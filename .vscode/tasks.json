@@ -1,0 +1,42 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Server",
+            "type": "shell",
+            "command": "cd Server; ./start.bat"
+        },
+        {
+            "label": "UltimateBot",
+            "type": "shell",
+            "command": "cd UltimateBot; node main.js ProCrafters localhost 51198 1.17.1"
+        },
+        {
+            "label": "BodyguardBots",
+            "type": "shell",
+            "command": "cd BodyguardBots; node bodyguards.js Bodyguard localhost 25565 5 1.17.1",
+        },
+        {
+            "label": "ResourceBots",
+            "type": "shell",
+            "command": "cd ResourceBots; node index.js localhost 25565 Password WordedYard70815 1.17.1"
+        },
+        {
+            "label": "PrintingCommandBots",
+            "type": "shell",
+            "command": "cd PrinterBots; node doByCommands.js Printer localhost 25565 5 1"
+        },
+        {
+            "label": "PrintingPlacingBots",
+            "type": "shell",
+            "command": "cd PrinterBots; node doByPlacingBETA.js Printer localhost 25565 1"
+        },
+        {
+            "label": "3DPrinter",
+            "type": "shell",
+            "command": "cd PrinterBots; cd 3DPrinter; node saver.js Saver localhost 25565 1.17.1 0 0 0 100 100 100 MySchematic; pause; node printer.js Printer localhost 25565 1.17.1 20 1"
+        },
+    ]
+}
