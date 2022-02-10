@@ -1,5 +1,24 @@
 const Utils = require('./utils');
 const Movements = require('mineflayer-pathfinder').Movements
+manila = require('./manila.js')
+
+//Bot configs
+var botConfig 
+    [
+      username = "Bot",
+      host = "localhost",
+      port = 25565,
+      version = "1.17.1",
+    ]
+
+//Ultimate Bot config
+prefix = '#'
+
+options = {
+  operators: [], // empty array for anyone
+  isOp: false,  // Allows stylish and pretty output, instead of normal messages (/tellraw), however, requires OP permission
+  loud: true, // answer in global chat (if false, the bot will whisper)
+}
 
 const movementCallback = (returnAddress, bot, chat, target, successful) => {
     const announcement = successful ? `got there` : `can't get there`;
@@ -202,6 +221,16 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             });
             console.log(target);
                             break;
+        case 'ultimate':
+            Ultimatebot = manila.createUltimateBot(
+                {
+                  username: "ProCrafters",
+                  host: "localhost",
+                  port: "50565",
+                  version: "1.17.1",
+                }
+            )
+            break;
         default:
             chat.addChat(bot, 'I don\'t understand', returnAddress);
             return;

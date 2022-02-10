@@ -1,13 +1,13 @@
-let bot
+let UltimateBot
 
-function load(botclass) {
-    bot = botclass
+function load(UltimateBotClass) {
+    UltimateBot = UltimateBotClass
 
-    bot.addTarget = addTarget
-    bot.clearTargets = clearTargets
-    bot.equipForCombat = equipForCombat
-    bot.hasShield = hasShield
-    bot.checkForTargets = checkForTargets
+    UltimateBot.addTarget = addTarget
+    UltimateBot.clearTargets = clearTargets
+    UltimateBot.equipForCombat = equipForCombat
+    UltimateBot.hasShield = hasShield
+    UltimateBot.checkForTargets = checkForTargets
 }
 
 
@@ -24,31 +24,31 @@ function addTarget(filter) {
 
 function clearTargets() {
     targets = []
-    bot.setControlState('forward', false)
-    bot.setControlState('sprint', false)
-    bot.setControlState('jump', false)
+    UltimateBot.setControlState('forward', false)
+    UltimateBot.setControlState('sprint', false)
+    UltimateBot.setControlState('jump', false)
 }
 
 function equipForCombat(priorizeAxe = false) {
     if (priorizeAxe) {
-        const weapon = bot.inventory.items().find(item => item.name.includes('axe'))
+        const weapon = UltimateBot.inventory.items().find(item => item.name.includes('_axe'))
         if (weapon) {
-            bot.equip(weapon, 'hand')
+            UltimateBot.equip(weapon, 'hand')
             return
         }
     }
-    const weapon = bot.inventory.items().find(item => item.name.includes('sword'))
+    const weapon = UltimateBot.inventory.items().find(item => item.name.includes('sword'))
     if (weapon) {
-        bot.equip(weapon, 'hand')
+        UltimateBot.equip(weapon, 'hand')
     }
-    bot.armorManager.equipAll()
+    UltimateBot.armorManager.equipAll()
 }
 
 /// Weapon management (from mineflayer-pvp)
 function hasShield() {
-    if (bot.supportFeature('doesntHaveOffHandSlot'))
+    if (UltimateBot.supportFeature('doesntHaveOffHandSlot'))
         return false;
-    const slot = bot.inventory.slots[bot.getEquipmentDestSlot('off-hand')];
+    const slot = UltimateBot.inventory.slots[UltimateBot.getEquipmentDestSlot('off-hand')];
     if (!slot)
         return false;
     return slot.name.includes('shield');
@@ -78,7 +78,7 @@ var mvTick = 0
 function checkForTargets() {
     const filter = e => targets.includes(e.username) || targets.includes(e.name)
 
-    const entity = bot.nearestEntity(filter)
+    const entity = UltimateBot.nearestEntity(filter)
     const minimumDistance = 5.5
 
     if (entity) {
@@ -86,15 +86,15 @@ function checkForTargets() {
         mvTick += 1
         if (mvTick > 10) {
             mvTick = 0
-            bot.moveTo(entity.position)
+            UltimateBot.moveTo(entity.position)
         }
         /*
         If it finds a valid target
         it will enter combat bot.state
         */
-        bot.state = 'combat'
+        UltimateBot.state = 'combat'
 
-        if (bot.health > 15 || bot.food > 19 || !bot.hasFood()) {
+        if (UltimateBot.health > 15 || UltimateBot.food > 19 || !UltimateBot.hasFood()) {
             /*
             Perform combat as long as the bot
             either is in good stat conditions
@@ -108,16 +108,16 @@ function checkForTargets() {
             time crits
             */
             let ticksPerAttack
-            const mainHand = bot.inventory.slots[bot.getEquipmentDestSlot('hand')]
+            const mainHand = UltimateBot.inventory.slots[UltimateBot.getEquipmentDestSlot('hand')]
             if (mainHand) {
-                ticksPerAttack = getCooldown(bot.inventory.slots[bot.getEquipmentDestSlot('hand')].name)
+                ticksPerAttack = getCooldown(UltimateBot.inventory.slots[UltimateBot.getEquipmentDestSlot('hand')].name)
             }
             else {
                 ticksPerAttack = 5
             }
 
-            bot.lookAt(entity.position)
-            bot.substate = 'moving'
+            UltimateBot.lookAt(entity.position)
+            UltimateBot.substate = 'moving'
 
             /*
             attackHits is used to eventually change
@@ -134,59 +134,59 @@ function checkForTargets() {
                 equipForCombat(true)
                 attackHits = 0
             }
-            if (entity.position.distanceTo(bot.entity.position) > minimumDistance + 5) {
+            if (entity.position.distanceTo(UltimateBot.entity.position) > minimumDistance + 5) {
                 equipForCombat(true)
-                bot.setControlState('jump', true)
+                UltimateBot.setControlState('jump', true)
             }
             else {
-                bot.setControlState('jump', false)
+                UltimateBot.setControlState('jump', false)
             }
-            bot.setControlState('sprint', true)
-            if (entity.position.distanceTo(bot.entity.position) < minimumDistance) {
-                bot.setControlState('back', true)
+            UltimateBot.setControlState('sprint', true)
+            if (entity.position.distanceTo(UltimateBot.entity.position) < minimumDistance) {
+                UltimateBot.setControlState('back', true)
             }
 
             /*
             Jumps in the (arguably) perfect time to
             get a critical hit in the next 10 ticks
             */
-            if (attackTick > ticksPerAttack - 10 && entity.position.distanceTo(bot.entity.position) < minimumDistance) {
-                bot.setControlState('jump', false)
-                bot.setControlState('forward', true)
-                bot.substate = 'attacking'
+            if (attackTick > ticksPerAttack - 10 && entity.position.distanceTo(UltimateBot.entity.position) < minimumDistance) {
+                UltimateBot.setControlState('jump', false)
+                UltimateBot.setControlState('forward', true)
+                UltimateBot.substate = 'attacking'
             }
 
             /*
             Perform the attack at the proper tick
             for current weapon cooldown
             */
-            if (attackTick > ticksPerAttack && entity.position.distanceTo(bot.entity.position) < minimumDistance) {
+            if (attackTick > ticksPerAttack && entity.position.distanceTo(UltimateBot.entity.position) < minimumDistance) {
                 //bot.stopDigging()
                 attackTick = 0      // Reseting ticks
-                bot.setControlState('sprint', false)
-                bot.attack(entity)
+                UltimateBot.setControlState('sprint', false)
+                UltimateBot.attack(entity)
                 equipForCombat()    // Equips sword
                 attackHits += 1
 
-                bot.substate = 'idle'
+                UltimateBot.substate = 'idle'
             }
             else {
                 // Shield management
-                if (hasShield() && attackTick < (ticksPerAttack / 1.1) && entity.position.distanceTo(bot.entity.position) < minimumDistance + 3) {
+                if (hasShield() && attackTick < (ticksPerAttack / 1.1) && entity.position.distanceTo(UltimateBot.entity.position) < minimumDistance + 3) {
                     if (!isShieldActive) {
                         isShieldActive = true
-                        bot.activateItem(true)
-                        bot.substate = 'defending'
+                        UltimateBot.activateItem(true)
+                        UltimateBot.substate = 'defending'
                     }
                 }
                 else if (isShieldActive) {
                     isShieldActive = false
-                    bot.deactivateItem(true);
-                    if (bot.substate === 'defending')
-                        bot.substate = 'idle'
+                    UltimateBot.deactivateItem(true);
+                    if (UltimateBot.substate === 'defending')
+                        UltimateBot.substate = 'idle'
                     if (attackTick < ticksPerAttack) {
-                        bot.setControlState('forward', false)
-                        bot.setControlState('back', true)
+                        UltimateBot.setControlState('forward', false)
+                        UltimateBot.setControlState('back', true)
                     }
                 }
             }
@@ -196,26 +196,26 @@ function checkForTargets() {
             if (eatTick > 30) {
                 if (isShieldActive) {
                     isShieldActive = false
-                    bot.deactivateItem(true);
+                    UltimateBot.deactivateItem(true);
                 }
-                if (bot.health < 15 && bot.food < 20) {
-                    bot.setControlState('forward', true)
-                    bot.setControlState('jump', true)
-                    bot.setControlState('sprint', true)
-                    bot.substate = 'eating'
-                    bot.eat()
+                if (UltimateBot.health < 15 && bot.food < 20) {
+                    UltimateBot.setControlState('forward', true)
+                    UltimateBot.setControlState('jump', true)
+                    UltimateBot.setControlState('sprint', true)
+                    UltimateBot.substate = 'eating'
+                    UltimateBot.eat()
                     eatTick = 0
                 }
             }
         }
     } else {
-        if (bot.state === 'combat') {
-          bot.state = 'idle'
-          bot.substate = 'none'
+        if (UltimateBot.state === 'combat') {
+          UltimateBot.state = 'idle'
+          UltimateBot.substate = 'none'
 
           if (isShieldActive) {
               isShieldActive = false
-              bot.deactivateItem(true);
+              UltimateBot.deactivateItem(true);
           }
       }
     }

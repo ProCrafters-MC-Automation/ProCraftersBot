@@ -1,20 +1,20 @@
 lodash = require('lodash')
 
-let bot
+let UltimateBot
 
-function load(botclass) {
-    bot = botclass
+function load(UltimateBotclass) {
+    UltimateBot = UltimateBotclass
 
-    bot.on('physicTick', miningTick)
+    UltimateBot.on('physicTick', miningTick)
 
-    bot.hasFood = hasFood
-    bot.eat = eat
-    bot.getPlayer = getPlayer
-    bot.mountNearest = mountNearest
-    bot.locateBlock = locateBlock
-    bot.mineBlock = mineBlock
-    bot.mineBlockAt = mineBlockAt
-    bot.stopMining = stopMining
+    UltimateBot.hasFood = hasFood
+    UltimateBot.eat = eat
+    UltimateBot.getPlayer = getPlayer
+    UltimateBot.mountNearest = mountNearest
+    UltimateBot.locateBlock = locateBlock
+    UltimateBot.mineBlock = mineBlock
+    UltimateBot.mineBlockAt = mineBlockAt
+    UltimateBot.stopMining = stopMining
 }
 
 // Eating
@@ -23,11 +23,11 @@ function hasFood() {
     Returns either there is or not
     available food in the inventory
     */
-    const mcData = require('minecraft-data')(bot.version)
+    const mcData = require('minecraft-data')(UltimateBot.version)
     var data = mcData.foodsArray
     var names = data.map((item) => item.name)
 
-    var found_food = bot.inventory
+    var found_food = UltimateBot.inventory
         .items()
         .filter((item) => names.includes(item.name))
 
@@ -53,13 +53,13 @@ function eat() {
     Returns either it found food in the inventory
     or not (bool)
     */
-    const mcData = require('minecraft-data')(bot.version)
+    const mcData = require('minecraft-data')(UltimateBot.version)
     var data = mcData.foodsArray
 
     var names = data.map((item) => item.name)
     var foodps = data.map((item) => item.foodPoints)
 
-    var found_food = bot.inventory
+    var found_food = UltimateBot.inventory
         .items()
         .filter((item) => names.includes(item.name))
 
@@ -69,7 +69,7 @@ function eat() {
 
     var available_food = []
 
-    bot.inventory.items().forEach((element) => {
+    UltimateBot.inventory.items().forEach((element) => {
         if (names.includes(element.name)) {
             element.foodPoints = foodps[names.indexOf(element.name)] // item does not contain foodPoints by default
             available_food.push(element)
@@ -85,12 +85,12 @@ function eat() {
         and activating the item from
         main hand (which is food)
         */
-        bot.substate = 'eating'
-        //console.log(best_food)
-        //console.log(available_food)
-        bot.equip(best_food, 'hand', function () {
-            bot.consume(function () {
-              bot.substate = 'none'
+        UltimateBot.substate = 'eating'
+        console.log(best_food)
+        console.log(available_food)
+        UltimateBot.equip(best_food, 'hand', function () {
+            UltimateBot.consume(function () {
+                UltimateBot.substate = 'none'
             })
         })
         return true
@@ -105,7 +105,7 @@ function getPlayer(username) {
     given username, or null if it
     can't find the player
     */
-    player = bot.players[username]
+    player = UltimateBot.players[username]
     if (player) return player
     return null
 }
@@ -115,8 +115,8 @@ function locateBlock(name) {
     Returns position for the nearest
     block of that kind
     */
-    blocks = bot.findBlockSync({
-        point: bot.entity.position,
+    blocks = UltimateBot.findBlockSync({
+        point: UltimateBot.entity.position,
         matching: name,
         maxDistance: 128,
         count: 1
@@ -132,24 +132,24 @@ var miningCount = 0
 var miningName = null
 
 function miningTick() {
-    if (mining) bot.lookAt(mining)
-    if (mining && !bot.targetDigBlock && bot.canDigBlock(bot.blockAt(mining))) {
+    if (mining) UltimateBot.lookAt(mining)
+    if (mining && !UltimateBot.targetDigBlock && UltimateBot.canDigBlock(UltimateBot.blockAt(mining))) {
         function finishedMining(err) {
-            bot.stopMoving()
+            UltimateBot.stopMoving()
             mining = false
             miningCount -= 1
         }
 
-        target = bot.blockAt(mining)
-        bot.tool.equipForBlock(target, {}, () => {
-            bot.substate = 'digging'
-            bot.dig(target, finishedMining)
+        target = UltimateBot.blockAt(mining)
+        UltimateBot.tool.equipForBlock(target, {}, () => {
+            UltimateBot.substate = 'digging'
+            UltimateBot.dig(target, finishedMining)
         })
     }
     else if (!mining && miningName && miningCount > 0) {
-        position = bot.locateBlock(miningName)
+        position = UltimateBot.locateBlock(miningName)
         if (position) {
-            bot.mineBlockAt(position)
+            UltimateBot.mineBlockAt(position)
         }
         else {
             miningName = null
@@ -159,12 +159,12 @@ function miningTick() {
 
 function mineBlockAt(position) {
     mining = position
-    bot.moveTo(position)
-    bot.substate = 'moving'
+    UltimateBot.moveTo(position)
+    UltimateBot.substate = 'moving'
 }
 
 function mineBlock(name, count = 1) {
-    bot.state = 'mining'
+    UltimateBot.state = 'mining'
     miningCount = count
     miningName = name
 }
@@ -173,11 +173,11 @@ function stopMining() {
     mining = false
     miningCount = 0
     miningName = null
-    bot.stopMoving()
-    bot.stopDigging()
-    if (bot.state === 'mining') {
-        bot.state = 'idle'
-        bot.substate = 'none'
+    UltimateBot.stopMoving()
+    UltimateBot.stopDigging()
+    if (UltimateBot.state === 'mining') {
+        UltimateBot.state = 'idle'
+        UltimateBot.substate = 'none'
     }
 }
 
@@ -192,10 +192,10 @@ function mountNearest() {
     mountable = ['boat', 'minecart', 'horse', 'donkey']
 
     const filter = e => e.name && mountable.includes(e.name)
-    const entity = bot.nearestEntity(filter)
+    const entity = UltimateBot.nearestEntity(filter)
 
     if (entity) {
-        bot.mount(entity)
+        UltimateBot.mount(entity)
         return true
     }
     return false

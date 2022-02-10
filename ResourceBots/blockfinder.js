@@ -1,9 +1,9 @@
-let bot
+let UltimateBot
 
-function load(botclass) {
-    bot = botclass
+function load(UltimateBotclass) {
+    UltimateBot = UltimateBotclass
 
-    bot.findBlockSync = findBlockSync
+    UltimateBot.findBlockSync = findBlockSync
 }
 
 var assert = require('assert');
@@ -57,7 +57,7 @@ function findBlockSync(options) {
     var result = [];
 
     while (result.length < options.count && it.apothem <= options.maxDistance) {
-        var block = bot.blockAt(it.next());
+        var block = UltimateBot.blockAt(it.next());
         if (block && block.name == options.matching) result.push(block);
     }
 

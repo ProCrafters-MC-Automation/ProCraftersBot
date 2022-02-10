@@ -7,7 +7,8 @@ const jobSelector = require('./individual').handleChat;
 const Utils = require('./utils');
 
 let botNames = [
-    'Parkour_Defeater',
+    'Bot1',
+    'Bot2',
 ];
 const host = process.argv[2];
 const port = parseInt(process.argv[3]);
