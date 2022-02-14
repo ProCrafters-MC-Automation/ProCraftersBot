@@ -1,0 +1,1 @@
+cd .\ResourceBots\; node index.js
