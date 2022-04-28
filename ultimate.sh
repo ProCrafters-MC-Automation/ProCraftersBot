@@ -1,1 +1,0 @@
-cd .\UltimateBot\; node main.js

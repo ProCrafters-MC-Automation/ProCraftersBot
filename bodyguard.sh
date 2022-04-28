@@ -1,1 +1,0 @@
-cd .\BodyguardBots\; node bodyguards.js
