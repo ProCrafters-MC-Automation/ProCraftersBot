@@ -7,7 +7,7 @@ const stuffs = require("stuffs");
 const chillout = require("chillout");
 
 // CONFIG PART
-const offsetX = -1000;
+const offsetX = 0;
 const offsetY = 150;
 const offsetZ = 0;
 const howManyBots = process.argv[5];

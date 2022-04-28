@@ -1,1 +1,0 @@
-cd .\PrinterBots\; node doByCommands.js

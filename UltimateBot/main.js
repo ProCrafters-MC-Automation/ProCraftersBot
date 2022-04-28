@@ -1,6 +1,7 @@
 manila = require('./manila.js')
+memory = {}
 
-prefix = '@'
+prefix = '#'
 
 options = {
   operators: [], // empty array for anyone
@@ -13,7 +14,6 @@ bot = manila.createBot(
       username: process.argv[2],
       host: process.argv[3],
       port: process.argv[4],
-      version: process.argv[5],
     }
 )
 
@@ -94,6 +94,7 @@ function onChatMessage(username, message, rawMessage, jsonMsg) {
     Used to simplify argument number thing,
     n is the number of args AFTER the
     calling argument (first argument)
+
     Automatically changes response to
     notify about the missing args
     */

@@ -16,6 +16,7 @@ function moveTo(position) {
     Pathfinds and move to the given
     coordinates, breaking or placing
     blocks if needed.
+
     This action can be interrupted
     with stopMoving()
     */

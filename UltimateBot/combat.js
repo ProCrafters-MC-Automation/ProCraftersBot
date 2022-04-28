@@ -104,6 +104,7 @@ function checkForTargets() {
             Gets cooldown in ticks for the
             current weapon and uses it to
             time the attacks properly
+
             ticksPerAttack is also used to
             time crits
             */
@@ -123,9 +124,11 @@ function checkForTargets() {
             attackHits is used to eventually change
             main weapon to axe, useful when fighting
             targets that posses shields.
+
             Also, if the target is far, the bot will
             also equip an axe, as it has enough time
             to charge it.
+
             After using the axe, the weapon is changed
             to a sword, that has more damage per
             second.

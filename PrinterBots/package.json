@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "chillout": "^5.0.0",
+    "jimp": "^0.16.1",
+    "mcfsd": "^1.2.1",
+    "mineflayer": "^4.0.0",
+    "nearest-color": "^0.4.4",
+    "stuffs": "^0.1.12"
+  }
+}

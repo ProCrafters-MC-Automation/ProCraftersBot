@@ -1,15 +1,15 @@
 const mineflayer = require('mineflayer')
 
-const bossName = "WordedYard70815"; 
+const bossName = process.argv[3];
 const prefix = process.argv[2];
 
 const server = {
-	address: process.argv[3],
-	port: process.argv[4],
-	version: process.argv[6],
+	address: process.argv[4],
+	port: process.argv[5],
+	version: process.argv[7],
 };
 
-const botCount = process.argv[5];
+const botCount = process.argv[6];
 const personalSpace = 4;
 
 var offset = 0;

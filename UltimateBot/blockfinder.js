@@ -1,3 +1,16 @@
+/*
+This code is mostly taken from
+mineflayer-blockfinder, it was
+modified and just contains what
+I will actually need to use
+
+It checks for block names instead
+of ID's, which is insanely slower.
+Just a temp solution, I should
+get the ID for the block somehow
+and then still use this ID
+*/
+
 let bot
 
 function load(botclass) {

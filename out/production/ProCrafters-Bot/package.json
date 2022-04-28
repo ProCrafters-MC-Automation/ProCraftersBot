@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "assert": "^2.0.0",
+    "browserify": "^17.0.0",
+    "child_process": "^1.0.2",
+    "chillout": "^5.0.0",
+    "fast-average-color-node": "^2.1.0",
+    "flying": "^0.1.1",
+    "flying-squid": "^1.4.0",
+    "jimp": "^0.16.1",
+    "lodash": "^4.17.21",
+    "mcdata": "^1.0.9",
+    "mcfsd": "^1.2.1",
+    "minecraft-assets": "^1.8.2",
+    "minecraft-data": "^2.95.0",
+    "mineflayer": "^3.11.2",
+    "mineflayer-armor-manager": "^1.4.2",
+    "mineflayer-pathfinder": "^1.8.0",
+    "mineflayer-tool": "^1.1.0",
+    "nearest-color": "^0.4.4",
+    "node-gui": "^1.0.2",
+    "npm-updater": "^3.0.3",
+    "prismarine-item": "^1.11.0",
+    "squid": "^0.5.2",
+    "stuffs": "^0.1.10",
+    "vec3": "^0.1.7",
+    "xterm": "^4.18.0"
+  }
+}

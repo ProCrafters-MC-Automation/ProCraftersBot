@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "mineflayer-blockfinder": "^0.0.7"
+    "minecraft-data": "^2.113.2",
+    "mineflayer": "^4.0.0",
+    "mineflayer-blockfinder": "^0.0.7",
+    "mineflayer-pathfinder": "^1.9.1"
   }
 }

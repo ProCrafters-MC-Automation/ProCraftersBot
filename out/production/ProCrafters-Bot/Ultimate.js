@@ -1,23 +1,10 @@
-mineflayer = require('mineflayer');
-const { exec } = require('child_process');
+const basicSettingsForm = document.getElementById("basic-settings-form");
+const basisSettingsButton = document.getElementById("basic-settings-form-submit");
+const basicSettingsErrorMsg = document.getElementById("basic-settings-error-msg");
 
-const user = process.argv[2]
-const host = process.argv[3]
-const port = process.argv[4]
-const version = process.argv[5]
-
-bot = mineflayer.createBot({
-    username: user,
-    host: host,
-    port: port,
-    version: version,
-})
-bot.on('chat', mainChat);
-function mainChat(username, message) {
-	//Ignore messages that are not from the boss
-	if (username != bossName) return;
-	//Boss's command parts as an array, e.g. ["kill, "jeb_"]
-	let tokens = message.split(' ');
+const server = basiSettingsForm.server.value;
+const port = basicSettingsForm.port.value;
+const version = basicSettingsForm.version.value;
 
 	switch(tokens[0]) {
 		case 'Bodyguards':
@@ -77,4 +64,3 @@ function mainChat(username, message) {
         });
             break;
 	}
-}
