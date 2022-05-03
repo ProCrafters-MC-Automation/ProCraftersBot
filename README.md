@@ -1,5 +1,5 @@
 # ProCraftersBot
-A handful of bots that will automate Minecraft tasks. This includes [Resource Bots](#Resource-Bots), [PvP Bot](#Resource-Bots), [Bodyguard Bots]# Bodyguard-Bots), and [Printer Bots](#Printer-Bots)
+A handful of bots that will automate Minecraft tasks. This includes [Resource Bots](#Resource-Bots), [PvP Bot](#Resource-Bots), [Bodyguard Bots](#Bodyguard-Bots), and [Printer Bots](#Printer-Bots)
 
 # [Resource Bots](https://github.com/ProCrafters-MC-Automation/ProCraftersBot/tree/main/ResourceBots)
 
