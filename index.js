@@ -1,6 +1,7 @@
 const mineflayer = require('mineflayer');
 const { Movements } = require('mineflayer-pathfinder');
 const { GoalNear, GoalBlock, GoalXZ, GoalY, GoalInvert, GoalFollow } = require('mineflayer-pathfinder').goals;
+const fs = require('fs');
 const { createSwarm } = require('./swarm');
 const chat = require('./chat');
 const jobSelector = require('./individual').handleChat;
@@ -10,6 +11,7 @@ let botNames = [
     'a',
     'b',
     'c',
+    'd',
 ];
 const host = process.argv[2];
 const port = parseInt(process.argv[3]);
@@ -40,14 +42,8 @@ const botInit = (bot) => {
         jobSelector(username, message, bot, masters, chat, true)
     });
     const startTime = Date.now();
-    bot.on('health', () => {
-        if(Date.now() - startTime < 500) return;
-        Utils.attackNearestMob(bot, defaultMove)
-    });
     bot.on('kicked', (reason) => console.log("kicked", reason));
-
     autoLogin(bot);
-
     masters.forEach(master => {
         chat.addChat(bot, `I'm online`, master);
     });

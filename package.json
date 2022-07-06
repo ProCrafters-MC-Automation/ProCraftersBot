@@ -3,7 +3,7 @@
     "assert": "^2.0.0",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
-    "minecraft-data": "^2.113.2",
+    "minecraft-data": "^2.221.0",
     "mineflayer": "^4.3.0",
     "mineflayer-armor-manager": "^1.4.2",
     "mineflayer-auto-eat": "^2.3.3",
@@ -11,6 +11,7 @@
     "mineflayer-pathfinder": "^1.10.0",
     "mineflayer-pvp": "^1.3.2",
     "mineflayer-tool": "^1.2.0",
+    "prismarine-viewer": "^1.23.0",
     "vec3": "^0.1.7"
   }
 }

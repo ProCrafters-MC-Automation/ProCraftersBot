@@ -1,0 +1,190 @@
+File is deleted.
+PartialReadError: Read error for undefined : undefined
+    at new ExtendableError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:63:13)
+    at new PartialReadError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:70:5)
+    at Object.readVarInt [as varint] (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\datatypes\utils.js:69:45)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:631:67)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:641:13)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:768:11)
+    at Object.packet_declare_commands (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:773:9)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2162:72)
+    at packet (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2253:9)
+    at CompiledProtodef.read (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:70:12)
+PartialReadError: Read error for undefined : undefined
+    at new ExtendableError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:63:13)
+    at new PartialReadError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:70:5)
+    at Object.readVarInt [as varint] (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\datatypes\utils.js:69:45)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:631:67)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:641:13)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:768:11)
+    at Object.packet_declare_commands (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:773:9)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2162:72)
+    at packet (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2253:9)
+    at CompiledProtodef.read (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:70:12)
+PartialReadError: Read error for undefined : undefined
+    at new ExtendableError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:63:13)
+    at new PartialReadError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:70:5)
+    at Object.readVarInt [as varint] (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\datatypes\utils.js:69:45)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:631:67)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:641:13)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:768:11)
+    at Object.packet_declare_commands (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:773:9)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2162:72)
+    at packet (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2253:9)
+    at CompiledProtodef.read (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:70:12)
+PartialReadError: Read error for undefined : undefined
+    at new ExtendableError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:63:13)
+    at new PartialReadError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:70:5)
+    at Object.readVarInt [as varint] (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\datatypes\utils.js:69:45)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:631:67)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:641:13)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:768:11)
+    at Object.packet_declare_commands (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:773:9)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2162:72)
+    at packet (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2253:9)
+    at CompiledProtodef.read (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:70:12)
+a initalised
+PartialReadError: Read error for undefined : undefined
+    at new ExtendableError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:63:13)
+    at new PartialReadError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:70:5)
+    at Object.readVarInt [as varint] (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\datatypes\utils.js:69:45)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:631:67)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:641:13)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:768:11)
+    at Object.packet_declare_commands (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:773:9)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2162:72)
+    at packet (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2253:9)
+    at CompiledProtodef.read (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:70:12)
+c initalised
+PartialReadError: Read error for undefined : undefined
+    at new ExtendableError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:63:13)
+    at new PartialReadError (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\utils.js:70:5)
+    at Object.readVarInt [as varint] (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\datatypes\utils.js:69:45)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:631:67)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:641:13)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:768:11)
+    at Object.packet_declare_commands (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:773:9)
+    at eval (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2162:72)
+    at packet (eval at compile (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:258:12), <anonymous>:2253:9)
+    at CompiledProtodef.read (C:\Users\pruth\Documents\GitHub\ProCrafters-Bot\node_modules\protodef\src\compiler.js:70:12)
+b initalised
+d initalised
+WordedYard70815 I'm online
+WordedYard70815 Teleported 5 entities to WordedYard70815]
+WordedYard70815 Teleported 5 entities to WordedYard70815]
+WordedYard70815 Teleported 5 entities to WordedYard70815]
+WordedYard70815 Teleported 5 entities to WordedYard70815]
+WordedYard70815 a guard
+WordedYard70815 a guard
+WordedYard70815 a guard
+WordedYard70815 a guard
+Vec3 { x: 7.447507886350134, y: 77, z: -29.730136102335507 }
+Vec3 { x: 7.447507886350134, y: 77, z: -29.730136102335507 }
+a I will guard that location.
+a I will guard that location.
+a I will guard that location.
+a I will guard that location.
+WordedYard70815 I'm online
+WordedYard70815 I'm online
+{mcData}.findItemOrBlockById() is deprecated, scheduled to be removed on or after April 1 2022
+WordedYard70815 I'm online
+{mcData}.findItemOrBlockById() is deprecated, scheduled to be removed on or after April 1 2022
+{mcData}.findItemOrBlockById() is deprecated, scheduled to be removed on or after April 1 2022
+{mcData}.findItemOrBlockById() is deprecated, scheduled to be removed on or after April 1 2022
+{mcData}.findItemOrBlockById() is deprecated, scheduled to be removed on or after April 1 2022
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 19 | idle(none)
+a HP: 20 | Food: 19 | idle(none)
+a HP: 20 | Food: 19 | idle(none)
+a HP: 20 | Food: 19 | idle(none)
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 Applied effect Hunger to a]
+WordedYard70815 Applied effect Hunger to a]
+Auto Eat started!
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 10 | idle(none)
+a HP: 20 | Food: 10 | idle(none)
+a HP: 20 | Food: 10 | idle(none)
+a HP: 20 | Food: 10 | idle(none)
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 9 | idle(none)
+a HP: 20 | Food: 9 | idle(none)
+a HP: 20 | Food: 9 | idle(none)
+a HP: 20 | Food: 9 | idle(none)
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+Auto Eat started!
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+a HP: 20 | Food: 13 | idle(none)
+Auto Eat stopped!
+Auto Eat started!
+Auto Eat stopped!
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 17 | idle(none)
+a HP: 20 | Food: 17 | idle(none)
+a HP: 20 | Food: 17 | idle(none)
+a HP: 20 | Food: 17 | idle(none)
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+WordedYard70815 a status
+a HP: 20 | Food: 20 | idle(none)
+a HP: 20 | Food: 20 | idle(none)
+a HP: 20 | Food: 20 | idle(none)
+a HP: 20 | Food: 20 | idle(none)

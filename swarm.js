@@ -4,6 +4,7 @@ const armorManager = require('mineflayer-armor-manager')
 const autoeat = require('mineflayer-auto-eat')
 const pvp = require('mineflayer-pvp').plugin
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
+const mineflayerViewer = require('prismarine-viewer').mineflayer
 const fs = require('fs')
 const movement = require('./movement')
 const combat = require('./combat')
@@ -17,6 +18,13 @@ const blockfinder = require('./blockfinder')
  * @returns {Swarm} The swarm
  */
 const createSwarm = (botNames, botConf, mineflayer) => {
+
+    fs.unlink('log.txt', (err) => {
+    if (err) {
+        throw err;
+    }
+        console.log("File is deleted.");
+    });
     const initBot = (name) => {
         const bot = mineflayer.createBot({ ...botConf, username: name});
 
@@ -39,14 +47,14 @@ const createSwarm = (botNames, botConf, mineflayer) => {
         convention.load(bot)
         blockfinder.load(bot)
 
-        fs.unlink('log.txt', (err) => {});
+        //bot.once('spawn', botConf.initCallback.bind(this, bot));
 
-        bot.once('spawn', botConf.initCallback.bind(this, bot));
-
-        bot.once("spawn", () => {
+        bot.once("spawn", botConf.initCallback.bind(this, bot), () => {
             bot.autoEat.options.priority = "foodPoints"
             bot.autoEat.options.bannedFood = []
             bot.autoEat.options.eatingTimeout = 3
+            mineflayerViewer(bot, {port: 1000, firstPerson: false})
+            mineflayerViewer(bot, {port: 1500, firstPerson: true})
         })
 
         bot.on('playerCollect', (collector, itemDrop) => {

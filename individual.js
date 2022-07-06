@@ -36,17 +36,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
                 bot.chat("I can't see the target.")
                 return
             }
-
                 bot.pvp.attack(targetPlayer.entity)
-            break;
-        case 'guard':
-            const player = bot.players[username]
-            if (!player) {
-                bot.chat("I can't see you.")
-                return
-            }
-            bot.chat('I will guard that location.')
-            guardArea(bot, player.entity.position)
             break;
         case 'come':
             Utils.goToTarget(bot, target, defaultMove, 0, (success) => {
@@ -68,7 +58,6 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             break;
         case 'stop':
             Utils.stop(bot);
-            stopGuarding(bot);
             chat.addChat(bot, 'ok', returnAddress);
             break;
         case 'info':
@@ -121,13 +110,6 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
                 chat.addChat(bot, 'finished hunting', returnAddress);
             });
             break;
-        case 'protect':
-            chat.addChat(bot, "I'm on it", returnAddress);
-            Utils.attackNearestMob(bot, defaultMove, (msg) => {
-                chat.addChat(bot, msg, returnAddress);
-            });
-            break;
-
         case 'goto':
         case 'go':
             let goto = (messageParts) => {
@@ -189,7 +171,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             let craftingTable = bot.findBlockSync({
                 matching: craftingTableBlockInfo.id,
                 point: bot.entity.position
-              })[0];
+            })[0];
 
             Utils.goToTarget(bot, craftingTable, defaultMove, 2, (arrivedSuccessfully) => {
                 if(!arrivedSuccessfully) return chat.addChat(bot, `Couldn't get to the crafting table`, returnAddress);
@@ -254,6 +236,82 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
         case 'valueof':
             bot.chat(JSON.stringify(memory));
             break;
+        case 'guard':
+            bot.on('playerCollect', (collector, itemDrop) => {
+                if (collector !== bot.entity) return
+
+                setTimeout(() => {
+                const sword = bot.inventory.items().find(item => item.name.includes('sword'))
+                if (sword) bot.equip(sword, 'hand')
+                }, 150)
+            })
+
+            bot.on('playerCollect', (collector, itemDrop) => {
+                if (collector !== bot.entity) return
+
+                setTimeout(() => {
+                    const shield = bot.inventory.items().find(item => item.name.includes('shield'))
+                    if (shield) bot.equip(shield, 'off-hand')
+                }, 250)
+            })
+
+            let guardPos = null
+
+            function guardArea (pos) {
+                guardPos = pos.clone()
+                console.log(pos)
+                console.log(guardPos)
+                if (!bot.pvp.target) {
+                    moveToGuardPos()
+                }
+            }
+
+            function stopGuarding () {
+                guardPos = null
+                bot.pvp.stop()
+                bot.pathfinder.setGoal(null)
+            }
+
+            function moveToGuardPos () {
+                const mcData = require('minecraft-data')(bot.version)
+                bot.pathfinder.setMovements(new Movements(bot, mcData))
+                bot.pathfinder.setGoal(new goals.GoalBlock(guardPos.x, guardPos.y, guardPos.z))
+            }
+
+            bot.on('stoppedAttacking', () => {
+                if (guardPos) {
+                    moveToGuardPos()
+                }
+            })
+
+            bot.on('physicTick', () => {
+                if (bot.pvp.target) return
+                if (bot.pathfinder.isMoving()) return
+                const entity = bot.nearestEntity()
+                if (entity) bot.lookAt(entity.position.offset(0, entity.height, 0))
+            })
+
+            bot.on('physicTick', () => {
+                if (!guardPos) return
+                const filter = e => e.type === 'mob' && e.position.distanceTo(bot.entity.position) < 16 && e.mobType !== 'Armor Stand' // Mojang classifies armor stands as mobs for some reason?
+                const entity = bot.nearestEntity(filter)
+                if (entity) {
+                    const sword = bot.inventory.items().find(item => item.name.includes('sword'))
+                    if (sword) bot.equip(sword, 'hand')
+                    bot.pvp.attack(entity)
+                }
+            })
+
+            const player = bot.players[username]
+
+            if (!player) {
+                bot.chat("I can't see you.")
+                return
+            }
+
+            bot.chat('I will guard that location.')
+            guardArea(player.entity.position)
+        break;
         case 'bodyguards':
             const command = 'node bodyguards.js Bodyguard ' + process.argv[5] + ' ' + process.argv[2] + ' ' + process.argv[3] + ' ' + messageParts[1];
             exec(command, (error, stdout, stderr) => {
@@ -274,25 +332,6 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
     }
 };
 
-function guardArea (bot, pos) {
-    guardPos = pos.clone()
-
-    if (!bot.pvp.target) {
-        moveToGuardPos(bot)
-    }
-}
-
-function stopGuarding (bot) {
-    guardPos = null
-    bot.pvp.stop()
-    bot.pathfinder.setGoal(null)
-}
-
-function moveToGuardPos (bot) {
-    const mcData = require('minecraft-data')(bot.version)
-    bot.pathfinder.setMovements(new Movements(bot, mcData))
-    bot.pathfinder.setGoal(new goals.GoalBlock(guardPos.x, guardPos.y, guardPos.z))
-}
 
 var fs = require('fs');
 var util = require('util');

@@ -1,4 +1,4 @@
-const { GoalNear, GoalBlock, GoalXZ, GoalY, GoalInvert, GoalFollow } = require('mineflayer-pathfinder').goals
+const { GoalNear, GoalFollow, Movements, goals} = require('mineflayer-pathfinder').goals
 let mcData;
 const toolMaterials = ['wooden', 'stone', 'iron', 'diamond', 'netherite', 'golden'];
 
@@ -37,8 +37,6 @@ const behaviours = {
         }
         attackLoop();
     },
-
-
 
     collectDrops: (bot, movement, maxDist, cb) => {
         drops = Object.values(bot.entities)
@@ -271,7 +269,8 @@ const behaviours = {
             }
         };
 
-        if(cb) callbackCheck();
+        if (cb) callbackCheck();
+        
     },
 
     positionToString: (pos) => `${pos.x} ${pos.y} ${pos.z}`,
@@ -324,25 +323,6 @@ const behaviours = {
         return b!==null && b.boundingBox!=="empty";
     },
 
-    attackNearestMob: (bot, defaultMove, cb) => {
-        const hostiles = Object.values(bot.entities)
-                        .filter(entity => entity.kind === 'Hostile mobs')
-                        .sort((mobA, mobB) => {
-                            return (mobA.position.distanceTo(bot.entity.position) - mobB.position.distanceTo(bot.entity.position));
-                        });
-    
-        if(hostiles.length > 0) {
-            const hostile = hostiles[0];
-            if(hostile.position.distanceTo(bot.entity.position) < 10) {
-                behaviours.kill(bot, defaultMove, [hostile], () => {
-                    if(cb) cb("Got it!");
-                });
-            } else {
-                if(cb) cb("there aren't any nearby mobs though")
-            }
-        }
-    },
-
     protectFriendly: (self, other, movement, maxRange = 30) => {
         if(self.entity.position.distanceTo(other.entity.position) < maxRange) {
             behaviours.goToTarget(self, other.entity, movement, 3, () => {
@@ -371,7 +351,7 @@ const behaviours = {
     getHome: (bot) => {
         if(bot.homePositon) return bot.homePositon;
         return null;
-    }
+    },
 }
 
 module.exports = behaviours;

@@ -4,24 +4,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Server",
-            "type": "shell",
-            "command": "cd Server; ./start.bat"
-        },
-        {
-            "label": "UltimateBot",
-            "type": "shell",
-            "command": "cd UltimateBot; node main.js ProCrafters localhost 51198 1.17.1"
-        },
-        {
             "label": "BodyguardBots",
             "type": "shell",
-            "command": "cd BodyguardBots; node bodyguards.js Bodyguard localhost 25565 5 1.17.1",
+            "command": "node bodyguards.js Bodyguard localhost 25565 5 1.17.1",
         },
         {
-            "label": "ResourceBots",
+            "label": "UltimateBots",
             "type": "shell",
-            "command": "cd ResourceBots; node index.js localhost 25565 Password WordedYard70815 1.17.1"
+            "command": "node index.js localhost 59494 Password WordedYard70815"
+        },
+        {
+            "label": "Updater",
+            "type": "shell",
+            "command": "updater.bat"
         },
         {
             "label": "PrintingCommandBots",
