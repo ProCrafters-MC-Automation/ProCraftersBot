@@ -1,4 +1,9 @@
 const mineflayer = require('mineflayer')
+const toolPlugin = require('mineflayer-tool').plugin
+const armorManager = require('mineflayer-armor-manager')
+const autoeat = require('mineflayer-auto-eat')
+const pvp = require('mineflayer-pvp').plugin
+const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 
 const bossName = process.argv[3];
 const prefix = process.argv[2];
@@ -6,7 +11,6 @@ const prefix = process.argv[2];
 const server = {
 	address: process.argv[4],
 	port: process.argv[5],
-	version: process.argv[7],
 };
 
 const botCount = process.argv[6];
@@ -23,17 +27,45 @@ function createBot() {
 		host: server.address,
 		port: server.port,
 		username: `${prefix}_${bots.length}`,
-		version: server.version,
 		viewDistance: "tiny",
 	});
 
 	bot.id = bots.length;
-	bot.direction = Math.PI*2/botCount*bots.length;
+	bot.direction = Math.PI * 2 / botCount * bots.length;
+	
+	// Loading plugins
+	bot.loadPlugin(pvp)
+	bot.loadPlugin(pathfinder)
+	bot.loadPlugin(armorManager)
+	bot.loadPlugin(toolPlugin)
+	bot.loadPlugin(autoeat)
 
 	//Log errors and kick messages
 	bot.on('kicked', (reason, loggedIn) => console.log(reason, loggedIn));
 	bot.on('error', err => console.log(err));
 
+	bot.once("spawn", () => {
+        bot.chat('I am the bodyguard of ' + bossName)
+    })
+
+	bot.on('playerCollect', (collector, itemDrop) => {
+		if (collector !== bot.entity) return
+
+		setTimeout(() => {
+			const sword = bot.inventory.items().find(item => item.name.includes('sword'))
+			if (sword) bot.equip(sword, 'hand')
+		}, 150)
+	})
+
+	bot.on('playerCollect', (collector, itemDrop) => {
+		if (collector !== bot.entity) return
+
+		setTimeout(() => {
+			const shield = bot.inventory.items().find(item => item.name.includes('shield'))
+			if (shield) bot.equip(shield, 'off-hand')
+		}, 250)
+	})
+	
 	//Do this every time the bot moves
 	bot.on('move', ()=>{
 		let boss = bot.players[bossName];
@@ -46,7 +78,7 @@ function createBot() {
 		offset = boss.yaw;
 		//Location is where the bot is supposed to be headed
 		let location;
-
+		
 		if (target) {
 			//If there is a target (enemy) to attack, make them the target location
 			location = target.position;
