@@ -4,7 +4,7 @@
   "description": "Application for ProCrafters Bots",
   "version": "1.0.0",
   "main": "main.js",
-  "license": "MIT",
+  "license": "Mozilla Public License Version 2.0",
   "author": "ProCrafters",
   "devDependencies": {
     "electron": "^5.0.8",
