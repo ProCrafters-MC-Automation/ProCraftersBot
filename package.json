@@ -1,17 +1,34 @@
 {
+  "name": "ProCrafters-Bots",
+  "productName": "ProCrafters Bots",
+  "description": "Application for ProCrafters Bots",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "author": "ProCrafters",
+  "devDependencies": {
+    "electron": "^5.0.8",
+    "electron-installer-dmg": "^3.0.0",
+    "electron-packager": "^12.2.0",
+    "electron-winstaller": "^2.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ProCrafters-MC-Automation/ProCraftersBot.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "set APP_DEV=true && electron .",
+    "delete": "del-cli --force ./release-builds",
+    "package-mac": "electron-packager . --overwrite --asar --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true",
+    "package-win": "electron-packager . ProCraftersBots --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"ProCrafters Bots\"",
+    "package-linux": "electron-packager . ProCraftersBots --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "create-installer-mac": "electron-installer-dmg ./release-builds/ProCrafters\\ Bots-darwin-x64/ProCrafters\\ Bots.app ProCraftersBots --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
+    "create-installer-win": "node installers/windows/createinstaller.js",
+    "create-debian-installer": "electron-installer-debian --src release-builds/ProCraftersBots-linux-x64/ --arch amd64 --config debian.json"
+  },
   "dependencies": {
-    "assert": "^2.0.0",
-    "fs": "^0.0.1-security",
-    "lodash": "^4.17.21",
-    "minecraft-data": "^2.221.0",
-    "mineflayer": "^4.3.0",
-    "mineflayer-armor-manager": "^1.4.2",
-    "mineflayer-auto-eat": "^2.3.3",
-    "mineflayer-blockfinder": "^0.0.7",
-    "mineflayer-pathfinder": "^1.10.0",
-    "mineflayer-pvp": "^1.3.2",
-    "mineflayer-tool": "^1.2.0",
-    "prismarine-viewer": "^1.23.0",
-    "vec3": "^0.1.7"
+    "child_process": "^1.0.2",
+    "fs": "^0.0.1-security"
   }
 }

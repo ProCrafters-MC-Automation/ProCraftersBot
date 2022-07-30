@@ -1,0 +1,32 @@
+<template class="section-template">
+  <section id="launcher" class="wrapper style3">
+    <h1 id="launcher-header">Bot Launcher</h1>
+    <input type="text" name="address" id="address-field" class="launcher-form-field" placeholder="Server Address">
+    <input type="text" name="port" id="port-field" class="launcher-form-field" placeholder="Server Port">
+    <input type="text" name="password" id="password-field" class="launcher-form-field" placeholder="Bot Password">
+    <input type="text" name="boss" id="boss-field" class="launcher-form-field" placeholder="Boss">
+    <button name="data" onclick="bots()">Click</button>
+    <p id="botStarted"></p>
+
+    <script type="text/javascript">
+      function bots() {
+        const { spawn } = require('child_process');
+        const fs = require('fs');
+        document.getElementById("botStarted").innerHTML = "Bots have been started";
+        console.log('Bot Log:')
+        let address = document.getElementById('address-field').value
+        let port = document.getElementById('port-field').value
+        let password = document.getElementById('password-field').value
+        let boss = document.getElementById('boss-field').value
+        const out = fs.openSync('./out.log', 'a');
+        const err = fs.openSync('./out.log', 'a');
+        const bots = spawn('cd src && node', ['index.js', address, port, password, boss], {
+          detached: true,
+          stdio: ['ignore', out, err],
+          shell: true
+        });
+        bots.unref();
+      }
+    </script>
+  </section>
+</template>
