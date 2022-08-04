@@ -1,0 +1,50 @@
+<template class="section-template">
+    <section id="help" class="wrapper style3">
+        <p>To execute a bot command, use the format: BotName command; commands listed below.</p>
+        <p><strong>status</strong>: Responds with the HP, Food, and State of the bot.</p>
+        <p><strong>target</strong>: Attacks a player (target PlayerName).</p>
+        <p><strong>come</strong>: Goes to where the player is located.</p>
+        <p><strong>follow</strong>: Follows the player.</p>
+        <p><strong>stop</strong>: Halts any action the bot is doing.</p>
+        <p><strong>info</strong>: Gives information about a specific entity (info PlayerName).</p>
+        <p><strong>print placer</strong>: Prints an image the user gives by placing (print placer x y z
+            imageFile.extension).</p>
+        <p><strong>print command</strong>: Prints an image provided by the user by commands (print commands x y z
+            numberOfBots botPrefix imageFile.extension).</p>
+        <p><strong>inventory</strong>: Tells you the list of things in the bot's inventory.</p>
+        <p><strong>drop</strong>: Drops the whole stack of a particular item that the player said (drop item).</p>
+        <p><strong>mine/ harvest</strong>: Mines/ Harvests the block stated along with the quantity needed(mine/harvest
+            block quantity).</p>
+        <p><strong>find</strong>: Finds the block stated.</p>
+        <p><strong>collect</strong>: Collects every drop closeby.</p>
+        <p><strong>hunt</strong>: Hunts a specific entity (hunt entity).</p>
+        <p><strong>goto/go</strong>: Goes to specific set of coordinates (goto/go x y z).</p>
+        <div>
+            <div>&nbsp; &nbsp;<strong>home</strong>: Goes to home set by setHome (goto/go home).</div>
+        </div>
+        <p><strong>learn</strong>: Saves the coordinates and movements of the player.</p>
+        <p><strong>learnStop</strong>: Stops the process of learn.</p>
+        <p><strong>craft</strong>: Crafts an item (craft item).</p>
+        <p><strong>setHome</strong>: Sets a home for the bot, where the bot is currently at.</p>
+        <p><strong>say</strong>: Says the exact message the player said (say message to say).</p>
+        <p><strong>use</strong>: Activates the currently held item, most right click operations.</p>
+        <p><strong>disuse</strong>: Deactivates the currently held item, most right click release operations.</p>
+        <p><strong>leave</strong>: Makes every bot leave by shutting down the bots, not the launcher.</p>
+        <p><strong>locate</strong>: Find the entity/ block stated (locate entity/ block).</p>
+        <p><strong>remember</strong>: Remember a message by from the player (remember message from the player).</p>
+        <p><strong>valueof</strong>: Recites the message by from the player.</p>
+        <p><strong>guard</strong>: Guards a spot from mobs.</p>
+        <p><strong>bodyguards</strong>: Sends bots to protect the player (bodyguards amount).</p>
+        <div>
+            <div>&nbsp; &nbsp;<strong>kill</strong>: Kills a player (kill enemy).</div>
+            <div>&nbsp; &nbsp;<strong>halt</strong>: Stops trying to kill a player.</div>
+            <div>&nbsp; &nbsp;<strong>cease</strong>: Bodyguards will leave.</div>
+        </div>
+        <p><strong>selfguard</strong>: Sends bots to protect the bot (selfguard amount).</p>
+        <div>
+            <div>&nbsp; &nbsp;<strong>kill</strong>: Kills a player (say kill enemy).</div>
+            <div>&nbsp; &nbsp;<strong>halt</strong>: Stops trying to kill a player (say halt).</div>
+            <div>&nbsp; &nbsp;<strong>cease</strong>: Bodyguards will leave (say cease).</div>
+        </div>
+    </section>
+</template>

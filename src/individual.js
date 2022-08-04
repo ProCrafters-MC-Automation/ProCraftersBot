@@ -1,7 +1,7 @@
 const Utils = require('./utils');
 const Movements = require('mineflayer-pathfinder').Movements
 const pvp = require('mineflayer-pvp').plugin
-const { pathfinder, goals} = require('mineflayer-pathfinder')
+const { pathfinder, goals } = require('mineflayer-pathfinder')
 const { worker } = require('worker_threads');
 let memory = {}
 
@@ -14,14 +14,14 @@ let stopLearn = null;
 const handleChat = (username, message, bot, masters, chat, isWhisper = false) => {
     console.log(username, message);
     if (username === bot.username || !masters.includes(username)) return;
-    
+
     // insert bot name for whispers, if not present for easier parsing
-    if(isWhisper && !message.startsWith(bot.username)) message = bot.username + ' ' + message;
+    if (isWhisper && !message.startsWith(bot.username)) message = bot.username + ' ' + message;
     const returnAddress = isWhisper ? username : null; // used for direct response or global chat depending on how we were spoken to
-    
+
     const messageParts = message.split(' ');
     let messageFor = messageParts.shift();
-    if(messageFor != bot.username && messageFor != 'swarm') return;
+    if (messageFor != bot.username && messageFor != 'swarm') return;
 
     let target = bot.players[username].entity;
     const mcData = require('minecraft-data')(bot.version)
@@ -36,7 +36,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
                 bot.chat("I can't see the target.")
                 return
             }
-                bot.pvp.attack(targetPlayer.entity)
+            bot.pvp.attack(targetPlayer.entity)
             break;
         case 'come':
             Utils.goToTarget(bot, target, defaultMove, 0, (success) => {
@@ -44,9 +44,9 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             });
             break;
         case 'follow':
-            if(messageParts.length > 1) {
+            if (messageParts.length > 1) {
                 let player = bot.players[messageParts[1]]
-                if(player) {
+                if (player) {
                     target = player.entity;
                 } else {
                     chat.addChat(bot, "No-one is called " + messageParts[1], returnAddress);
@@ -88,7 +88,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
                         imageFile: messageParts[7]
                     },
                 });
-            }    
+            }
             break;
         case 'inventory':
             chat.addChat(bot, Utils.inventoryAsString(bot, bot.inventory.items()), returnAddress);
@@ -96,18 +96,19 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
         case 'drop':
             if (messageParts[1]) {
                 const item = bot.inventory.items().find(item => item.name.toLowerCase().includes(messageParts[1]))
-            if (item) {
-                bot.tossStack(item)
-                response = [1, `Dropping ${messageParts[1].toLowerCase()}.`]
+                if (item) {
+                    bot.tossStack(item)
+                    response = [1, `Dropping ${messageParts[1].toLowerCase()}.`]
+                }
+                else {
+                    response = [2, 'Item not found.']
+                }
             }
-            else {
-                response = [2, 'Item not found.']
-            }
-            }
-                break;
+            break;
         case 'harvest':
-            if(messageParts.length == 1) {
-                        chat.addChat(bot, "Harvest how much of what!?", returnAddress);
+        case 'mine':
+            if (messageParts.length == 1) {
+                chat.addChat(bot, "Harvest how much of what!?", returnAddress);
                 return;
             }
             Utils.harvest(bot, messageParts[2], defaultMove, parseInt(messageParts[1], 10), mcData, (msg) => {
@@ -138,22 +139,22 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
         case 'goto':
         case 'go':
             let goto = (messageParts) => {
-                if(messageParts.length > 3) {
+                if (messageParts.length > 3) {
                     let x = parseInt(messageParts[1], 10);
                     let y = parseInt(messageParts[2], 10);
                     let z = parseInt(messageParts[3], 10);
-                    Utils.goToTarget(bot, { position: { x, y, z }}, defaultMove, 0, (success) => {
+                    Utils.goToTarget(bot, { position: { x, y, z } }, defaultMove, 0, (success) => {
                         movementCallback(returnAddress, bot, chat, target, success);
                     });
                 } else {
                     let player = bot.players[messageParts[1]]
-                    if(player) {
+                    if (player) {
                         target = player.entity;
                     } else {
-                        if(messageParts[1] == 'home') {
+                        if (messageParts[1] == 'home') {
                             let homePos = Utils.getHome(bot);
-                            if(homePos) {
-                                target = {position: homePos};
+                            if (homePos) {
+                                target = { position: homePos };
                             } else {
                                 chat.addChat(bot, "I'm homeless, I've got no home to go to", returnAddress);
                                 return;
@@ -170,22 +171,10 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             };
             goto(messageParts);
             break;
-        case 'move':
-            let move = (messageParts) => {
-                let x = parseInt(messageParts[1], 10);
-                let y = parseInt(messageParts[2], 10);
-                let z = parseInt(messageParts[3], 10);
-                let targetPos = {x,y,z};
-                Utils.goToTarget(bot, { position: bot.entity.position.add(targetPos)}, defaultMove, 0, (success) => {
-                    movementCallback(returnAddress, bot, chat, target, success);
-                });
-            };
-            move(messageParts);
-            break;
         case 'learn':
             Utils.learn(bot, target, console.log);
             break;
-        case 'recite':
+        case 'learnStop':
             Utils.finishLearn(bot);
             break;
         case 'craft':
@@ -199,9 +188,9 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             })[0];
 
             Utils.goToTarget(bot, craftingTable, defaultMove, 2, (arrivedSuccessfully) => {
-                if(!arrivedSuccessfully) return chat.addChat(bot, `Couldn't get to the crafting table`, returnAddress);
+                if (!arrivedSuccessfully) return chat.addChat(bot, `Couldn't get to the crafting table`, returnAddress);
                 Utils.craft(bot, itemName, mcData, amount, craftingTable, (err) => {
-                    if(err) {
+                    if (err) {
                         chat.addChat(bot, `Couldn't make a ${itemName}`, returnAddress);
                         console.log(err);
                     } else {
@@ -265,8 +254,8 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
                 if (collector !== bot.entity) return
 
                 setTimeout(() => {
-                const sword = bot.inventory.items().find(item => item.name.includes('sword'))
-                if (sword) bot.equip(sword, 'hand')
+                    const sword = bot.inventory.items().find(item => item.name.includes('sword'))
+                    if (sword) bot.equip(sword, 'hand')
                 }, 150)
             })
 
@@ -281,7 +270,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
 
             let guardPos = null
 
-            function guardArea (pos) {
+            function guardArea(pos) {
                 guardPos = pos.clone()
                 console.log(pos)
                 console.log(guardPos)
@@ -290,13 +279,13 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
                 }
             }
 
-            function stopGuarding () {
+            function stopGuarding() {
                 guardPos = null
                 bot.pvp.stop()
                 bot.pathfinder.setGoal(null)
             }
 
-            function moveToGuardPos () {
+            function moveToGuardPos() {
                 const mcData = require('minecraft-data')(bot.version)
                 bot.pathfinder.setMovements(new Movements(bot, mcData))
                 bot.pathfinder.setGoal(new goals.GoalBlock(guardPos.x, guardPos.y, guardPos.z))
@@ -354,7 +343,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             });
             bot.chat("Bodyguards are on their way")
             break;
-        case 'selfProtect':
+        case 'selfguard':
             let selfBodyguards = 0;
             if (messageParts[1] == null) {
                 selfBodyguards = 1
@@ -381,12 +370,12 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
 
 var fs = require('fs');
 var util = require('util');
-var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
+var log_file = fs.createWriteStream(__dirname + '/debug.log', { flags: 'w' });
 var log_stdout = process.stdout;
 
-console.log = function(d) { //
-  log_file.write(util.format(d) + '\n');
-  log_stdout.write(util.format(d) + '\n');
+console.log = function (d) { //
+    log_file.write(util.format(d) + '\n');
+    log_stdout.write(util.format(d) + '\n');
 };
 console.error = console.log;
 

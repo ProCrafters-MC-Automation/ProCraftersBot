@@ -5,13 +5,15 @@
     <input type="text" name="port" id="port-field" class="launcher-form-field" placeholder="Server Port">
     <input type="text" name="password" id="password-field" class="launcher-form-field" placeholder="Bot Password">
     <input type="text" name="boss" id="boss-field" class="launcher-form-field" placeholder="Boss">
-    <button name="data" onclick="bots()">Click</button>
+    <button name="bots" onclick="bots()">Start Bots</button>
+    <button name="stop" onclick="stop()">Force Stop</button>
     <p id="botStarted"></p>
-
+    <object data="src/debug.log" style="min-height:100vh;width:100%"></object>
     <script type="text/javascript">
+      const { spawn } = require('child_process');
+      const fs = require('fs');
+      let botsProc;
       function bots() {
-        const { spawn } = require('child_process');
-        const fs = require('fs');
         document.getElementById("botStarted").innerHTML = "Bots have been started";
         console.log('Bot Log:')
         let address = document.getElementById('address-field').value
@@ -20,12 +22,20 @@
         let boss = document.getElementById('boss-field').value
         const out = fs.openSync('./out.log', 'a');
         const err = fs.openSync('./out.log', 'a');
-        const bots = spawn('cd src && node', ['index.js', address, port, password, boss], {
+        botsProc = spawn('cd src && node', ['index.js', address, port, password, boss], {
           detached: true,
           stdio: ['ignore', out, err],
           shell: true
         });
-        bots.unref();
+        botsProc.on('close', (code, signal) => {
+          console.log('Bots were force stopped')
+          console.log('In order to stop from within Minecraft: [BotName] leave')
+        })
+        botsProc.unref();
+      }
+
+      function stop() {
+        botsProc.kill('SIGINT')
       }
     </script>
   </section>

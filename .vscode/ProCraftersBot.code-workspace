@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "..\\src"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "ProCraftersBot"
+	}
+}
