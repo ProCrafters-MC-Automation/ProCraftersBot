@@ -32,6 +32,6 @@
     "stop": "node -e 'require(\"./index\").stop()'"
   },
   "devDependencies": {
-    "electron": "^6.1.12"
+    "electron": "^15.5.5"
   }
 }
