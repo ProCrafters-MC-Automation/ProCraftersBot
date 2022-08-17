@@ -5,3 +5,6 @@ node_modules
 
 # Ignore Gradle build output directory
 build
+UltimateBot/ultimateDebug.log
+CommandsPrinter/commandsPrinterDebug.log
+PlacerPrinter/placerPrinterDebug.log

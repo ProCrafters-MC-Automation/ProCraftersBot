@@ -14,11 +14,11 @@ function getInstallerConfig() {
   const outPath = path.join(rootPath, 'release-builds')
 
   return Promise.resolve({
-    appDirectory: path.join(outPath, 'ProCraftersBots-win32-ia32/'),
-    authors: 'ProCrafters',
+    appDirectory: path.join(outPath, 'ProCrafters-Bots-win32-ia32/'),
+    authors: 'Christian Engvall',
     noMsi: true,
     outputDirectory: path.join(outPath, 'windows-installer'),
-    exe: 'ProCraftersBots.exe',
+    exe: 'ProCrafters-Bots.exe',
     setupExe: 'ProCraftersBots.exe',
     setupIcon: path.join(rootPath, 'assets', 'icons', 'win', 'icon.ico')
   })

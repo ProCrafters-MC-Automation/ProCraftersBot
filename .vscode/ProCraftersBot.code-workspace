@@ -4,10 +4,14 @@
 			"path": ".."
 		},
 		{
-			"path": "..\\src"
+			"path": "../src"
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "ProCraftersBot"
+		"liveServer.settings.multiRootWorkspaceName": "ProCraftersBot",
+		"powershell.cwd": "c:\\Users\\pruth\\Documents\\Programming\\ProCraftersBot",
+		"marquee.widgets.npm-stats.packageNames": [
+			"ProCrafters-Bots"
+		]
 	}
 }

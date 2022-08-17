@@ -10,7 +10,7 @@
 	<link rel="import" href="sections/getintouch.html">
 	<link rel="import" href="sections/welcome.html">
 	<link rel="import" href="sections/launcher.html">
-	<link rel="import" href="sections/help.html">
+	<link rel="import" href="sections/help.html"
 </head>
 
 <body>
@@ -22,16 +22,10 @@
 				<ul>
 					<li><a id="welcome-menu" data-section="welcome" href="#">Welcome</a></li>
 					<li><a id="launcher-menu" data-section="launcher" href="#">Launcher</a></li>
-					<li><a id="help-menu" data-section="help" href="#">Bot Commands</a></li>
+					<li><a id="help-menu" data-section="help" href="#">Help</a></li>
 					<li><a id="getintouch-menu" data-section="getintouch" href="#">Get in touch</a></li>
 				</ul>
 			</nav>
-			<div class="version-info">
-				(Currently running ProCraftersBots v
-				<script>
-					var pjson = require('./package.json');
-					document.write(pjson.version)</script>)
-			</div>
 		</div>
 	</section>
 
@@ -44,14 +38,19 @@
 		<div class="inner">
 			<ul class="menu">
 				<li>&copy; ProCrafters Bots All rights reserved.</li>
-				<li>Owners: <a href="https://github.com/ProCrafters-MC-Automation">ProCrafters MC Automation/a> </li>
+				<li>Organization: <a href="https://github.com/ProCrafters-MC-Automation">ProCrafters MC Automation</a></li>
+				<li>(Currently running ProCraftersBots v
+					<script>
+						var pjson = require('./package.json');
+						document.write(pjson.version)
+					</script>)
+				</li>
 			</ul>
 		</div>
 	</footer>
 
 	<!-- Scripts -->
 	<script>window.$ = window.jQuery = require('./assets/js/jquery.min.js');</script>
-	<script>window.i18n = new (require('./translations/i18n'));</script>
 	<script src="assets/js/jquery.scrollex.min.js"></script>
 	<script src="assets/js/jquery.scrolly.min.js"></script>
 	<script src="assets/js/skel.min.js"></script>
@@ -59,7 +58,6 @@
 	<script src="assets/js/main.js"></script>
 	<script>
 		require('./assets/js/menu')
-		require('./assets/js/translations')
 		require('./assets/js/ipc')
 	</script>
 </body>

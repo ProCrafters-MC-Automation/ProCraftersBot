@@ -9,8 +9,8 @@ const electron = require('electron')
 // Module to control application life.
 const app = electron.app
 const { ipcMain } = require('electron')
+const fs = require('fs')
 var path = require('path')
-require('./launcher/launcher')
 
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
@@ -34,21 +34,22 @@ function createWindow() {
     icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
     webPreferences: {
       nodeIntegration: true,
+      webviewTag: true
     }
-
   })
+  if (fs.existsSync('./out.log')) {
+    fs.unlinkSync('out.log');
+  }
+  if (fs.existsSync('./src/debug.log')) {
+    fs.unlinkSync('src/debug.log');
+  }
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
 
   // Open the DevTools.
-  var isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == 'true') : false;
-  if (isDev) {
-    mainWindow.webContents.openDevTools()
-  }
+  //mainWindow.webContents.openDevTools()
 
-  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-  process.env['ELECTRON_ENABLE_LOGGING'] = 'true';
 
   // Show the mainwindow when it is loaded and ready to show
   mainWindow.once('ready-to-show', () => {

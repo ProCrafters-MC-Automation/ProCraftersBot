@@ -7,7 +7,7 @@
   "license": "Apache 2.0",
   "author": "ProCrafters",
   "devDependencies": {
-    "electron": "^15.5.5",
+    "electron": "^5.0.8",
     "electron-installer-dmg": "^3.0.0",
     "electron-packager": "^12.2.0",
     "electron-winstaller": "^2.7.0"
@@ -18,18 +18,15 @@
   },
   "scripts": {
     "start": "electron .",
-    "dev": "set APP_DEV=true && electron .",
-    "delete": "del-cli --force ./release-builds",
+    "dev": "set APP_DEV=true && electron . --stacktrace",
     "package-mac": "electron-packager . --overwrite --asar --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds --darwinDarkModeSupport=true",
-    "package-win": "electron-packager . ProCraftersBots --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"ProCraftersBots\"",
-    "package-linux": "electron-packager .  ProCraftersBots --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds && node -e \"require('fs').rename('release-builds/ProCraftersBots-linux-x64/ProCraftersBots', 'release-builds/ProCraftersBots-linux-x64/ProCrafters-Bots', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\"",
-    "create-installer-mac": "electron-installer-dmg ./release-builds/ProCrafters\\ Bots-darwin-x64/ProCrafters\\ Bots.app ProCraftersBots --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
+    "package-win": "electron-packager . ProCrafters-Bots --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"ProCrafters Bots\"",
+    "package-linux": "electron-packager . ProCrafters-Bots --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "create-installer-mac": "electron-installer-dmg ./release-builds/ProCrafters\\ Bots-darwin-x64/ProCrafters\\ Bots.app ProCrafters-Bots --out=release-builds --overwrite --icon=assets/icons/mac/icon.icns",
     "create-installer-win": "node installers/windows/createinstaller.js",
-    "create-debian-installer": "electron-installer-debian --src release-builds/ProCraftersBots-linux-x64/ --dest release-builds/debian-installer/ --arch amd64 --config debian.json"
+    "create-debian-installer": "electron-installer-debian --src release-builds/ProCrafters-Bots-linux-x64/ --arch amd64 --config debian.json"
   },
   "dependencies": {
-    "child_process": "^1.0.2",
-    "fs": "^0.0.1-security",
-    "xterm": "^4.19.0"
+    "electron-tabs": "^1.0.1"
   }
 }
