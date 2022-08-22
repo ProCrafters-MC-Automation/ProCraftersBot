@@ -1,3 +1,4 @@
+const { parentPort, workerData } = require('worker_threads')
 const mineflayer = require('mineflayer')
 const toolPlugin = require('mineflayer-tool').plugin
 const armorManager = require('mineflayer-armor-manager')
@@ -5,15 +6,15 @@ const autoeat = require('mineflayer-auto-eat')
 const pvp = require('mineflayer-pvp').plugin
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 
-const bossName = process.argv[2];
-const prefix = process.argv[6];
+const bossName = workerData.bossName;
+const prefix = workerData.prefix;
 
 const server = {
-	address: process.argv[3],
-	port: process.argv[4],
+	address: workerData.address,
+	port: workerData.port,
 };
 const personalSpace = 5;
-const botCount = process.argv[5];
+const botCount = workerData.botCount;
 var offset = 0;
 var bots = [];
 

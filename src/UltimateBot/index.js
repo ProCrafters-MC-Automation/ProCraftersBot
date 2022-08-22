@@ -1,4 +1,3 @@
-var worker = require('inline-web-worker');
 const mineflayer = require('mineflayer');
 const { Movements } = require('mineflayer-pathfinder');
 const { GoalNear, GoalBlock, GoalXZ, GoalY, GoalInvert, GoalFollow } = require('mineflayer-pathfinder').goals;

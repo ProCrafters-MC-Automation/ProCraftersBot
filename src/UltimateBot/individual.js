@@ -28,12 +28,12 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
     const defaultMove = new Movements(bot, mcData);
     switch (messageParts[0]) {
         case 'status':
-            bot.chat('HP: ' + bot.health.toString().split('.')[0] + ' | Food: ' + bot.food.toString().split('.')[0] + ' | ' + bot.state + '(' + bot.substate + ')')
+            chat.addChat(bot, 'HP: ' + bot.health.toString().split('.')[0] + ' | Food: ' + bot.food.toString().split('.')[0] + ' | ' + bot.state + '(' + bot.substate + ')', returnAddress)
             break;
         case 'target':
             const targetPlayer = bot.players[username]
             if (!targetPlayer) {
-                bot.chat("I can't see the target.")
+                chat.addChat(bot, "I can't see the target.", returnAddress)
                 return
             }
             bot.pvp.attack(targetPlayer.entity)
@@ -118,14 +118,14 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
         case 'find':
             const name = messageParts[1]
             if (mcData.blocksByName[name] === undefined) {
-                bot.chat(`${name} is not a block name`)
+                chat.addChat(bot, `${name} is not a block name`, returnAddress)
                 return
             }
             const ids = [mcData.blocksByName[name].id]
             const startTime = performance.now()
             const blocks = bot.findBlocks({ matching: ids, maxDistance: 128, count: 10 })
             const time = (performance.now() - startTime).toFixed(2)
-            bot.chat(`I found ${blocks.length} ${name} blocks in ${time} ms`)
+            chat.addChat(bot, `I found ${blocks.length} ${name} blocks in ${time} ms`, returnAddress)
             break;
         case 'collect':
             Utils.collectDrops(bot, defaultMove, 30, () => chat.addChat(bot, "Everything's collected", returnAddress));
@@ -233,21 +233,21 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
                     position.x = parseInt(position.x.toString().split('.')[0])
                     position.y = parseInt(position.y.toString().split('.')[0])
                     position.z = parseInt(position.z.toString().split('.')[0])
-                    bot.chat('Found at ' + position.x.toString() + ' / ' + position.y.toString() + ' / ' + position.z.toString() + '.')
+                    chat.addChat(bot, 'Found at ' + position.x.toString() + ' / ' + position.y.toString() + ' / ' + position.z.toString() + '.', returnAddress)
                 }
                 else {
-                    bot.chat('Could not locate entity/block.')
+                    chat.addChat(bot, 'Could not locate entity/block.', returnAddress)
                 }
             }
             break;
         case 'remember':
             if (messageParts[2]) {
                 memory[bot.username] = message.slice(2, message.length);
-                bot.chat('Successfully saved!');
+                chat.addChat(bot, 'Successfully saved!', returnAddress);
             }
             break;
         case 'valueof':
-            bot.chat(JSON.stringify(memory));
+            chat.addChat(bot, JSON.stringify(memory), returnAddress);
             break;
         case 'guard':
             bot.on('playerCollect', (collector, itemDrop) => {
@@ -318,11 +318,11 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             const player = bot.players[username]
 
             if (!player) {
-                bot.chat("I can't see you.")
+                chat.addChat(bot, "I can't see you.", returnAddress)
                 return
             }
 
-            bot.chat('I will guard that location.')
+            chat.addChat(bot, 'I will guard that location.', returnAddress)
             guardArea(player.entity.position)
             break;
         case 'bodyguards':
@@ -332,16 +332,16 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             } else {
                 bossBodyguards = messageParts[1]
             }
-            new Worker('./bodyguardWorker.js', {
+            new Worker('./UltimateBot/bodyguards.js', {
                 workerData: {
                     bossName: process.argv[5],
                     address: process.argv[2],
                     port: process.argv[3],
                     botCount: bossBodyguards,
-                    prefix: 'Boss'
+                    prefix: bot.username + 'Boss'
                 },
             });
-            bot.chat("Bodyguards are on their way")
+            chat.addChat(bot, "Bodyguards are on their way", returnAddress)
             break;
         case 'selfguard':
             let selfBodyguards = 0;
@@ -350,16 +350,16 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             } else {
                 selfBodyguards = messageParts[1]
             }
-            new Worker('./bodyguardWorker.js', {
+            new Worker('./UltimateBot/bodyguards.js', {
                 workerData: {
                     bossName: bot.username,
                     address: process.argv[2],
                     port: process.argv[3],
                     botCount: selfBodyguards,
-                    prefix: bot.username
+                    prefix: bot.username + 'Bot'
                 },
             });
-            bot.chat("Bodyguards are on their way")
+            chat.addChat(bot, "Bodyguards are on their way", returnAddress)
             break;
         default:
             chat.addChat(bot, 'I don\'t understand', returnAddress);
@@ -370,7 +370,7 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
 
 var fs = require('fs');
 var util = require('util');
-var log_file = fs.createWriteStream(__dirname + '/ultimateDebug.log', { flags: 'w' });
+var log_file = fs.createWriteStream(__dirname + '/ultimateDebug.txt', { flags: 'w' });
 var log_stdout = process.stdout;
 
 console.log = function (d) { //

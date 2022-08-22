@@ -8,7 +8,7 @@ if (setupEvents.handleSquirrelEvent()) {
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
-const { ipcMain } = require('electron')
+const { ipcMain, webviewTag } = require('electron')
 const fs = require('fs')
 var path = require('path')
 
@@ -37,19 +37,25 @@ function createWindow() {
       webviewTag: true
     }
   })
-  if (fs.existsSync('./out.log')) {
-    fs.unlinkSync('out.log');
-  }
-  if (fs.existsSync('./src/debug.log')) {
-    fs.unlinkSync('src/debug.log');
-  }
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
 
+  if (fs.existsSync('./out.txt')) {
+    fs.unlinkSync('out.txt');
+  }
+  if (fs.existsSync('./src/UltimateBot/ultimateDebug.txt')) {
+    fs.unlinkSync('src/UltimateBot/ultimateDebug.txt');
+  }
+  if (fs.existsSync('./src/CommandsPrinter/commandsPrinterDebug.txt')) {
+    fs.unlinkSync('src/CommandsPrinter/commandsPrinterDebug.txt');
+  }
+  if (fs.existsSync('./src/PlacerPrinter/placerPrinterDebug.txt')) {
+    fs.unlinkSync('src/PlacerPrinter/placerPrinterDebug.txt');
+  }
+
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
-
 
   // Show the mainwindow when it is loaded and ready to show
   mainWindow.once('ready-to-show', () => {
@@ -75,7 +81,8 @@ function createWindow() {
     icon: path.join(__dirname, 'assets/icons/png/64x64.png'),
     parent: mainWindow,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      webviewTag: true
     }
   })
 

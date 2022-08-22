@@ -26,9 +26,11 @@ const createSwarm = (botNames, botConf, mineflayer) => {
             port: port + 2,
         }
         mineflayerViewer(bot, { port: port, firstPerson: true })
-        mineflayerViewer(bot, { port: port + 1, firstPerson: false })
+        port++
+        mineflayerViewer(bot, { port: port, firstPerson: false })
+        port++
         inventoryViewer(bot, inventoryOptions)
-        port = port + 3
+        port++
 
         bot.state = 'idle'    // idle, combat, moving
         bot.substate = 'none'

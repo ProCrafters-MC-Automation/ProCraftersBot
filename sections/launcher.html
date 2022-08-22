@@ -2,16 +2,18 @@
   <section id="launcher" class="wrapper style3">
     <h1 id="launcher-header">Bot Launchers</h1>
     <h3 id="launcher-header">ProCrafters Bot Launcher</h3>
-    <input type="text" name="address" id="address-field" placeholder="Server Address">
-    <input type="text" name="port" id="port-field" placeholder="Server Port">
-    <input type="text" name="password" id="password-field" placeholder="Bot Password">
-    <input type="text" name="boss" id="boss-field" placeholder="Boss">
-    <input type="text" name="bots" id="botNames-field" placeholder="Bots">
+    <input type="text" name="address" id="address-field" placeholder="Server Address" value="localhost">
+    <input type="text" name="port" id="port-field" placeholder="Server Port" value="25565">
+    <input type="text" name="password" id="password-field" placeholder="Bot Password" value="Password">
+    <input type="text" name="boss" id="boss-field" placeholder="Boss" value="Boss">
+    <input type="text" name="bots" id="botNames-field" placeholder="Bots" value="Alpha Beta Omega Gamma Sigma Delta Theta">
     <button name="bots" onclick="bots()">Start Bots</button>
     <button name="stop" onclick="stop()">Force Stop</button>
-    <div id="container"></div>
+    <p></p>
+    <div id="buttonContainer"></div>
+    <div id="webContainer"></div>
     <p id="botStarted"></p>
-    <object data="src/UltimateBot/ultimateDebug.log" style="min-height:100vh;width:100%"></object>
+    <object data="src/UltimateBot/ultimateDebug.txt" style="min-height:100vh;width:100%"></object>
 
     <h2 id="launcher-header">Printer Bots</h2>
     <h3 id="launcher-header">Printer Bot(By Commands) Launcher</h3>
@@ -24,7 +26,7 @@
     <input type="text" name="z" id="z-field" placeholder="z">
     <button name="commandBots" onclick="commandBots()">Start Command Printer Bots</button>
     <p id="commandPrinterStarted"></p>
-    <object data="src/CommandsPrinter/commandsPrinterDebug.log" style="min-height:100vh;width:100%"></object>
+    <object data="src/CommandsPrinter/commandsPrinterDebug.txt" style="min-height:100vh;width:100%"></object>
 
     <h3 id="launcher-header">Printer Bot(By Placing) Launcher</h3>
     <input type="text" name="address" id="placer-address-field" placeholder="Server Address">
@@ -36,7 +38,7 @@
     <input type="text" name="z" id="z-field" placeholder="z">
     <button name="commandBots" onclick="placerBots()">Start Placer Printer Bots</button>
     <p id="commandPrinterStarted"></p>
-    <object data="src/PlacerPrinter/placerPrinterDebug.log" style="min-height:100vh;width:100%"></object>
+    <object data="src/PlacerPrinter/placerPrinterDebug.txt" style="min-height:100vh;width:100%"></object>
 
     <script type="text/javascript">
       const { spawn, exec } = require('child_process');
@@ -52,28 +54,43 @@
         let boss = document.getElementById('boss-field').value
         let bots = document.getElementById('botNames-field').value
         botsProc = spawn('node', ['src/UltimateBot/index.js', address, port, password, boss, bots], {
-          detached: true,
-          stdio: "inherit",
-          shell: true
+          detached: false,
+          shell: true,
         });
 
         let botNames = bots.split(" ");
         let websitePort = 9000;
         console.log(botNames)
+        var firstPerson = document.createElement("iframe");
+        var thirdPerson = document.createElement("iframe");
+        var inventory = document.createElement("iframe");
+        const p = document.createElement("p");
 
         botNames.forEach(botName => {
-          var button = document.createElement("button");
-          button.id = botName;
+          let button = document.createElement("button");
           var text = document.createTextNode(botName);
           button.addEventListener("click", ()=>{
-            website = 'http://localhost:' + websitePort;
-            var firstPerson = window.open('http://localhost:' + websitePort, 'First Person view of ' + botName);
-            var thirdPerson = window.open('http://localhost:' + websitePort + 1, 'Second Person view of ' + botName)
-            var inventory = window.open('http://localhost:' + 2, 'Inventory of ' + botName)
+            document.body.appendChild(p);
+            firstPerson.src = "http://localhost:" + websitePort
+            firstPerson.webviewtag = true
+            firstPerson.nodeIntegration = true
+            webContainer.appendChild(firstPerson);
+            websitePort++
+            document.body.appendChild(p);
+            thirdPerson.src = "http://localhost:" + websitePort
+            thirdPerson.webviewtag = true
+            thirdPerson.nodeIntegration = true
+            webContainer.appendChild(thirdPerson);
+            websitePort++
+            document.body.appendChild(p);
+            inventory.src = "http://localhost:" + websitePort
+            inventory.webviewtag = true
+            inventory.nodeIntegration = true
+            webContainer.appendChild(inventory);
+            websitePort++
           });
           button.appendChild(text);
-          container.appendChild(button);
-          let port = websitePort
+          buttonContainer.appendChild(button);
         });
 
         botsProc.on('close', (code, signal) => {
@@ -81,7 +98,8 @@
           console.log('In order to stop from within Minecraft: [BotName] leave')
         })
       }
-
+      
+      let commandsProc;
       function commandBots() {
         let commandAddress = document.getElementById('command-address-field').value
         let commandPort = document.getElementById('command-port-field').value
@@ -90,21 +108,14 @@
         let x = document.getElementById('x-field').value
         let y = document.getElementById('y-field').value
         let z = document.getElementById('z-field').value
-        const command = 'node src/CommandsPrinter/doByCommands.js ' + prefix + ' ' + commandAddress + ' ' + commandPort + ' ' + botCount + ' ' + x + ' ' + y + ' ' + z + ' ' + 'src/image.jpg';
-        console.log(command)
-        exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.error(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout:\n${stdout}`);
+        
+        commandsProc = spawn('node', ['src/CommandsPrinter/doByCommands.js', prefix, commandAddress, commandPort, botCount, x, y, z, 'src/image.jpg'], {
+          detached: false,
+          shell: true,
         });
       }
 
+      let placersProc;
       function placerBots() {
         let placerAddress = document.getElementById('placer-address-field').value
         let placerPort = document.getElementById('placer-port-field').value
@@ -113,25 +124,17 @@
         //let x = document.getElementById('x-field').value
         //let y = document.getElementById('y-field').value
         //let z = document.getElementById('z-field').value
-        const command = 'node src/PlacerPrinter/index.js ' + placerAddress + ' ' + placerPort + ' ' + name + ' ' + boss + ' ' + 'src/PlacerPrinter/image.jpg';
-        console.log(command)
-        exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`error: ${error.message}`);
-            return;
-        } if (stderr) {
-            console.error(`stderr: ${stderr}`);
-            return;
-        } console.log(`stdout:\n${stdout}`);
+        placersProc = spawn('node', ['src/PlacerPrinter/index.js', placerAddress, placerPort, name, boss, 'src/PlacerPrinter/image.jpg'], {
+          detached: false,
+          shell: true,
         });
       }
 
       function stop() {
-        botsProc.kill('SIGINT')
+        //process.kill(botsProc.pid)
+        //process.kill(commandsProc.pid)
+        //process.kill(placersProc.pid)
       }
     </script>
-    <tab-group new-tab-button="false" sortable="true"></tab-group>
-
-    <script src="node_modules/electron-tabs/dist/electron-tabs.js"></script>
   </section>
 </template>

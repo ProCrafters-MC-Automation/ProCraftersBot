@@ -299,15 +299,15 @@ const behaviours = {
             done,
             listener: (oldBlock, newBlock) => {
                 if (newBlock == null) return;
-                bot.chat("mmm")
+                chat.addChat(bot, "mmm", returnAddress)
                 if (target.position.floored().distanceTo(newBlock.position.floored()) < 5) {
-                    bot.chat("Yep...");
+                    chat.addChat(bot, "Yep...", returnAddress);
                     let action;
                     if (behaviours.isBlockEmpty(newBlock)) action = "dig";
                     else if (behaviours.isBlockNotEmpty(newBlock)) action = "place";
                     else action = "";
                     if (action !== "") {
-                        bot.chat("gotcha");
+                        chat.addChat(bot, "gotcha", returnAddress);
                         const deltaPos = newBlock.position.floored().minus(initialLoc);
                         this.instructions.push(`goto ${behaviours.positionToString(deltaPos)}`);
                     }

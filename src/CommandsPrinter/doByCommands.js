@@ -176,7 +176,7 @@ async function chunk(arr, n) {
 
 var fs = require('fs');
 var util = require('util');
-var log_file = fs.createWriteStream(__dirname + '/commandsPrinterDebug.log', { flags: 'w' });
+var log_file = fs.createWriteStream(__dirname + '/commandsPrinterDebug.txt', { flags: 'w' });
 var log_stdout = process.stdout;
 
 console.log = function (d) { //
