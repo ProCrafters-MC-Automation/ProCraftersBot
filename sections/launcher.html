@@ -43,6 +43,25 @@
     <script type="text/javascript">
       const { spawn, exec } = require('child_process');
       const fs = require('fs');
+      const kill = require('./')
+      const http = require('http')
+
+      const server = http.createServer((req, res) => {
+        res.writeHead(200, {
+          'Content-Type': 'text/plain'
+        })
+
+        res.end('Hi!')
+      })
+
+      let child;
+        function startServer() {
+            child = exec('java -jar server.jar', {cwd: 'server'}, function (error, stdout, stderr) {
+                let out = stdout;
+                let err = stderr;
+                let fatal = error;
+            });
+        }
 
       let botsProc;
       function bots() {
@@ -64,39 +83,41 @@
         var firstPerson = document.createElement("iframe");
         var thirdPerson = document.createElement("iframe");
         var inventory = document.createElement("iframe");
-        const p = document.createElement("p");
-
+        var radar = document.createElement("iframe")
         botNames.forEach(botName => {
           let button = document.createElement("button");
           var text = document.createTextNode(botName);
           button.addEventListener("click", ()=>{
-            document.body.appendChild(p);
-            firstPerson.src = "http://localhost:" + websitePort
-            firstPerson.webviewtag = true
-            firstPerson.nodeIntegration = true
+            firstPerson.setAttribute("src", "http://localhost:" + websitePort);
+            websitePort++
             webContainer.appendChild(firstPerson);
+            thirdPerson.setAttribute("src", "http://localhost:" + websitePort);
             websitePort++
-            document.body.appendChild(p);
-            thirdPerson.src = "http://localhost:" + websitePort
-            thirdPerson.webviewtag = true
-            thirdPerson.nodeIntegration = true
             webContainer.appendChild(thirdPerson);
+            inventory.setAttribute("src", "http://localhost:" + websitePort);
             websitePort++
-            document.body.appendChild(p);
-            inventory.src = "http://localhost:" + websitePort
-            inventory.webviewtag = true
-            inventory.nodeIntegration = true
             webContainer.appendChild(inventory);
+            radar.setAttribute("src", "http://localhost:" + websitePort);
             websitePort++
+            webContainer.appendChild(radar);
           });
           button.appendChild(text);
           buttonContainer.appendChild(button);
         });
 
         botsProc.on('close', (code, signal) => {
-          console.log('Bots were force stopped')
-          console.log('In order to stop from within Minecraft: [BotName] leave')
+          console.log('Bots were stopped')
+          console.log('Exit Code:' + code)
+          console.log('Signal:' + signal)
         })
+      }
+
+      function stop() {
+        botsProc.stdin.pause();
+        botsProc.kill();
+        //process.kill(botsProc.pid)
+        //process.kill(commandsProc.pid)
+        //process.kill(placersProc.pid)
       }
       
       let commandsProc;
@@ -130,11 +151,7 @@
         });
       }
 
-      function stop() {
-        //process.kill(botsProc.pid)
-        //process.kill(commandsProc.pid)
-        //process.kill(placersProc.pid)
-      }
+      
     </script>
   </section>
 </template>

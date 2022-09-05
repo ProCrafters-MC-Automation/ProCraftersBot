@@ -1,0 +1,14 @@
+<template class="section-template">
+    <section id="server" class="wrapper style3">        
+        <h1>Server Launcher</h1>
+        <button name="server" onclick="startServer()">Start Server</button>
+        <div id="log">
+
+        </div>
+    </section>
+    <script>
+        setInterval(function() {
+            $('#log').load('server//logs//latest.log');
+        }, 1000);
+    </script>
+</template>

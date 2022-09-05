@@ -6,10 +6,12 @@ const pvp = require('mineflayer-pvp').plugin
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 const mineflayerViewer = require('prismarine-viewer').mineflayer
 const inventoryViewer = require('mineflayer-web-inventory')
+const radarViewer = require('mineflayer-radar')(mineflayer);
 const movement = require('./movement')
 const combat = require('./combat')
 const convention = require('./convention')
 const blockfinder = require('./blockfinder')
+const mother = require('./mineflayer-mother.js').mother;
 
 /**
  * Create a swarm with each bot having a name from the given array
@@ -25,11 +27,17 @@ const createSwarm = (botNames, botConf, mineflayer) => {
         let inventoryOptions = {
             port: port + 2,
         }
+
+        var radarOptions = {
+            port: port + 3,
+        }
         mineflayerViewer(bot, { port: port, firstPerson: true })
         port++
         mineflayerViewer(bot, { port: port, firstPerson: false })
         port++
         inventoryViewer(bot, inventoryOptions)
+        port++
+        radarViewer(bot, radarOptions)
         port++
 
         bot.state = 'idle'    // idle, combat, moving
@@ -41,6 +49,7 @@ const createSwarm = (botNames, botConf, mineflayer) => {
         bot.loadPlugin(armorManager)
         bot.loadPlugin(toolPlugin)
         bot.loadPlugin(autoeat)
+        //bot.loadPlugin(mother)
 
         // Applying listeners
         bot.on('physicTick', onTick)
@@ -50,8 +59,6 @@ const createSwarm = (botNames, botConf, mineflayer) => {
         combat.load(bot)
         convention.load(bot)
         blockfinder.load(bot)
-
-        //bot.once('spawn', botConf.initCallback.bind(this, bot));
 
         bot.once("spawn", botConf.initCallback.bind(this, bot), () => {
             let botMove = new pathFinder.Movements(bot, mcData);

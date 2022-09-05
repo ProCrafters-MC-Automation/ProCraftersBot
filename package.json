@@ -28,5 +28,22 @@
   },
   "dependencies": {
     "electron-tabs": "^1.0.1"
+  },
+  "build": {
+    "appId": "com.ProCraftersMCAutomation.ProCraftersBot",
+    "productName": "ProCraftersBot",
+    "copyright": "Copyright © 2022 ProCraftersMCAutomation",
+    "win": {
+      "target": "portable",
+      "publisherName": "ProCraftersMCAutomation",
+      "icon": "assets/icons/win/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "assets/icons/win/icon.png",
+      "category": "Utility"
+    }
   }
 }

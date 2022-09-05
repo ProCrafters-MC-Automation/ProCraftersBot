@@ -1,0 +1,23 @@
+{
+  "minecraft:adventure/root": {
+    "criteria": {
+      "killed_by_something": "2022-08-28 17:18:26 -0500"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:birch_forest": "2022-08-28 16:58:56 -0500",
+      "minecraft:swamp": "2022-08-28 21:14:53 -0500",
+      "minecraft:windswept_forest": "2022-08-28 17:18:27 -0500"
+    },
+    "done": false
+  },
+  "minecraft:recipes/misc/bone_meal": {
+    "criteria": {
+      "has_bone": "2022-08-28 17:42:59 -0500"
+    },
+    "done": true
+  },
+  "DataVersion": 2975
+}

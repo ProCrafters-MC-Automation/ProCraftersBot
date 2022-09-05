@@ -5,6 +5,12 @@
 		},
 		{
 			"path": "../src"
+		},
+		{
+			"path": "../server"
+		},
+		{
+			"path": "../../Bot Gui"
 		}
 	],
 	"settings": {
