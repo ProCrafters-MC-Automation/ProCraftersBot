@@ -31,7 +31,7 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             chat.addChat(bot, 'HP: ' + bot.health.toString().split('.')[0] + ' | Food: ' + bot.food.toString().split('.')[0] + ' | ' + bot.state + '(' + bot.substate + ')', returnAddress)
             break;
         case 'target':
-            const targetPlayer = bot.players[username]
+            const targetPlayer = bot.players[messageParts[1]]
             if (!targetPlayer) {
                 chat.addChat(bot, "I can't see the target.", returnAddress)
                 return
@@ -332,7 +332,7 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             } else {
                 bossBodyguards = messageParts[1]
             }
-            new Worker('./UltimateBot/bodyguards.js', {
+            new Worker('./bodyguards.js', {
                 workerData: {
                     bossName: process.argv[5],
                     address: process.argv[2],
@@ -350,7 +350,7 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             } else {
                 selfBodyguards = messageParts[1]
             }
-            new Worker('./UltimateBot/bodyguards.js', {
+            new Worker('./bodyguards.js', {
                 workerData: {
                     bossName: bot.username,
                     address: process.argv[2],

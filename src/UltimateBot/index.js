@@ -57,13 +57,15 @@ const prepFriendlyProtection = (mcData) => {
                     other.on('health', () => Utils.protectFriendly(bot, other, defaultMove));
                 }
             });
-            let player = bot.players[master];
-            if (!player) {
-                console.warn("No player found for auto protect");
-            } else {
-                while (!player.entity) { }
-                player.entity.on('health', () => Utils.protectFriendly(bot, player, defaultMove));
-            }
+            master.forEach(m => {
+                let player = bot.players[m];
+                if (!player) {
+                    console.warn("No player found for auto protect");
+                } else {
+                    while (!player.entity) { }
+                    player.entity.on('health', () => Utils.protectFriendly(bot, player, defaultMove));
+                }
+            });
         });
     });
     haveSetupProtection = true;

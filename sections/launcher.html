@@ -44,24 +44,15 @@
       const { spawn, exec } = require('child_process');
       const fs = require('fs');
       const kill = require('./')
-      const http = require('http')
-
-      const server = http.createServer((req, res) => {
-        res.writeHead(200, {
-          'Content-Type': 'text/plain'
-        })
-
-        res.end('Hi!')
-      })
 
       let child;
-        function startServer() {
-            child = exec('java -jar server.jar', {cwd: 'server'}, function (error, stdout, stderr) {
-                let out = stdout;
-                let err = stderr;
-                let fatal = error;
-            });
-        }
+      function startServer() {
+          child = exec('java -jar server.jar', {cwd: 'server'}, function (error, stdout, stderr) {
+              let out = stdout;
+              let err = stderr;
+              let fatal = error;
+          });
+      }
 
       let botsProc;
       function bots() {
@@ -75,6 +66,7 @@
         botsProc = spawn('node', ['src/UltimateBot/index.js', address, port, password, boss, bots], {
           detached: false,
           shell: true,
+          stdio: [out, err]
         });
 
         let botNames = bots.split(" ");

@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../../Bot Gui"
+		},
+		{
+			"path": "../../POC"
 		}
 	],
 	"settings": {

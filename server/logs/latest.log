@@ -1,321 +1,74 @@
-[20:42:59] [ServerMain/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[20:43:01] [Worker-Main-2/INFO]: Loaded 7 recipes
-[20:43:04] [Server thread/INFO]: Starting minecraft server version 1.18.2
-[20:43:04] [Server thread/INFO]: Loading properties
-[20:43:05] [Server thread/INFO]: This server is running Paper version git-Paper-387 (MC: 1.18.2) (Implementing API version 1.18.2-R0.1-SNAPSHOT) (Git: df630a2 on ver/1.18.2)
-[20:43:05] [Server thread/INFO]: Server Ping Player Sample Count: 12
-[20:43:05] [Server thread/INFO]: Using 4 threads for Netty based IO
-[20:43:05] [Server thread/INFO]: Default game type: SURVIVAL
-[20:43:05] [Server thread/INFO]: Generating keypair
-[20:43:05] [Server thread/INFO]: Starting Minecraft server on *:25565
-[20:43:05] [Server thread/INFO]: Using default channel type
-[20:43:05] [Server thread/INFO]: Paper: Using Java 11 compression from Velocity.
-[20:43:05] [Server thread/INFO]: Paper: Using Java cipher from Velocity.
-[20:43:05] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
-[20:43:05] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[20:43:05] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[20:43:05] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[20:43:05] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[20:43:05] [Server thread/INFO]: Preparing level "world"
-[20:43:08] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[20:43:09] [Server thread/INFO]: Time elapsed: 562 ms
-[20:43:09] [Server thread/INFO]: Preparing start region for dimension minecraft:the_nether
-[20:43:09] [Server thread/INFO]: Time elapsed: 138 ms
-[20:43:09] [Server thread/INFO]: Preparing start region for dimension minecraft:the_end
-[20:43:09] [Server thread/INFO]: Time elapsed: 103 ms
-[20:43:09] [Server thread/INFO]: Running delayed init tasks
-[20:43:09] [Server thread/INFO]: Done (4.942s)! For help, type "help"
-[20:43:09] [Server thread/INFO]: Timings Reset
-[20:43:12] [User Authenticator #1/INFO]: UUID of player WordedYard70815 is 1449d780-9095-3207-b729-9e97b4d1d00e
-[20:43:12] [Netty Server IO #1/WARN]: java.io.IOException: An established connection was aborted by the software in your host machine
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:76)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doWrite(NioSocketChannel.java:408)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannel$AbstractUnsafe.flush0(AbstractChannel.java:949)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.flush0(AbstractNioChannel.java:354)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannel$AbstractUnsafe.flush(AbstractChannel.java:913)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.DefaultChannelPipeline$HeadContext.flush(DefaultChannelPipeline.java:1372)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush(AbstractChannelHandlerContext.java:742)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.flush(AbstractChannelHandlerContext.java:728)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.handler.flush.FlushConsolidationHandler.flushNow(FlushConsolidationHandler.java:204)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.handler.flush.FlushConsolidationHandler.flush(FlushConsolidationHandler.java:138)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush(AbstractChannelHandlerContext.java:742)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.flush(AbstractChannelHandlerContext.java:728)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.ChannelOutboundHandlerAdapter.flush(ChannelOutboundHandlerAdapter.java:125)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeWriteAndFlush(AbstractChannelHandlerContext.java:765)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.write(AbstractChannelHandlerContext.java:790)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.writeAndFlush(AbstractChannelHandlerContext.java:758)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.writeAndFlush(AbstractChannelHandlerContext.java:808)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.DefaultChannelPipeline.writeAndFlush(DefaultChannelPipeline.java:1025)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannel.writeAndFlush(AbstractChannel.java:306)
-[20:43:12] [Netty Server IO #1/WARN]: 	at net.minecraft.network.NetworkManager.doSendPacket(NetworkManager.java:462)
-[20:43:12] [Netty Server IO #1/WARN]: 	at net.minecraft.network.NetworkManager.writePacket(NetworkManager.java:424)
-[20:43:12] [Netty Server IO #1/WARN]: 	at net.minecraft.network.NetworkManager.a(NetworkManager.java:382)
-[20:43:12] [Netty Server IO #1/WARN]: 	at net.minecraft.network.NetworkManager.exceptionCaught(NetworkManager.java:242)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:302)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:281)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.fireExceptionCaught(AbstractChannelHandlerContext.java:273)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.handler.flush.FlushConsolidationHandler.exceptionCaught(FlushConsolidationHandler.java:159)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:302)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:281)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.fireExceptionCaught(AbstractChannelHandlerContext.java:273)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.DefaultChannelPipeline$HeadContext.exceptionCaught(DefaultChannelPipeline.java:1377)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:302)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeExceptionCaught(AbstractChannelHandlerContext.java:281)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.DefaultChannelPipeline.fireExceptionCaught(DefaultChannelPipeline.java:907)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.handleReadException(AbstractNioByteChannel.java:125)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:177)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:43:12] [Netty Server IO #1/WARN]: java.io.IOException: An established connection was aborted by the software in your host machine
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketDispatcher.read0(Native Method)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:46)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:330)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:284)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.read(IOUtil.java:259)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:417)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:253)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:43:12] [Netty Server IO #1/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:43:12] [Netty Server IO #1/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:43:15] [Server thread/INFO]: WordedYard70815 joined the game
-[20:43:15] [Server thread/INFO]: WordedYard70815[/127.0.0.1:63400] logged in with entity id 1 at ([world]-18.73254241457561, 99.0, -59.45472937930826)
-[20:43:15] [Server thread/WARN]: Can't keep up! Is the server overloaded? Running 5044ms or 100 ticks behind
-[20:43:16] [Server thread/INFO]: WordedYard70815 issued server command: /locraw
-[20:43:17] [Server thread/INFO]: WordedYard70815 issued server command: /locraw
-[20:43:17] [Server thread/INFO]: WordedYard70815 issued server command: /locraw
-[20:43:19] [Server thread/INFO]: WordedYard70815 issued server command: /locraw
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Beta is 1110dc55-a244-318c-9843-101d405cbf34
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Alpha is d4f0704a-3a4c-3f30-80e5-695c1cf28fe2
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Omega is 0365b9b5-1091-3565-8259-07a880628fb3
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Gamma is 4a9ac705-6f2b-3744-a56e-e5d6cca0de8f
-[20:43:30] [Server thread/INFO]: Alpha joined the game
-[20:43:30] [Server thread/INFO]: Alpha[/127.0.0.1:63428] logged in with entity id 284 at ([world]-12.3, 75.0, -37.97951288143814)
-[20:43:30] [Server thread/INFO]: Beta joined the game
-[20:43:30] [Server thread/INFO]: Beta[/127.0.0.1:63429] logged in with entity id 285 at ([world]-13.5, 75.0, -39.5)
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Sigma is 6f55f45f-22c0-3c71-8f6e-1cc7cc1d5924
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Delta is 79088514-8e05-347e-bda6-d888f86a4162
-[20:43:30] [Server thread/INFO]: Omega joined the game
-[20:43:30] [Server thread/INFO]: Omega[/127.0.0.1:63430] logged in with entity id 286 at ([world]-8.3, 74.0, -48.4900743875)
-[20:43:30] [Server thread/INFO]: Gamma joined the game
-[20:43:30] [Server thread/INFO]: Gamma[/127.0.0.1:63431] logged in with entity id 287 at ([world]-18.5, 97.0, -56.5)
-[20:43:30] [User Authenticator #1/INFO]: UUID of player Theta is 217e3499-1252-380f-a663-2154f41726d9
-[20:43:30] [Server thread/INFO]: Sigma joined the game
-[20:43:30] [Server thread/INFO]: Sigma[/127.0.0.1:63434] logged in with entity id 288 at ([world]-8.3, 86.0, -53.75292308626321)
-[20:43:30] [Server thread/INFO]: Delta joined the game
-[20:43:30] [Server thread/INFO]: Delta[/127.0.0.1:63433] logged in with entity id 289 at ([world]-12.7, 85.0, -55.5)
-[20:43:30] [Server thread/INFO]: Theta joined the game
-[20:43:30] [Server thread/INFO]: Theta[/127.0.0.1:63432] logged in with entity id 291 at ([world]-17.09877740957869, 72.0, -38.521800426904)
-[20:43:32] [Server thread/INFO]: Omega issued server command: /register Password Password
-[20:43:34] [Server thread/INFO]: Omega issued server command: /login Password
-[20:43:36] [Server thread/INFO]: Omega issued server command: /msg Boss I'm online
-[20:43:38] [Server thread/INFO]: Sigma issued server command: /register null null
-[20:43:40] [Server thread/INFO]: Sigma issued server command: /login null
-[20:43:42] [Server thread/INFO]: Sigma issued server command: /msg Boss I'm online
-[20:43:44] [Server thread/INFO]: Delta issued server command: /register null null
-[20:43:46] [Server thread/INFO]: Delta issued server command: /login null
-[20:43:48] [Server thread/INFO]: Delta issued server command: /msg Boss I'm online
-[20:43:50] [Server thread/INFO]: Alpha issued server command: /register null null
-[20:43:52] [Server thread/INFO]: Alpha issued server command: /login null
-[20:43:54] [Server thread/INFO]: Alpha issued server command: /msg Boss I'm online
-[20:43:56] [Server thread/INFO]: Theta issued server command: /register null null
-[20:43:58] [Server thread/INFO]: Theta issued server command: /login null
-[20:44:00] [Server thread/INFO]: Theta issued server command: /msg Boss I'm online
-[20:44:02] [Server thread/INFO]: Gamma issued server command: /register null null
-[20:44:04] [Server thread/INFO]: Gamma issued server command: /login null
-[20:44:06] [Server thread/INFO]: Gamma issued server command: /msg Boss I'm online
-[20:44:08] [Server thread/INFO]: Beta issued server command: /register null null
-[20:44:10] [Server thread/INFO]: Beta issued server command: /login null
-[20:44:12] [Server thread/INFO]: Beta issued server command: /msg Boss I'm online
-[20:44:32] [Server thread/INFO]: Stopping the server
-[20:44:32] [Server thread/WARN]: java.lang.Throwable: Server stopped
-[20:44:32] [Server thread/WARN]: 	at io.papermc.paper.util.TraceUtil.dumpTraceForThread(TraceUtil.java:16)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.MinecraftServer.safeShutdown(MinecraftServer.java:1090)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.MinecraftServer.halt(MinecraftServer.java:1085)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.commands.StopCommand.lambda$register$1(StopCommand.java:14)
-[20:44:32] [Server thread/WARN]: 	at com.mojang.brigadier.CommandDispatcher.execute(CommandDispatcher.java:264)
-[20:44:32] [Server thread/WARN]: 	at com.mojang.brigadier.CommandDispatcher.execute(CommandDispatcher.java:178)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.commands.Commands.performCommand(Commands.java:293)
-[20:44:32] [Server thread/WARN]: 	at org.bukkit.craftbukkit.v1_18_R2.command.VanillaCommandWrapper.execute(VanillaCommandWrapper.java:45)
-[20:44:32] [Server thread/WARN]: 	at org.bukkit.command.SimpleCommandMap.dispatch(SimpleCommandMap.java:159)
-[20:44:32] [Server thread/WARN]: 	at org.bukkit.craftbukkit.v1_18_R2.CraftServer.dispatchCommand(CraftServer.java:906)
-[20:44:32] [Server thread/WARN]: 	at org.bukkit.craftbukkit.v1_18_R2.CraftServer.dispatchServerCommand(CraftServer.java:869)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.dedicated.DedicatedServer.handleConsoleInputs(DedicatedServer.java:510)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.dedicated.DedicatedServer.tickChildren(DedicatedServer.java:484)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:1456)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:1226)
-[20:44:32] [Server thread/WARN]: 	at net.minecraft.server.MinecraftServer.lambda$spin$0(MinecraftServer.java:316)
-[20:44:32] [Server thread/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:44:32] [Server thread/INFO]: Stopping server
-[20:44:32] [Server thread/INFO]: Saving players
-[20:44:32] [Server thread/INFO]: WordedYard70815 lost connection: Server closed
-[20:44:32] [Server thread/INFO]: WordedYard70815 left the game
-[20:44:32] [Server thread/INFO]: Alpha lost connection: Server closed
-[20:44:32] [Netty Server IO #2/WARN]: java.net.SocketException: Connection reset
-[20:44:32] [Netty Server IO #2/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394)
-[20:44:32] [Netty Server IO #2/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:253)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:44:32] [Netty Server IO #2/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:44:32] [Netty Server IO #2/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:44:32] [Netty Server IO #1/WARN]: java.net.SocketException: Connection reset
-[20:44:32] [Server thread/INFO]: Alpha left the game
-[20:44:32] [Server thread/INFO]: Beta lost connection: Server closed
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:253)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:44:32] [Netty Server IO #3/WARN]: java.net.SocketException: Connection reset
-[20:44:32] [Netty Server IO #3/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394)
-[20:44:32] [Netty Server IO #3/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:253)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:44:32] [Netty Server IO #3/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:44:32] [Netty Server IO #3/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:44:32] [Netty Server IO #0/WARN]: java.net.SocketException: Connection reset
-[20:44:32] [Netty Server IO #0/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394)
-[20:44:32] [Netty Server IO #0/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:253)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:350)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:719)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:655)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:581)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:493)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:44:32] [Netty Server IO #0/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:44:32] [Netty Server IO #0/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:44:32] [Netty Server IO #1/WARN]: java.io.IOException: Connection reset by peer
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:76)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.socket.nio.NioSocketChannel.doWrite(NioSocketChannel.java:408)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannel$AbstractUnsafe.flush0(AbstractChannel.java:949)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.AbstractNioChannel$AbstractNioUnsafe.flush0(AbstractNioChannel.java:354)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannel$AbstractUnsafe.flush(AbstractChannel.java:913)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.DefaultChannelPipeline$HeadContext.flush(DefaultChannelPipeline.java:1372)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush(AbstractChannelHandlerContext.java:742)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.flush(AbstractChannelHandlerContext.java:728)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.handler.flush.FlushConsolidationHandler.flushNow(FlushConsolidationHandler.java:204)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.handler.flush.FlushConsolidationHandler.flush(FlushConsolidationHandler.java:138)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush(AbstractChannelHandlerContext.java:742)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.flush(AbstractChannelHandlerContext.java:728)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.ChannelOutboundHandlerAdapter.flush(ChannelOutboundHandlerAdapter.java:125)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeFlush0(AbstractChannelHandlerContext.java:750)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.invokeWriteAndFlush(AbstractChannelHandlerContext.java:765)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.write(AbstractChannelHandlerContext.java:790)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.writeAndFlush(AbstractChannelHandlerContext.java:758)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannelHandlerContext.writeAndFlush(AbstractChannelHandlerContext.java:808)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.DefaultChannelPipeline.writeAndFlush(DefaultChannelPipeline.java:1025)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.AbstractChannel.writeAndFlush(AbstractChannel.java:306)
-[20:44:32] [Netty Server IO #1/WARN]: 	at net.minecraft.network.NetworkManager.doSendPacket(NetworkManager.java:462)
-[20:44:32] [Netty Server IO #1/WARN]: 	at net.minecraft.network.NetworkManager.lambda$writePacket$11(NetworkManager.java:436)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java:164)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:469)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:497)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:986)
-[20:44:32] [Netty Server IO #1/WARN]: 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-[20:44:32] [Netty Server IO #1/WARN]: 	at java.base/java.lang.Thread.run(Thread.java:833)
-[20:44:32] [Server thread/INFO]: Beta left the game
-[20:44:32] [Server thread/INFO]: Omega lost connection: Server closed
-[20:44:32] [Server thread/INFO]: Omega left the game
-[20:44:32] [Server thread/INFO]: Gamma lost connection: Server closed
-[20:44:32] [Server thread/INFO]: Gamma left the game
-[20:44:32] [Server thread/INFO]: Sigma lost connection: Server closed
-[20:44:32] [Server thread/INFO]: Sigma left the game
-[20:44:32] [Server thread/INFO]: Delta lost connection: Server closed
-[20:44:32] [Server thread/INFO]: Delta left the game
-[20:44:32] [Server thread/INFO]: Theta lost connection: Server closed
-[20:44:32] [Server thread/INFO]: Theta left the game
-[20:44:32] [Server thread/INFO]: Saving worlds
-[20:44:33] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
-[20:44:34] [AWT-EventQueue-0/WARN]: java.lang.Throwable: Server stopped
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at io.papermc.paper.util.TraceUtil.dumpTraceForThread(TraceUtil.java:16)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at net.minecraft.server.MinecraftServer.safeShutdown(MinecraftServer.java:1090)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at net.minecraft.server.MinecraftServer.halt(MinecraftServer.java:1085)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at net.minecraft.server.gui.MinecraftServerGui$1.windowClosing(MinecraftServerGui.java:75)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Window.processWindowEvent(Window.java:2085)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/javax.swing.JFrame.processWindowEvent(JFrame.java:298)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Window.processEvent(Window.java:2044)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:5001)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4833)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:722)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:716)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:746)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:744)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:743)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-[20:44:34] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
-[20:44:35] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
-[20:44:35] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
-[20:44:35] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[20:44:35] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[20:44:35] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[20:44:35] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
-[20:44:35] [Server thread/INFO]: Flushing Chunk IO
-[20:44:35] [Server thread/INFO]: Closing Thread Pool
-[20:44:35] [Server thread/INFO]: Closing Server
-[20:44:35] [Thread-0/WARN]: java.lang.Throwable: Server stopped
-[20:44:35] [Thread-0/WARN]: 	at io.papermc.paper.util.TraceUtil.dumpTraceForThread(TraceUtil.java:16)
-[20:44:35] [Thread-0/WARN]: 	at net.minecraft.server.MinecraftServer.safeShutdown(MinecraftServer.java:1090)
-[20:44:35] [Thread-0/WARN]: 	at org.bukkit.craftbukkit.v1_18_R2.util.ServerShutdownThread.run(ServerShutdownThread.java:16)
+[21:14:25] [ServerMain/INFO]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[21:14:30] [Worker-Main-6/INFO]: Loaded 7 recipes
+[21:14:35] [Server thread/INFO]: Starting minecraft server version 1.18.2
+[21:14:35] [Server thread/INFO]: Loading properties
+[21:14:35] [Server thread/INFO]: This server is running Paper version git-Paper-387 (MC: 1.18.2) (Implementing API version 1.18.2-R0.1-SNAPSHOT) (Git: df630a2 on ver/1.18.2)
+[21:14:35] [Server thread/INFO]: Using 4 threads for Netty based IO
+[21:14:35] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[21:14:36] [Server thread/INFO]: Default game type: SURVIVAL
+[21:14:36] [Server thread/INFO]: Generating keypair
+[21:14:36] [Server thread/INFO]: Starting Minecraft server on *:25565
+[21:14:36] [Server thread/INFO]: Using default channel type
+[21:14:36] [Server thread/INFO]: Paper: Using Java 11 compression from Velocity.
+[21:14:36] [Server thread/INFO]: Paper: Using Java cipher from Velocity.
+[21:14:37] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[21:14:37] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[21:14:37] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[21:14:37] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[21:14:37] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[21:14:37] [Server thread/INFO]: Preparing level "world"
+[21:14:39] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[21:14:40] [Server thread/INFO]: Time elapsed: 658 ms
+[21:14:40] [Server thread/INFO]: Preparing start region for dimension minecraft:the_nether
+[21:14:40] [Server thread/INFO]: Time elapsed: 107 ms
+[21:14:40] [Server thread/INFO]: Preparing start region for dimension minecraft:the_end
+[21:14:40] [Server thread/INFO]: Time elapsed: 95 ms
+[21:14:40] [Server thread/INFO]: Running delayed init tasks
+[21:14:40] [Server thread/INFO]: Done (5.912s)! For help, type "help"
+[21:14:40] [Server thread/INFO]: Timings Reset
+[21:23:28] [AWT-EventQueue-0/WARN]: java.lang.Throwable: Server stopped
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at io.papermc.paper.util.TraceUtil.dumpTraceForThread(TraceUtil.java:16)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at net.minecraft.server.MinecraftServer.safeShutdown(MinecraftServer.java:1090)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at net.minecraft.server.MinecraftServer.halt(MinecraftServer.java:1085)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at net.minecraft.server.gui.MinecraftServerGui$1.windowClosing(MinecraftServerGui.java:75)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Window.processWindowEvent(Window.java:2085)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/javax.swing.JFrame.processWindowEvent(JFrame.java:298)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Window.processEvent(Window.java:2044)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:5001)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.Component.dispatchEvent(Component.java:4833)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:773)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:722)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:716)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:97)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:746)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:744)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:743)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+[21:23:28] [AWT-EventQueue-0/WARN]: 	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+[21:23:28] [Server thread/INFO]: Stopping server
+[21:23:28] [Server thread/INFO]: Saving players
+[21:23:28] [Server thread/INFO]: Saving worlds
+[21:23:28] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[21:23:29] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
+[21:23:29] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
+[21:23:29] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[21:23:29] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[21:23:29] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[21:23:29] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[21:23:29] [Server thread/INFO]: Flushing Chunk IO
+[21:23:29] [Server thread/INFO]: Closing Thread Pool
+[21:23:29] [Server thread/INFO]: Closing Server
+[21:23:29] [Thread-0/WARN]: java.lang.Throwable: Server stopped
+[21:23:29] [Thread-0/WARN]: 	at io.papermc.paper.util.TraceUtil.dumpTraceForThread(TraceUtil.java:16)
+[21:23:29] [Thread-0/WARN]: 	at net.minecraft.server.MinecraftServer.safeShutdown(MinecraftServer.java:1090)
+[21:23:29] [Thread-0/WARN]: 	at org.bukkit.craftbukkit.v1_18_R2.util.ServerShutdownThread.run(ServerShutdownThread.java:16)
