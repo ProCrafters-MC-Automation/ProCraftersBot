@@ -38,6 +38,6 @@
     "start": "node UltimateBot/index.js localhost 25565 Password WordedYard70815 Alpha Beta Gamma Omega"
   },
   "devDependencies": {
-    "electron": "^15.5.5"
+    "electron": "^18.3.7"
   }
 }
