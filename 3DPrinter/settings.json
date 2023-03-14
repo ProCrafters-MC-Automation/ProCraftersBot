@@ -1,0 +1,13 @@
+{
+    "bosses": [
+        "Makkusu_Otaku"
+    ],
+    "chunkSize": 10,
+    "commands": true,
+    "mode": "RGB",
+    "color": "average",
+    "lastJoin": {
+        "server": "localhost",
+        "port": 54888
+    }
+}

@@ -1,5 +1,11 @@
-.DS_STORE
-.sass-cache
 node_modules
-release-builds
-out.log
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+UltimateBot/ultimateDebug.txt
+CommandsPrinter/commandsPrinterDebug.txt
+PlacerPrinter/placerPrinterDebug.txt
+UltimateBot/ultimateDebug.log
