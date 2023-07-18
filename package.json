@@ -26,7 +26,7 @@
     "mineflayer-radar": "^0.0.2",
     "mineflayer-tool": "^1.2.0",
     "mineflayer-web-inventory": "^1.8.3",
-    "mongoose": "^6.4.3",
+    "mongoose": "^6.11.3",
     "nearest-color": "^0.4.4",
     "path": "^0.12.7",
     "prismarine-item": "^1.11.5",
