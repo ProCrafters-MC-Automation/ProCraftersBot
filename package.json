@@ -39,6 +39,6 @@
     "start": "node UltimateBot/index.js localhost 25565 Password WordedYard70815 Alpha"
   },
   "devDependencies": {
-    "electron": "^15.5.5"
+    "electron": "^22.3.21"
   }
 }
