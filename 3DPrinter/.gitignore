@@ -1,8 +1,0 @@
-node_modules
-package-lock.json
-*.png
-*.jpg
-*.jpeg
-!examples/*.png
-tests/
-test.js
