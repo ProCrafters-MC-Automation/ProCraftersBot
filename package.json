@@ -1,41 +1,14 @@
 {
-  "name": "Dev App",
-  "author": "ProCrafters",
-  "maintainer": "ProCrafters",
-  "version": "1.6.0",
-  "description": "A Minecraft botting tool with Anti-AFK, Chat spammer, Inventory/Chest manager features.",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "winx64": "electron-builder build --win --x64",
-    "winx86": "electron-builder build --win --ia32",
-    "linux64": "electron-builder build --linux --x64",
-    "linux86": "electron-builder build --linux --ia32"
-  },
-  "dependencies": {
-    "electron-store": "^8.0.1",
-    "mineflayer": "^4.1.0",
-    "node-fetch": "2.6.7"
-  },
-  "devDependencies": {
-    "electron": "^18.2.2",
-    "electron-builder": "^23.0.3"
-  },
-  "build": {
-    "appId": "com.ProCraftersMCAutomation.ProCraftersBot",
-    "productName": "ProCraftersBot",
-    "copyright": "Copyright © 2022 ProCraftersMCAutomation",
-    "win": {
-      "target": "portable",
-      "publisherName": "ProCraftersMCAutomation",
-      "icon": "assets/icons/win/icon.png"
+    "name": "rl-pvp",
+    "version": "1.0.0",
+    "description": "A Node.js program for creating Minecraft bots that fight each other.",
+    "main": "node main.js Group1 Prefix1 Group2 Prefix2 5 localhost 25565",
+    "scripts": {
+        "start": "node bot-fight.js"
     },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "icon": "assets/icons/win/icon.png",
-      "category": "Utility"
+    "author": "1ProCrafter",
+    "dependencies": {
+        "mineflayer": "^4.14.0",
+        "mineflayer-pvp": "^1.3.2"
     }
-  }
 }
