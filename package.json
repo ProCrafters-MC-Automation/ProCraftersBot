@@ -2,13 +2,16 @@
     "name": "rl-pvp",
     "version": "1.0.0",
     "description": "A Node.js program for creating Minecraft bots that fight each other.",
-    "main": "node main.js Group1 Prefix1 Group2 Prefix2 5 localhost 25565",
+    "main": "node main.js Group1 Group2 5 localhost 25565",
     "scripts": {
-        "start": "node bot-fight.js"
+        "start": "node main.js Water Melon 3 localhost 25565"
     },
     "author": "1ProCrafter",
     "dependencies": {
+        "@nxg-org/mineflayer-custom-pvp": "^1.7.2",
         "mineflayer": "^4.14.0",
+        "mineflayer-autocrystal": "^0.7.0",
+        "mineflayer-death-event": "^1.0.0",
         "mineflayer-pvp": "^1.3.2"
     }
 }
