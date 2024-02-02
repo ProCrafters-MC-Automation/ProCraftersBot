@@ -19,14 +19,12 @@
     "mineflayer-armor-manager": "^1.4.2",
     "mineflayer-auto-eat": "^2.3.3",
     "mineflayer-autocrystal": "^0.7.0",
-    "mineflayer-autotem": "^1.0.1",
     "mineflayer-blockfinder": "^0.0.7",
     "mineflayer-pathfinder": "^1.10.0",
     "mineflayer-pvp": "^1.3.2",
     "mineflayer-radar": "^0.0.2",
     "mineflayer-tool": "^1.2.0",
     "mineflayer-web-inventory": "^1.8.3",
-    "mongoose": "^6.4.3",
     "nearest-color": "^0.4.4",
     "path": "^0.12.7",
     "prismarine-item": "^1.11.5",
@@ -37,8 +35,5 @@
   },
   "scripts": {
     "start": "node UltimateBot/index.js localhost 25565 Password WordedYard70815 Alpha"
-  },
-  "devDependencies": {
-    "electron": "^15.5.5"
   }
 }
