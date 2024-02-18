@@ -58,16 +58,33 @@ function createBot(name, prefix, host, port) {
     return bot;
 }
 
-function startFighting() {
-    for (let i = 1; i <= botCount; i++) {
-        const bot = createBot(i, group1Prefix, host, port);
-        group1.push(bot)
+async function startFighting() {
+    const promises = [];
+
+    for (let i = 0; i < botCount; i++) {
+        promises.push(new Promise((resolve) => {
+            const bot1 = createBot(i, group1Prefix, host, port);
+            const bot2 = createBot(i, group2Prefix, host, port);
+
+            bot1.once('spawn', () => {
+                bot2.once('spawn', () => {
+                    group1.push(bot1);
+                    group2.push(bot2);
+                    resolve();
+                });
+            });
+        }));
     }
-    for (let i = 1; i <= botCount; i++) {
-        const bot = createBot(i, group2Prefix, host, port);
-        group2.push(bot)
-    }
+
+    await Promise.all(promises);
     spawned = true;
+    console.log('All bots spawned and ready to fight!');
+}
+
+
+function sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
 }
 
 startFighting();
