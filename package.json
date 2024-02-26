@@ -1,0 +1,46 @@
+{
+    "name": "procrafters-bots",
+    "author": "PMCA",
+    "maintainer": "ProCrafters",
+    "version": "2.3.0",
+    "description": "A Minecraft botting tool with many featers and a feature manager.",
+    "license": "MIT",
+    "main": "index.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "winx64": "electron-builder build --win --x64",
+        "winx86": "electron-builder build --win --ia32",
+        "linux64": "electron-builder build --linux --x64",
+        "linux86": "electron-builder build --linux --ia32"
+    },
+    "dependencies": {
+        "electron-store": "^8.1.0",
+        "minecraft-protocol": "^1.44.0",
+        "mineflayer": "^4.14.0",
+        "node-fetch": "2.6.7",
+        "proxy-agent": "^5.0.0",
+        "socks": "^2.7.0"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^6.0.0-beta.61",
+        "electron": "^26.2.4",
+        "electron-builder": "^23.6.0"
+    },
+    "build": {
+        "appId": "com.PMCA.ProCraftersBots",
+        "productName": "ProCrafters Bots",
+        "copyright": "Copyright © 2024 PMCA",
+        "win": {
+            "target": "portable",
+            "publisherName": "PMCA",
+            "icon": "src/assets/icons/icon.ico"
+        },
+        "linux": {
+            "target": [
+                "AppImage"
+            ],
+            "icon": "src/assets/icons/icon.png",
+            "category": "Utility"
+        }
+    }
+}
