@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "electron-store": "^8.1.0",
+        "minecraft-data": "^3.62.0",
         "minecraft-protocol": "^1.44.0",
         "mineflayer": "^4.14.0",
         "node-fetch": "2.6.7",
@@ -33,13 +34,13 @@
         "win": {
             "target": "portable",
             "publisherName": "PMCA",
-            "icon": "src/assets/icons/icon.ico"
+            "icon": "assets/icons/icon.ico"
         },
         "linux": {
             "target": [
                 "AppImage"
             ],
-            "icon": "src/assets/icons/icon.png",
+            "icon": "assets/icons/icon.png",
             "category": "Utility"
         }
     }
