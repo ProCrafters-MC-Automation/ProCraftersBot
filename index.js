@@ -2,16 +2,18 @@ const { app, ipcMain, BrowserWindow, ipcRenderer } = require('electron')
 const Store = require('electron-store');
 const store = new Store();
 
+const debug = true;
+
 app.on('ready', () => {
   const mainWindow = new BrowserWindow({
-    width: 970,
-    height: 530,
+    width: 1200,
+    height: 700,
     show: false,
     //resizable: false,
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
     webPreferences: {
-      // devTools: false,
+      devTools: debug,
       nodeIntegration: true,
       contextIsolation: false
     }

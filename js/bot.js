@@ -105,7 +105,7 @@ window.onload = () => {
 }
 
 idBtnStart.onclick = () => {
-    if(idNameMethod.value == "default" && !idBotUsername.value) {
+    if (idNameMethod.value == "default" && !idBotUsername.value) {
         createPopup("Invalid Username!", "red")
         return;
     }
@@ -113,22 +113,22 @@ idBtnStart.onclick = () => {
     saveData();
     idTabBot.click()
 }
-idBtnStop.onclick = () => {botApi.emit('stopBots')}
-idBtnDc.onclick = () => {exeAll("disconnect")}
-idBtnUse.onclick = () => {exeAll("useheld")}
-idBtnClose.onclick = () => {exeAll("closewindow")}
-idBtnSpam.onclick = () => {botApi.emit("spam", idSpamMessage.value, idSpamDelay.value)}
-idBtnSpamStop.onclick = () => {botApi.emit("stopspam")}
-idBtnChat.onclick = () => {exeAll("chat", idChatMessage.value)}
-idBtnSetHotbar.onclick = () => {exeAll("sethotbar", idHotbarSlot.value)}
-idBtnWinClick.onclick = () => {exeAll("winclick", idBtnWinClickSlot.value, idClickWinLoR.value)}
-idControlStart.onclick = () => {exeAll("startcontrol", idControlValue.value)}
-idControlStop.onclick = () => {exeAll("stopcontrol", idControlValue.value)}
-idBtnLookAt.onclick = () => {exeAll("look", idLookValue.value)}
-idCheckSprint.onclick = () => {exeAll("sprintcheck", idCheckSprint.checked)}
-idBtnDrop.onclick = () => {exeAll("drop", idDropValue.value)}
-idStartScrape.onclick = () => {scrapeProxy()}
-idStartProxyCheck.onclick = () => {checkProxy(idProxylist.value)}
+idBtnStop.onclick = () => { botApi.emit('stopBots') }
+idBtnDc.onclick = () => { exeAll("disconnect") }
+idBtnUse.onclick = () => { exeAll("useheld") }
+idBtnClose.onclick = () => { exeAll("closewindow") }
+idBtnSpam.onclick = () => { botApi.emit("spam", idSpamMessage.value, idSpamDelay.value) }
+idBtnSpamStop.onclick = () => { botApi.emit("stopspam") }
+idBtnChat.onclick = () => { exeAll("chat", idChatMessage.value) }
+idBtnSetHotbar.onclick = () => { exeAll("sethotbar", idHotbarSlot.value) }
+idBtnWinClick.onclick = () => { exeAll("winclick", idBtnWinClickSlot.value, idClickWinLoR.value) }
+idControlStart.onclick = () => { exeAll("startcontrol", idControlValue.value) }
+idControlStop.onclick = () => { exeAll("stopcontrol", idControlValue.value) }
+idBtnLookAt.onclick = () => { exeAll("look", idLookValue.value) }
+idCheckSprint.onclick = () => { exeAll("sprintcheck", idCheckSprint.checked) }
+idBtnDrop.onclick = () => { exeAll("drop", idDropValue.value) }
+idStartScrape.onclick = () => { scrapeProxy() }
+idStartProxyCheck.onclick = () => { checkProxy(idProxylist.value) }
 idBtnCheckFile.onclick = () => {
     const path = fs.readFileSync(idProxyFilePath.files[0].path)
     if (!path) return createPopup("No file selected.")
@@ -138,52 +138,52 @@ idBtnCheckFile.onclick = () => {
 
 idBtnStartScript.onclick = () => {
     const list = selectedList()
-    if(list.length === 0) return createPopup("No bot selected")
+    if (list.length === 0) return createPopup("No bot selected")
     list.forEach(name => {
         startScript(name, idScriptPath.value)
     });
 }
-idStartAfk.onclick = () => {exeAll('afkon')}
-idStopAfk.onclick = () => {exeAll('afkoff')}
-idBtnC.onclick = () => {saveData(); window.close()}
-idBtnM.onclick = () => {ipcRenderer.send('minimize')}
+idStartAfk.onclick = () => { exeAll('afkon') }
+idStopAfk.onclick = () => { exeAll('afkoff') }
+idBtnC.onclick = () => { saveData(); window.close() }
+idBtnM.onclick = () => { ipcRenderer.send('minimize') }
 idBtnCustomCss.onclick = () => {
     const path = idCustomCssFile.files[0].path
-    if(path) {
+    if (path) {
         loadTheme(path)
         ipcRenderer.send('theme', (event, path))
     }
 }
 idKaToggle.onchange = () => {
-    if(idKaToggle.checked) {
+    if (idKaToggle.checked) {
         botApi.emit("toggleka", idKadelay.value)
     } else {
         botApi.emit("stopka")
     }
 }
-idAuthType.onchange = () => {checkAuth()}
+idAuthType.onchange = () => { checkAuth() }
 
 
 async function newBot(options) {
     const bot = createBot(options)
     let afkLoaded = false
-    await bot.once('login', ()=> {
+    await bot.once('login', () => {
         botApi.emit("login", bot.username)
-        botApi.once(bot.username+'disconnect', () => {bot.quit()})
-        botApi.once(bot.username+'reconnect', () => {newBot(options)})
-        botApi.on(bot.username+'useheld', () => {bot.activateItem()})
-        botApi.on(bot.username+'closewindow', () => {bot.closeWindow(bot.currentWindow)})
-        botApi.on(bot.username+'chat', (o) => { if(idCheckAntiSpam.checked) { bot.chat(o.toString().replaceAll("(SALT)", salt(4))+" "+salt(antiSpamLength.value ? antiSpamLength.value : 5)) } else { bot.chat(o.toString().replaceAll("(SALT)", salt(4))) } })
-        botApi.on(bot.username+'sethotbar', (o) => {bot.setQuickBarSlot(o)})
-        botApi.on(bot.username+'winclick', (o, i) => {if(i == 0) {bot.clickWindow(o, 0, 0)} else {bot.clickWindow(o, 1, 0)}})
-        botApi.on(bot.username+'stopcontrol', (o) => {bot.setControlState(o, false)})
-        botApi.on(bot.username+'look', (o) => {bot.look(o, 0)})
-        botApi.on(bot.username+'sprintcheck', (o) => {bot.setControlState('sprint', o)})
-        botApi.on(bot.username+'startscript', () => {startScript(bot.username, idScriptPath.value)})
-        if(idScriptCheck.checked) { startScript(bot.username, idScriptPath.value)}
-        
-        botApi.on(bot.username+'afkon', () => {
-            if(!afkLoaded) {
+        botApi.once(bot.username + 'disconnect', () => { bot.quit() })
+        botApi.once(bot.username + 'reconnect', () => { newBot(options) })
+        botApi.on(bot.username + 'useheld', () => { bot.activateItem() })
+        botApi.on(bot.username + 'closewindow', () => { bot.closeWindow(bot.currentWindow) })
+        botApi.on(bot.username + 'chat', (o) => { if (idCheckAntiSpam.checked) { bot.chat(o.toString().replaceAll("(SALT)", salt(4)) + " " + salt(antiSpamLength.value ? antiSpamLength.value : 5)) } else { bot.chat(o.toString().replaceAll("(SALT)", salt(4))) } })
+        botApi.on(bot.username + 'sethotbar', (o) => { bot.setQuickBarSlot(o) })
+        botApi.on(bot.username + 'winclick', (o, i) => { if (i == 0) { bot.clickWindow(o, 0, 0) } else { bot.clickWindow(o, 1, 0) } })
+        botApi.on(bot.username + 'stopcontrol', (o) => { bot.setControlState(o, false) })
+        botApi.on(bot.username + 'look', (o) => { bot.look(o, 0) })
+        botApi.on(bot.username + 'sprintcheck', (o) => { bot.setControlState('sprint', o) })
+        botApi.on(bot.username + 'startscript', () => { startScript(bot.username, idScriptPath.value) })
+        if (idScriptCheck.checked) { startScript(bot.username, idScriptPath.value) }
+
+        botApi.on(bot.username + 'afkon', () => {
+            if (!afkLoaded) {
                 afkLoaded = true
                 bot.loadPlugin(antiafk)
                 bot.afk.start()
@@ -191,10 +191,10 @@ async function newBot(options) {
                 bot.afk.start()
             }
         })
-        botApi.on(bot.username+'afkoff', () => {bot.afk.stop()})
-    
-        botApi.on(bot.username+'drop', (o) => {
-            if(o) {
+        botApi.on(bot.username + 'afkoff', () => { bot.afk.stop() })
+
+        botApi.on(bot.username + 'drop', (o) => {
+            if (o) {
                 bot.clickWindow(o, 0, 0)
                 bot.clickWindow(-999, 0, 0)
             } else {
@@ -206,17 +206,17 @@ async function newBot(options) {
                         bot.tossStack(item)
                         await delay(10)
                     }
-                  })();
+                })();
             }
         })
-    
-        botApi.on(bot.username+'startcontrol', (o) => {
+
+        botApi.on(bot.username + 'startcontrol', (o) => {
             bot.setControlState(o, true)
-            if(idCheckSprint.checked === true) {bot.setControlState('sprint', true)} else {bot.setControlState('sprint', false)}
+            if (idCheckSprint.checked === true) { bot.setControlState('sprint', true) } else { bot.setControlState('sprint', false) }
         })
-    
-        idBtnRc.addEventListener('click', () => {botApi.emit(bot.username+'reconnect')})
-    
+
+        idBtnRc.addEventListener('click', () => { botApi.emit(bot.username + 'reconnect') })
+
         botApi.on(bot.username + 'hit', () => {
             const entities = Object.values(bot.entities);
             entities.forEach((entity) => {
@@ -251,7 +251,7 @@ async function newBot(options) {
                     }
                     if (entity.type === "player" && entity.username !== bot.username && idTplayer.checked) {
                         const list = selectedList()
-                        if(list.includes(entity.username) && idCheckIgnoreFriends.checked) return;
+                        if (list.includes(entity.username) && idCheckIgnoreFriends.checked) return;
                         if (idKaLook.checked) {
                             bot.lookAt(entity.position, true);
                             bot.attack(entity);
@@ -264,16 +264,16 @@ async function newBot(options) {
             });
         })
     });
-    bot.once('spawn', ()=> {
+    bot.once('spawn', () => {
         botApi.emit("spawn", bot.username)
-        if(idJoinMessage) {bot.chat(idJoinMessage.value)}
+        if (idJoinMessage) { bot.chat(idJoinMessage.value) }
     });
-    bot.once('kicked', (reason)=> {
+    bot.once('kicked', (reason) => {
         botApi.emit("kicked", bot.username, reason)
     });
-    bot.once('end', (reason)=> {
+    bot.once('end', (reason) => {
         botApi.emit("end", bot.username, reason)
-        if(idCheckAutoRc.checked === true) {
+        if (idCheckAutoRc.checked === true) {
             recon()
             async function recon() {
                 await delay(idReconDelay.value)
@@ -281,13 +281,13 @@ async function newBot(options) {
             }
         }
     });
-    bot.once('error', (err)=> {
+    bot.once('error', (err) => {
         botApi.emit("error", bot.username, err)
     });
-    
+
     bot.on('messagestr', (message) => {
-        if(!message) return;
-        if(idShowChatCheck.checked) {
+        if (!message) return;
+        if (idShowChatCheck.checked) {
             sendLog(`[${bot.username}] ${message}`)
         }
     });
@@ -295,54 +295,54 @@ async function newBot(options) {
     bot.on('windowOpen', (window) => {
         sendLog(`[${bot.username}] Window opened`)
     })
-    bot.on('death', function() {
+    bot.on('death', function () {
         botApi.emit('death', bot.username)
-        bot.once('respawn', function() {
-            if(idCheckOnDeath.checked && idScriptPath.value) { startScript(bot.username, idScriptPath.value)}
+        bot.once('respawn', function () {
+            if (idCheckOnDeath.checked && idScriptPath.value) { startScript(bot.username, idScriptPath.value) }
         })
     })
-    bot.on('respawn', function() {
+    bot.on('respawn', function () {
         botApi.emit('respawn', bot.username)
-        if(idCheckOnRespawn.checked && idScriptPath.value) { startScript(bot.username, idScriptPath.value)}
+        if (idCheckOnRespawn.checked && idScriptPath.value) { startScript(bot.username, idScriptPath.value) }
     })
 }
 
-botApi.on('toggleka', (dl)=> {
-    botApi.once('stopka', ()=> {clearInterval(katoggle)})
+botApi.on('toggleka', (dl) => {
+    botApi.once('stopka', () => { clearInterval(katoggle) })
     var katoggle = setInterval(() => {
         exeAll('hit')
-    }, dl ? dl: 500);
+    }, dl ? dl : 500);
 })
 
 botApi.on('spam', (msg, dl) => {
-    botApi.once('stopspam', ()=> {clearInterval(chatSpam)})
+    botApi.once('stopspam', () => { clearInterval(chatSpam) })
     var chatSpam = setInterval(() => {
         exeAll("chat", msg)
-    }, dl ? dl: 1000);
+    }, dl ? dl : 1000);
 })
 
-botApi.on("login", (name)=> {
+botApi.on("login", (name) => {
     addPlayer(name)
     sendLog(`<li> <img src="./assets/icons/arrow-right.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(68%) sepia(74%) saturate(5439%) hue-rotate(86deg) brightness(128%) contrast(114%)"> ${name} Logged in.</li>`)
 })
-botApi.on("end", (name, reason)=> {
+botApi.on("end", (name, reason) => {
     rmPlayer(name)
     sendLog(`<li> <img src="./assets/icons/alert-triangle.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(100%) sepia(61%) saturate(4355%) hue-rotate(357deg) brightness(104%) contrast(104%)"> [${name}] ${reason}</li>`)
 })
-botApi.on("error", (name, err)=> {
+botApi.on("error", (name, err) => {
     errBot(name)
     sendLog(`<li> <img src="./assets/icons/alert-triangle.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(89%) sepia(82%) saturate(799%) hue-rotate(1deg) brightness(103%) contrast(102%)"> [${name}] ${err}</li>`)
 })
-botApi.on("spawn", (name)=> {
+botApi.on("spawn", (name) => {
     sendLog(`<li> <img src="./assets/icons/arrow-right.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(5963%) hue-rotate(74deg) brightness(96%) contrast(101%)"> ${name} Spawned.</li>`)
 })
-botApi.on("death", (name)=> {
+botApi.on("death", (name) => {
     sendLog(`<li> <img src="./assets/icons/arrow-right.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(5963%) hue-rotate(74deg) brightness(96%) contrast(101%)"> ${name} Died.</li>`)
 })
-botApi.on("respawn", (name)=> {
+botApi.on("respawn", (name) => {
     sendLog(`<li> <img src="./assets/icons/arrow-right.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(5963%) hue-rotate(74deg) brightness(96%) contrast(101%)"> ${name} Respawned.</li>`)
 })
-botApi.on("kicked", (name, reason)=> {
+botApi.on("kicked", (name, reason) => {
     rmPlayer(name)
     sendLog(`<li> <img src="./assets/icons/arrow-left.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(11%) sepia(92%) saturate(6480%) hue-rotate(360deg) brightness(103%) contrast(113%)"> [${name}] : ${formatText(JSON.parse(reason))}</li>`)
 })
@@ -354,10 +354,10 @@ idBtnStart.addEventListener('click', () => {
         clearInterval(botUptime)
         idUptime.innerHTML = getTime(currentTime)
     })
-    
-let botUptime = setInterval(() => {
-    idUptime.innerHTML = getTime(currentTime)
-}, 1000);
+
+    let botUptime = setInterval(() => {
+        idUptime.innerHTML = getTime(currentTime)
+    }, 1000);
 })
 function getTime(from) {
     const calc = Date.now() - from
@@ -371,14 +371,14 @@ function formatTime(time) {
     return time;
 }
 function playAudio(filename) {
-    new Audio( __dirname + `./assets/audios/${filename}`).play();
+    new Audio(__dirname + `./assets/audios/${filename}`).play();
 }
 // save and restore config
 ipcRenderer.on('restore', (event, data) => {
     Object.keys(data).forEach(v => {
         document.getElementById(v).value = data[v]
-      });
-      checkAuth()
+    });
+    checkAuth()
 })
 ipcRenderer.on('restoreTheme', (event, path) => {
     loadTheme(path)
