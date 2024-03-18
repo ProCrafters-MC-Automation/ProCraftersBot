@@ -10,6 +10,7 @@ const bot = mineflayer.createBot({
     host: process.argv[2] || 'localhost',
     port: parseInt(process.argv[3]) || 25565,
     username: process.argv[4] || 'builder',
+
 })
 
 bot.loadPlugin(pathfinder)
@@ -19,7 +20,20 @@ function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
 
 bot.once('spawn', async () => {
     mineflayerViewer(bot, { port: 3000 })
+})
 
+bot.on('chat', (username, message) => {
+    if (username === bot.username) return
+    switch (message) {
+        case 'build':
+            build("./smallhouse1.schem")
+            break
+        default:
+            bot.chat("That's nice")
+    }
+})
+
+async function build(schem) {
     bot.on('path_update', (r) => {
         const path = [bot.entity.position.offset(0, 0.5, 0)]
         for (const node of r.path) {
@@ -28,12 +42,12 @@ bot.once('spawn', async () => {
         bot.viewer.drawLine('path', path, 0xff00ff)
     })
 
-    const schematic = await Schematic.read(await fs.readFile(path.resolve(__dirname, './smallhouse1.schem')), bot.version)
+    const schematic = await Schematic.read(await fs.readFile(path.resolve(__dirname, schem)), bot.version)
     while (!bot.entity.onGround) {
-        await wait(100)
+        await wait(10)
     }
     const at = bot.entity.position.floored()
     console.log('Building at ', at)
     const build = new Build(schematic, bot.world, at)
     bot.builder.build(build)
-})
+}
