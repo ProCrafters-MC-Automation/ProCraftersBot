@@ -45,7 +45,7 @@ const createSwarm = (botNames, botConf, mineflayer) => {
         bot.loadPlugin(pathfinder)
         bot.loadPlugin(armorManager)
         bot.loadPlugin(toolPlugin)
-        bot.loadPlugin(autoeat)
+        // bot.loadPlugin(autoeat)
         //bot.loadPlugin(mother)
 
         // Applying listeners
