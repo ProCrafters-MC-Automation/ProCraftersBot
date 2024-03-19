@@ -11,14 +11,15 @@ const { handleChat: jobSelector } = require('./individual');
 const { protectFriendly } = require('./utils');
 
 let botNames = [] //Sin Cos Tan Csc Sec Cot hSin hCos hTan hCsc hSec hCot
-for (i = 6; i < process.argv.length; i++) {
+for (i = 5; i < process.argv.length; i++) {
     botNames.push(process.argv[i]);
 }
-// botNames = botNames.split(" ")
-const host = process.argv[2];
-const port = parseInt(process.argv[3]);
-let password = process.argv[4];
-const master = process.argv[5];
+
+server = process.argv[2].split(':')
+const host = server[0];
+const port = parseInt(server[1]);
+let password = process.argv[3];
+const master = process.argv[4];
 const viewDistance = "normal";
 
 // Function to stop the server on a given port
