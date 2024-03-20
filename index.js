@@ -96,8 +96,8 @@ const botInit = (bot) => {
     //     }
     // });
     bot.on('move', () => {
-        const { tasked } = require('./individual');
-        if(bodyguard && !tasked) {
+        const { tasked, bodyguard } = require('./individual');
+        if(bodyguard) {
             let boss = bot.players[master];
             //Abort if the boss is not on the server
             if (!boss) return;
