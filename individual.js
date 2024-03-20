@@ -34,8 +34,8 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
     //             bodyguard = true;
     //     }
     // }
-    
-    if(messageParts[0]) {
+
+    if (messageParts[0]) {
         tasked = true;
     }
 
@@ -76,6 +76,12 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
         case 'info':
             chat.addChat(bot, Utils.info(bot, messageParts), returnAddress);
             break;
+        case 'build':
+            if (messageParts.length > 1) {
+                Utils.buildSchem(bot, messageParts[1]);
+            } else {
+                chat.addChat(bot, "What is the schematic's file name?")
+            }
         case 'print':
             if (messageParts[1] == 'placer') {
                 new Worker('./printerPlacerWorker.js', {
@@ -338,7 +344,7 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             chat.addChat(bot, 'I will guard that location.', returnAddress)
             guardArea(player.entity.position)
             break;
-        case 'bodyguard': 
+        case 'bodyguard':
             tasked = false;
             bodyguard = true;
         case 'bodyguards':

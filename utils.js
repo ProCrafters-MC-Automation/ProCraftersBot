@@ -17,6 +17,25 @@ const { Vec3 } = require("vec3");
 let Item;
 
 const behaviours = {
+    buildSchem: async (bot, schem) => {
+        bot.on('path_update', (r) => {
+            const path = [bot.entity.position.offset(0, 0.5, 0)]
+            for (const node of r.path) {
+                path.push({ x: node.x, y: node.y + 0.5, z: node.z })
+            }
+            bot.viewer.drawLine('path', path, 0xff00ff)
+        })
+
+        const schematic = await Schematic.read(await fs.readFile(path.resolve(__dirname, schem)), bot.version)
+        while (!bot.entity.onGround) {
+            await wait(10)
+        }
+        const at = bot.entity.position.floored()
+        console.log('Building at ', at)
+        const build = new Build(schematic, bot.world, at)
+        bot.builder.build(build)
+    },
+
     hunt: (bot, movement, amount, maxDist = 30, cb = null) => {
         const mobs = Object.values(bot.entities)
             .filter(entity => entity.kind === 'Passive mobs')
