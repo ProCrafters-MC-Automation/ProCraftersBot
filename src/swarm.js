@@ -18,8 +18,26 @@ const blockfinder = require('./blockfinder')
  * @returns {Swarm} The swarm
  */
 const createSwarm = (botNames, botConf, mineflayer) => {
+<<<<<<< Updated upstream:src/swarm.js
     const initBot = (name) => {
         const bot = mineflayer.createBot({ ...botConf, username: name});
+=======
+    let names = botNames
+    const initBot = async (name) => {
+        const bot = mineflayer.createBot({ ...botConf, username: name });
+
+        let inventoryOptions = { port: maxPort + 2 }
+
+        var radarOptions = { port: maxPort + 3 }
+        mineflayerViewer(bot, { port: maxPort, firstPerson: true })
+        maxPort++
+        mineflayerViewer(bot, { port: maxPort, firstPerson: false })
+        maxPort++
+        inventoryViewer(bot, inventoryOptions)
+        maxPort++
+        radarViewer(bot, radarOptions)
+        maxPort++
+>>>>>>> Stashed changes:swarm.js
 
         bot.state = 'idle'    // idle, combat, moving
         bot.substate = 'none'
@@ -108,12 +126,15 @@ const createSwarm = (botNames, botConf, mineflayer) => {
             console.log("Auto Eat stopped!")
         })
 
+<<<<<<< Updated upstream:src/swarm.js
         bot.on("health", () => {
         if (bot.food === 20) bot.autoEat.disable()
         // Disable the plugin if the bot is at 20 food points
         else bot.autoEat.enable() // Else enable the plugin again
         })
 
+=======
+>>>>>>> Stashed changes:swarm.js
         let guardPos = null
 
         return bot;

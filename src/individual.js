@@ -4,6 +4,7 @@ const pvp = require('mineflayer-pvp').plugin
 const { pathfinder, goals } = require('mineflayer-pathfinder')
 const { worker } = require('worker_threads');
 let memory = {}
+let tasked = false;
 
 const movementCallback = (returnAddress, bot, chat, target, successful) => {
     const announcement = successful ? `got there` : `can't get there`;
@@ -26,6 +27,17 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
     let target = bot.players[username].entity;
     const mcData = require('minecraft-data')(bot.version)
     const defaultMove = new Movements(bot, mcData);
+    // if (messageFor == 'swarm') {
+    //     switch(messageParts[0]) {
+    //         case 'guard':
+    //             bodyguard = true;
+    //     }
+    // }
+
+    if (messageParts[0]) {
+        tasked = true;
+    }
+
     switch (messageParts[0]) {
         case 'status':
             bot.chat('HP: ' + bot.health.toString().split('.')[0] + ' | Food: ' + bot.food.toString().split('.')[0] + ' | ' + bot.state + '(' + bot.substate + ')')
@@ -325,6 +337,9 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             bot.chat('I will guard that location.')
             guardArea(player.entity.position)
             break;
+        case 'bodyguard':
+            tasked = false;
+            bodyguard = true;
         case 'bodyguards':
             let bossBodyguards = 0;
             if (messageParts[1] == null) {
@@ -362,6 +377,7 @@ const handleChat = (username, message, bot, masters, chat, isWhisper = false) =>
             bot.chat("Bodyguards are on their way")
             break;
         default:
+            tasked = false;
             chat.addChat(bot, 'I don\'t understand', returnAddress);
             return;
     }
@@ -380,5 +396,6 @@ console.log = function (d) { //
 console.error = console.log;
 
 module.exports = {
-    handleChat
+    handleChat,
+    tasked
 };
