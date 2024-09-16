@@ -1,7 +1,8 @@
 const mineflayer = require('mineflayer')
 
 const bot = mineflayer.createBot({
-  host: 'localhost', // minecraft server ip
+  host: '10.90.242.205', // minecraft server ip
+  port: '25565',
   username: 'Bot', // username or email, switch if you want to change accounts
 })
 
