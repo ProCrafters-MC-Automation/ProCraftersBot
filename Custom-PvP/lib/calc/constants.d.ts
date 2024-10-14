@@ -1,8 +1,8 @@
-declare type ProjectileInfo = {
+type ProjectileInfo = {
     v0: number;
     g: number;
 };
-declare type ProjectileInfos = {
+type ProjectileInfos = {
     [name: string]: ProjectileInfo;
 };
 export declare const trajectoryInfo: ProjectileInfos;

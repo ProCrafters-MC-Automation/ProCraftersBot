@@ -2,7 +2,7 @@ import { Entity } from "prismarine-entity";
 import { goals } from "mineflayer-pathfinder";
 import { Bot } from "mineflayer";
 import { Vec3 } from "vec3";
-import { FollowConfig, SwordFullConfig } from "./swordconfigs";
+import { FollowConfig, FullConfig } from "./swordconfigs";
 declare class PredictiveGoal extends goals.GoalFollow {
     readonly bot: Bot;
     predictTicks: number;
@@ -21,6 +21,6 @@ declare class PredictiveGoal extends goals.GoalFollow {
     predictiveFunction(delta: Vec3, pos: Vec3, vel: Vec3): Vec3;
     distanceXZ(dx: number, dz: number): number;
 }
-export declare function followEntity(bot: Bot, entity: Entity, options: SwordFullConfig, predictTicks: number): PredictiveGoal | import("@nxg-org/mineflayer-jump-pathing/lib/goals").EntityGoalPredictive;
+export declare function followEntity(bot: Bot, entity: Entity, options: FullConfig): PredictiveGoal;
 export declare function stopFollow(bot: Bot, mode: FollowConfig["mode"]): void;
 export {};

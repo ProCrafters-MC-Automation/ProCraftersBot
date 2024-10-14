@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultSwordConfig = void 0;
-exports.defaultSwordConfig = {
+exports.defaultConfig = void 0;
+exports.defaultConfig = {
     genericConfig: {
         viewDistance: 128,
         attackRange: 3,
+        tooCloseRange: 2,
         missChancePerTick: 0.0,
         enemyReach: 3,
     },
@@ -16,43 +17,47 @@ exports.defaultSwordConfig = {
     strafeConfig: {
         enabled: true,
         mode: {
-            name: "intelligent",
-            maxOffset: Math.PI / 2
-        }
+            mode: "intelligent",
+            maxOffset: Math.PI / 2,
+        },
     },
     critConfig: {
         enabled: true,
-        mode: "hop"
+        mode: "hop",
+        attemptRange: 2.5,
+        reaction: {
+            enabled: true,
+            maxPreemptiveTicks: 1,
+            maxWaitTicks: 5,
+            maxWaitDistance: 5,
+        },
     },
-    kbCancelConfig: {
+    onHitConfig: {
         enabled: true,
-        // mode: {
-        //     name: "velocity",
-        //     hRatio: 0,
-        //     yRatio: 0,
-        // }
-        mode: {
-            name: "jump",
-            delay: 0
-        }
+        mode: "backoff",
+        kbCancel: {
+            enabled: true,
+            mode: "jump",
+        },
     },
     rotateConfig: {
         enabled: true,
-        mode: "constant"
+        mode: "constant",
     },
     shieldConfig: {
         enabled: true,
-        mode: "legit"
+        mode: "legit",
     },
     shieldDisableConfig: {
         enabled: true,
-        mode: "single" // not used rn
+        mode: "single", // not used rn
     },
     swingConfig: {
-        mode: "fullswing"
+        mode: "fullswing",
     },
     followConfig: {
         mode: "standard",
-        distance: 3
-    }
+        distance: 3,
+        predict: true
+    },
 };

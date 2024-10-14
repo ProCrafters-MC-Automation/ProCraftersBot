@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShotPlanner = void 0;
 const mineflayer_trajectories_1 = require("@nxg-org/mineflayer-trajectories");
-const mathUtilts_1 = require("../calc/mathUtilts");
+const mathUtils_1 = require("../calc/mathUtils");
 const vec3_1 = require("vec3");
-const aabbUtils_1 = require("../calc/aabbUtils");
+const mineflayer_util_plugin_1 = require("@nxg-org/mineflayer-util-plugin");
 const emptyVec = new vec3_1.Vec3(0, 0, 0);
 const dv = Math.PI / 360;
 const PIOver2 = Math.PI / 2;
@@ -42,7 +42,7 @@ class ShotPlanner {
      * @returns {CheckedShot} the shot.
      */
     shotToEntity(target, avgSpeed = emptyVec, pitch = -PIOver2) {
-        const yaw = (0, mathUtilts_1.getTargetYaw)(this.bot.entity.position, target.position);
+        const yaw = (0, mathUtils_1.getTargetYaw)(this.bot.entity.position, target.position);
         while (pitch < PIOver2) {
             const initInfo = this.getNextShot(target, yaw, pitch);
             pitch = initInfo.pitch;
@@ -71,10 +71,11 @@ class ShotPlanner {
         return null;
     }
     shiftTargetPositions(target, avgSpeed, ...shotInfo) {
-        const newInfo = shotInfo.map((i) => i.shift ? target.position.clone().add(avgSpeed.clone().scale(i.ticks + 4)) : target.position); //weird monkey patch.
+        avgSpeed.y = 0;
+        const newInfo = shotInfo.map((i) => i.shift ? target.position.clone().add(avgSpeed.scaled(i.ticks + 4)) : target.position); //weird monkey patch.
         const allInfo = [];
         for (const position of newInfo) {
-            const yaw = (0, mathUtilts_1.getTargetYaw)(this.bot.entity.position, position);
+            const yaw = (0, mathUtils_1.getTargetYaw)(this.bot.entity.position, position);
             const res = this.getAllPossibleShots({ position, height: target.height, width: target.width }, yaw);
             const info = res.map((i) => {
                 return { yaw, pitch: i.pitch, ticks: i.ticks };
@@ -86,7 +87,13 @@ class ShotPlanner {
     checkForBlockIntercepts(target, ...shots) {
         var _a;
         for (const { pitch, ticks, yaw } of shots) {
-            const initShot = mineflayer_trajectories_1.ShotFactory.fromPlayer({ position: this.bot.entity.position, yaw, pitch, velocity: this.bot.entity.velocity, onGround: this.bot.entity.onGround }, this.intercepter, this.weapon);
+            const initShot = mineflayer_trajectories_1.ShotFactory.fromPlayer({
+                position: this.bot.entity.position,
+                yaw,
+                pitch,
+                velocity: this.bot.entity.velocity,
+                onGround: this.bot.entity.onGround,
+            }, this.intercepter, this.weapon);
             const shot = (_a = initShot.hitsEntity(target, { yawChecked: false, blockCheck: true })) === null || _a === void 0 ? void 0 : _a.shotInfo;
             if (!!shot && this.isShotValid(shot, target.position, Number(pitch)))
                 return { hit: true, yaw, pitch: Number(pitch), ticks, shotInfo: shot };
@@ -100,14 +107,20 @@ class ShotPlanner {
         for (let pitch = minPitch + dv; pitch < PIOver2; pitch += dv) {
             if (pitch > PIOver3)
                 shift = true;
-            const initShot = mineflayer_trajectories_1.ShotFactory.fromPlayer({ position: this.bot.entity.position, yaw, pitch, velocity: this.bot.entity.velocity, onGround: this.bot.entity.onGround }, this.intercepter, this.weapon);
+            const initShot = mineflayer_trajectories_1.ShotFactory.fromPlayer({
+                position: this.bot.entity.position,
+                yaw,
+                pitch,
+                velocity: this.bot.entity.velocity,
+                onGround: this.bot.entity.onGround,
+            }, this.intercepter, this.weapon);
             const shot = (_a = initShot.hitsEntity(target, { yawChecked: false, blockCheck: false })) === null || _a === void 0 ? void 0 : _a.shotInfo;
             if (!shot)
                 continue;
             if (!shot.intersectPos) {
                 if (hittingData.length !== 0) {
                     const pitch = hittingData.map((e) => e.pitch).reduce((a, b) => a + b) / hittingData.length; //monkeypatch to hit feet.
-                    const ticks = hittingData.map((e) => e.ticks).reduce((a, b) => a + b) / hittingData.length;
+                    const ticks = Math.round(hittingData.map((e) => e.ticks).reduce((a, b) => a + b) / hittingData.length);
                     return { yaw, pitch, ticks, shift };
                 }
                 else if (pitch > PIOver3 && shot.nearestDistance < 1) {
@@ -122,14 +135,20 @@ class ShotPlanner {
     getAlternativeYawShots(target, ...shots) {
         var _a;
         for (const { pitch, yaw: orgYaw } of shots) {
-            const yaws = (0, aabbUtils_1.getEntityAABB)(target)
+            const yaws = mineflayer_util_plugin_1.AABBUtils.getEntityAABBRaw(target)
                 .toVertices()
-                .map((p) => (0, mathUtilts_1.getTargetYaw)(this.bot.entity.position, p))
+                .map((p) => (0, mathUtils_1.getTargetYaw)(this.bot.entity.position, p))
                 .sort((a, b) => orgYaw - Math.abs(a) - (orgYaw - Math.abs(b)));
             let inbetween = [yaws.pop(), yaws.pop()];
             inbetween = inbetween.map((y) => y + Math.sign(orgYaw - y) * 0.02);
             for (const yaw of inbetween) {
-                const initShot = mineflayer_trajectories_1.ShotFactory.fromShootingPlayer({ position: this.bot.entity.position, yaw, pitch, velocity: this.bot.entity.velocity, onGround: this.bot.entity.onGround }, this.intercepter, this.weapon);
+                const initShot = mineflayer_trajectories_1.ShotFactory.fromShootingPlayer({
+                    position: this.bot.entity.position,
+                    yaw,
+                    pitch,
+                    velocity: this.bot.entity.velocity,
+                    onGround: this.bot.entity.onGround,
+                }, this.intercepter, this.weapon);
                 const shot = (_a = initShot.hitsEntity(target, { yawChecked: false, blockCheck: true })) === null || _a === void 0 ? void 0 : _a.shotInfo;
                 if (!!shot && (shot.intersectPos || (pitch > PIOver3 && shot.nearestDistance < 1))) {
                     return { hit: true, yaw, pitch, ticks: shot.totalTicks, shotInfo: shot };
@@ -147,14 +166,20 @@ class ShotPlanner {
         for (let pitch = -PIOver2; pitch < PIOver2; pitch += dv) {
             if (pitch > PIOver3)
                 shift = true;
-            const initShot = mineflayer_trajectories_1.ShotFactory.fromPlayer({ position: this.bot.entity.position, yaw, pitch, velocity: this.bot.entity.velocity, onGround: this.bot.entity.onGround }, this.intercepter, this.weapon);
+            const initShot = mineflayer_trajectories_1.ShotFactory.fromPlayer({
+                position: this.bot.entity.position,
+                yaw,
+                pitch,
+                velocity: this.bot.entity.velocity,
+                onGround: this.bot.entity.onGround,
+            }, this.intercepter, this.weapon);
             const shot = (_a = initShot.hitsEntity(target, { yawChecked: false, blockCheck: false })) === null || _a === void 0 ? void 0 : _a.shotInfo;
             if (!shot)
                 continue;
             if (!shot.intersectPos) {
                 if (hittingData.length !== 0) {
                     const pitch = hittingData.map((e) => e.pitch).reduce((a, b) => a + b) / hittingData.length; //monkeypatch to hit feet.
-                    const ticks = Math.ceil(hittingData.map((e) => e.ticks).reduce((a, b) => a + b) / hittingData.length);
+                    const ticks = Math.round(hittingData.map((e) => e.ticks).reduce((a, b) => a + b) / hittingData.length);
                     possibleShotData.push({ yaw, pitch, ticks, shift });
                     hittingData = [];
                 }

@@ -1,24 +1,24 @@
 import type { Block } from "prismarine-block";
 import type { Item } from "prismarine-item";
 import type { Vec3 } from "vec3";
-export declare type ShotEntity = {
+export type ShotEntity = {
     position: Vec3;
     velocity: Vec3;
     yaw?: number;
     pitch?: number;
     heldItem?: Item | null;
 };
-export declare type AABBComponents = {
+export type AABBComponents = {
     position: Vec3;
     height: number;
     width?: number;
 };
-export declare type ProjectileMotion = {
+export type ProjectileMotion = {
     position: Vec3;
     velocity: Vec3;
     gravity?: number;
 };
-export declare type BasicShotInfo = {
+export type BasicShotInfo = {
     nearestDistance: number;
     blockingBlock: Block | null;
     intersectPos: Vec3 | null;

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.stopFollow = exports.followEntity = void 0;
 const mineflayer_pathfinder_1 = require("mineflayer-pathfinder");
 const vec3_1 = require("vec3");
-const mineflayer_jump_pathing_1 = require("@nxg-org/mineflayer-jump-pathing");
+// import { GoalFactory } from "@nxg-org/mineflayer-jump-pathing";
 class PredictiveGoal extends mineflayer_pathfinder_1.goals.GoalFollow {
     constructor(bot, entity, range, predictTicks) {
         super(entity, range);
@@ -48,28 +48,27 @@ class PredictiveGoal extends mineflayer_pathfinder_1.goals.GoalFollow {
         return Math.abs(dx - dz) + Math.min(dx, dz) * Math.SQRT2;
     }
 }
-function followEntity(bot, entity, options, predictTicks) {
+function followEntity(bot, entity, options) {
+    var _a;
     switch (options.followConfig.mode) {
         case "jump":
-            const tmp1 = mineflayer_jump_pathing_1.GoalFactory.predictEntity(bot, entity, options.followConfig.distance, predictTicks);
-            bot.jumpPather.goto(tmp1);
-            return tmp1;
+        // const tmp1 = GoalFactory.predictEntity(
+        //   bot,
+        //   entity,
+        //   options.followConfig.distance,
+        //   options.followConfig.predict ? options.followConfig.predictTicks ?? 4 : 0
+        // );
+        // bot.jumpPather.goto(tmp1);
+        // return tmp1;
         case "standard":
-            // const tmp2 = new goals.GoalFollow(entity, options.followConfig.distance);
-            const tmp2 = new PredictiveGoal(bot, entity, options.followConfig.distance, predictTicks);
+            const tmp2 = new PredictiveGoal(bot, entity, options.followConfig.distance, options.followConfig.predict ? (_a = options.followConfig.predictTicks) !== null && _a !== void 0 ? _a : 4 : 0);
             bot.pathfinder.setGoal(tmp2, true);
             return tmp2;
     }
 }
 exports.followEntity = followEntity;
 function stopFollow(bot, mode) {
-    switch (mode) {
-        case "jump":
-            bot.jumpPather.stop();
-            break;
-        case "standard":
-            bot.pathfinder.setGoal(null);
-            break;
-    }
+    // bot.jumpPather.stop();
+    bot.pathfinder.stop();
 }
 exports.stopFollow = stopFollow;

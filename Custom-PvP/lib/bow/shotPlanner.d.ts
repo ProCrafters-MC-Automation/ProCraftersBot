@@ -1,13 +1,13 @@
 import { Bot } from "mineflayer";
 import { AABBComponents, BasicShotInfo } from "@nxg-org/mineflayer-trajectories";
 import { Vec3 } from "vec3";
-declare type CheckShotInfo = {
+type CheckShotInfo = {
     yaw: number;
     pitch: number;
     ticks: number;
     shift?: boolean;
 };
-export declare type CheckedShot = {
+export type CheckedShot = {
     hit: boolean;
     yaw: number;
     pitch: number;

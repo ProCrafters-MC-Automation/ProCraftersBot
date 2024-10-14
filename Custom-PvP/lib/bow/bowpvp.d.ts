@@ -2,15 +2,11 @@ import { Bot } from "mineflayer";
 import { Entity } from "prismarine-entity";
 import { CheckedShot } from "./shotPlanner";
 import { Vec3 } from "vec3";
-export interface BowFullConfig {
-    useOffhand: boolean;
-}
-export declare const defaultBowConfig: BowFullConfig;
 export declare class BowPVP {
     private bot;
-    options: BowFullConfig;
     enabled: boolean;
     weapon: string;
+    useOffhand: boolean;
     target: Entity | null;
     shotInfo: CheckedShot | null;
     private shotInit;
@@ -18,7 +14,7 @@ export declare class BowPVP {
     private crossbowLoading;
     private planner;
     private waitTime;
-    constructor(bot: Bot, options?: BowFullConfig);
+    constructor(bot: Bot);
     private get shotReady();
     /**
      *

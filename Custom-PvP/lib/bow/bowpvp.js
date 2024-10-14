@@ -9,22 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BowPVP = exports.defaultBowConfig = void 0;
+exports.BowPVP = void 0;
 const perf_hooks_1 = require("perf_hooks");
 const util_1 = require("util");
 const shotPlanner_1 = require("./shotPlanner");
 const vec3_1 = require("vec3");
 const sleep = (0, util_1.promisify)(setTimeout);
 const emptyVec = new vec3_1.Vec3(0, 0, 0);
-exports.defaultBowConfig = {
-    useOffhand: false
-};
 class BowPVP {
-    constructor(bot, options = exports.defaultBowConfig) {
+    constructor(bot) {
         this.bot = bot;
-        this.options = options;
         this.enabled = false;
         this.weapon = "bow";
+        this.useOffhand = false;
         this.target = null;
         this.shotInfo = null;
         this.shotInit = perf_hooks_1.performance.now();
@@ -35,7 +32,6 @@ class BowPVP {
             if (!this.target)
                 return;
             this.shotInfo = this.shotToEntity(this.target, this.bot.tracker.getEntitySpeed(this.target) || new vec3_1.Vec3(0, 0, 0));
-            // console.log(this.shotInfo)
         });
         this.chargeHandling = () => __awaiter(this, void 0, void 0, function* () {
             switch (this.weapon) {
@@ -53,7 +49,7 @@ class BowPVP {
                     break;
                 case "crossbow":
                 case "crossbow_firework":
-                    const weaponHand = this.bot.util.inv.getHandWithItem(this.options.useOffhand);
+                    const weaponHand = this.bot.util.inv.getHandWithItem(this.useOffhand);
                     if (!weaponHand)
                         return console.log("cant find a thing");
                     const isEnchanted = weaponHand.enchants.find((enchant) => enchant.name === "quick_charge");
@@ -64,13 +60,13 @@ class BowPVP {
             }
             if (!this.shotCharging) {
                 if (["bow", "crossbow", "crossbow_firework", "trident"].includes(this.weapon)) {
-                    this.bot.activateItem(this.options.useOffhand);
+                    this.bot.activateItem(this.useOffhand);
                 }
                 this.shotCharging = true;
                 this.shotInit = perf_hooks_1.performance.now();
             }
             if (this.shotInfo && this.shotInfo.hit) {
-                this.bot.util.move.forceLook(this.shotInfo.yaw, this.shotInfo.pitch, true);
+                this.bot.look(this.shotInfo.yaw, this.shotInfo.pitch, true);
                 if (this.shotReady) {
                     if (["bow", "trident"].includes(this.weapon)) {
                         this.bot.deactivateItem();
@@ -78,7 +74,7 @@ class BowPVP {
                     }
                     if (["snowball", "ender_pearl", "egg", "splash_potion"].includes(this.weapon)) {
                         this.bot.swingArm(undefined);
-                        this.bot.activateItem(this.options.useOffhand);
+                        this.bot.activateItem(this.useOffhand);
                         this.bot.deactivateItem();
                         this.shotCharging = false;
                     }
@@ -167,12 +163,12 @@ class BowPVP {
     checkForWeapon(weapon) {
         return __awaiter(this, void 0, void 0, function* () {
             weapon !== null && weapon !== void 0 ? weapon : (weapon = this.weapon);
-            const usedHand = this.bot.util.inv.getHandWithItem(this.options.useOffhand);
+            const usedHand = this.bot.util.inv.getHandWithItem(this.useOffhand);
             if (!usedHand || !usedHand.name.includes(weapon)) {
                 const foundItem = this.bot.util.inv.getAllItems().find((item) => item.name === weapon);
                 if (!foundItem)
                     return false;
-                yield this.bot.util.inv.customEquip(foundItem, this.bot.util.inv.getHand(this.options.useOffhand));
+                yield this.bot.util.inv.customEquip(foundItem, this.bot.util.inv.getHand(this.useOffhand));
             }
             return true;
         });
@@ -180,13 +176,13 @@ class BowPVP {
     fireworkSetup() {
         return __awaiter(this, void 0, void 0, function* () {
             const weapon = this.bot.util.inv.getAllItems().find((item) => item.name.includes("crossbow"));
-            if (!this.hasAmmo() || !weapon)
+            if (!this.hasAmmo("crossbow_firework") || !weapon)
                 return false;
-            this.options.useOffhand = false;
+            this.useOffhand = false;
             // if (!this.bot.util.inv.getHandWithItem(true)?.name.includes("firework")) {
             const ammo = this.bot.util.inv.getAllItems().find(item => item.name.includes("firework"));
-            yield this.bot.util.inv.customEquip(ammo, this.bot.util.inv.getHand(!this.options.useOffhand));
-            yield this.bot.util.inv.customEquip(weapon, this.bot.util.inv.getHand(this.options.useOffhand));
+            yield this.bot.util.inv.customEquip(ammo, this.bot.util.inv.getHand(!this.useOffhand));
+            yield this.bot.util.inv.customEquip(weapon, this.bot.util.inv.getHand(this.useOffhand));
             return true;
             // } 
         });
@@ -207,12 +203,15 @@ class BowPVP {
         this.bot.removeListener("physicsTick", this.chargeHandling);
         if (this.target)
             this.bot.tracker.stopTrackingEntity(this.target);
+        if (this.shotCharging) {
+            // if (this.shotInfo) this.bot.look(this.shotInfo.yaw, this.shotInfo.pitch, true);
+            if (this.shotInfo)
+                this.bot.look(this.shotInfo.yaw, this.shotInfo.pitch, true);
+            this.bot.deactivateItem();
+        }
         this.target = null;
         this.shotCharging = false;
         this.enabled = false;
-        if (this.shotCharging && this.shotInfo)
-            this.bot.util.move.forceLook(this.shotInfo.yaw, this.shotInfo.pitch, true);
-        this.bot.deactivateItem();
     }
     /**
      * Attacks a specified target with a specified weapon.
@@ -237,7 +236,7 @@ class BowPVP {
             this.enabled = true;
             this.target = target;
             if (weapon === "crossbow_firework") {
-                const isSetup = this.fireworkSetup();
+                const isSetup = yield this.fireworkSetup();
                 if (!isSetup)
                     return this.stop();
             }
@@ -277,9 +276,9 @@ class BowPVP {
             yield this.bot.look(yaw, grade, true);
             this.shotCharging = true;
             this.shotInit = perf_hooks_1.performance.now();
-            this.bot.activateItem(this.options.useOffhand);
+            this.bot.activateItem(this.useOffhand);
             while (!this.shotReady)
-                yield sleep(0);
+                yield sleep(50);
             this.bot.deactivateItem();
             this.shotCharging = false;
         });
@@ -287,7 +286,7 @@ class BowPVP {
     shootCrossbow() {
         // console.log(this.crossbowLoading, this.shotReady, performance.now() - this.shotInit)
         if (this.crossbowLoading) {
-            this.bot.activateItem(this.options.useOffhand);
+            this.bot.activateItem(this.useOffhand);
             this.bot.deactivateItem();
             this.crossbowLoading = false;
             this.shotCharging = false;

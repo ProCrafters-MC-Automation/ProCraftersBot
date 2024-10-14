@@ -1,9 +1,8 @@
 import { Shot } from "@nxg-org/mineflayer-trajectories";
-import { SwordPvp } from "./sword/swordPvp";
+import { SwordPvp } from "./sword/swordpvp";
 import { Bot } from "mineflayer";
 import { Entity } from "prismarine-entity";
-import { BowFullConfig, BowPVP } from "./bow/bowpvp";
-import { SwordFullConfig } from "./sword/swordconfigs";
+import { BowPVP } from "./bow/bowpvp";
 declare module "mineflayer" {
     interface Bot {
         swordpvp: SwordPvp;
@@ -16,6 +15,5 @@ declare module "mineflayer" {
         targetBlockingUpdate: (target: Entity, blocking: boolean) => void;
     }
 }
-export declare function getPlugin(swordConfig?: Partial<SwordFullConfig>, bowConfig?: Partial<BowFullConfig>): (bot: Bot) => void;
-export declare function defaultPlugin(bot: Bot): void;
+export default function plugin(bot: Bot): void;
 export { Shot };
