@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "tsx": "^4.19.1"
+    "mineflayer": "^4.22.0"
   }
 }

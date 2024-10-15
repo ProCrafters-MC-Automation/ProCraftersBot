@@ -1,6 +1,0 @@
-# specifically shouldn't be published to npm
-.gitignore
-.github/
-src/
-example/
-tsconfig.json
