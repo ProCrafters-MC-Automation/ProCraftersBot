@@ -325,6 +325,9 @@ const handleChat = (username, message, bot, master, chat, isWhisper = false) => 
             chat.addChat(bot, 'I will guard that location.', returnAddress)
             guardArea(player.entity.position)
             break;
+        case 'bodyguard':
+            bot.state = "bodyguard"
+            break;
         case 'bodyguards':
             let bossBodyguards = 0;
             if (messageParts[1] == null) {

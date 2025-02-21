@@ -257,6 +257,7 @@ const behaviours = {
         bot.stopMining()
         bot.clearTargets()
         bot.pathfinder.setGoal(null);
+        bot.state = "idle";
     },
 
     follow: (bot, target, movement) => {

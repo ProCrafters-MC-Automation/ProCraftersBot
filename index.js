@@ -1,6 +1,5 @@
 const mineflayer = require('mineflayer');
-const { Movements } = require('mineflayer-pathfinder');
-const { goals } = require('mineflayer-pathfinder');
+const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 const { exec } = require('child_process');
 const { GoalNear, GoalBlock, GoalXZ, GoalY, GoalInvert, GoalFollow } = goals;
 const fs = require('fs');
@@ -63,7 +62,7 @@ const botInit = (bot) => {
     addChat(bot, `I'm online`, master);
 };;
 
-let haveSetupProtection = false;
+let haveSetupProtection = true;
 const prepFriendlyProtection = (mcData) => {
     if (haveSetupProtection) return;
     swarm[swarm.length - 1].once('spawn', () => {
@@ -102,5 +101,5 @@ function stop() {
 }
 
 start();
-const swarm = createSwarm(botNames, config, mineflayer);
+const swarm = createSwarm(botNames, master, config, mineflayer);
 module.exports = { stop };

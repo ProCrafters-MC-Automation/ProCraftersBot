@@ -6,19 +6,20 @@ const autoeat = require('mineflayer-auto-eat')
 const pvp = require('mineflayer-pvp').plugin
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 
-const bossName = workerData.bossName;
-const prefix = workerData.prefix;
+const bossName = process.argv[4] || workerData.bossName;
+const prefix = process.argv[5] || workerData.prefix;
 
 const server = {
-	address: workerData.address,
-	port: workerData.port,
+	address: process.argv[2] || workerData.address,
+	port: process.argv[3] || workerData.port,
 };
 const personalSpace = 5;
-const botCount = workerData.botCount;
+const botCount = process.argv[6] || workerData.botCount;
 var offset = 0;
 var bots = [];
 
 var target;
+var defaultMove;
 
 function createBot() {
 	//Log in as a new bot to the server
@@ -36,7 +37,6 @@ function createBot() {
 	bot.loadPlugin(pathfinder)
 	bot.loadPlugin(armorManager)
 	bot.loadPlugin(toolPlugin)
-	bot.loadPlugin(autoeat)
 
 	//Log errors and kick messages
 	bot.on('kicked', (reason, loggedIn) => console.log(reason, loggedIn));
@@ -62,6 +62,10 @@ function createBot() {
 			const shield = bot.inventory.items().find(item => item.name.includes('shield'))
 			if (shield) bot.equip(shield, 'off-hand')
 		}, 250)
+	})
+
+	bot.on('spawn', () => {
+		defaultMove = new Movements(bot);
 	})
 
 	//Do this every time the bot moves
@@ -93,11 +97,10 @@ function createBot() {
 		if (target) bot.attack(target);
 		//If it is not yet the amount of blocks "personalSpace" away from the location, walk
 		if (bot.entity.position.xzDistanceTo(location) > personalSpace) {
-			//Sprint forward
-			bot.setControlState('forward', true);
-			bot.setControlState('sprint', true);
-			//Jump in case it is stuck
-			bot.setControlState('jump', bot.entity.isCollidedHorizontally);
+			bot.pathfinder.setMovements(defaultMove);
+			bot.pathfinder.setGoal(new goals.GoalBlock(location.x, location.y, location.z));
+			// Face the location it is heading
+			bot.lookAt(location);
 		}
 	});
 	return (bot);
@@ -130,7 +133,7 @@ function populate() {
 	//Spawn 1 Guard
 	bots.push(createBot());
 	if (bots.length < botCount) {
-		setTimeout(populate, process.argv[6] * 10);
+		setTimeout(populate, process.argv[7] * 1000);
 	} else {
 		//Do this when all bots are spawned
 		console.log("Ready!");

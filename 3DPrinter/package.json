@@ -21,6 +21,7 @@
   "homepage": "https://github.com/MakkusuOtaku/mc-printer#readme",
   "dependencies": {
     "get-pixels": "^3.3.3",
+    "mc-printer": "file:",
     "mineflayer": "^4.4.0"
   }
 }

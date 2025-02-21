@@ -20,8 +20,13 @@ let maxPort = 9000;
  * @param {mineflayer} mineflayer Mineflayer instance
  * @returns {Swarm} The swarm
  */
-const createSwarm = (botNames, botConf, mineflayer) => {
+const createSwarm = (botNames, master, botConf, mineflayer) => {
     let names = botNames
+    
+    const personalSpace = 5;
+    var offset = 0;
+    var target;
+    
     const initBot = (name) => {
         const bot = mineflayer.createBot({ ...botConf, username: name });
 
@@ -57,6 +62,13 @@ const createSwarm = (botNames, botConf, mineflayer) => {
         convention.load(bot)
         blockfinder.load(bot)
 
+        // Bodyguard Master
+        bot.id = names.indexOf(name);
+        bot.direction = Math.PI * 2 / names.length * names.indexOf(name);
+        bot.physicsEnabled = true;
+
+        console.log(bot.id)
+
         bot.once("spawn", botConf.initCallback.bind(this, bot), () => {
             let botMove = new pathFinder.Movements(bot, mcData);
             botMove.canDig = true;
@@ -77,8 +89,9 @@ const createSwarm = (botNames, botConf, mineflayer) => {
                 if (sword) bot.equip(sword, 'hand')
             }, 150)
         })
+
         //to be tested
-        bot.on("physicTick", () => {
+        bot.on("physicsTick", () => {
             if (bot.health < 10) {
                 const prevItem = bot.heldItem;
                 const gapple = bot.inventory.items().find((item) => item.name.includes("apple"));
@@ -99,7 +112,40 @@ const createSwarm = (botNames, botConf, mineflayer) => {
                     bot.equip(prevItem);
                 }
             }
+
+            if(bot.state == "bodyguard") {
+
+                let boss = bot.players[master].entity;
+
+                //Abort if the boss is not close
+                if (!boss) return;
+
+                offset = boss.yaw;
+                //Location is where the bot is supposed to be headed
+                let location;
+
+                //If there is no enemy (no combat), return to or keep staying with boss
+                let x = Math.sin(bot.direction + offset) * personalSpace;
+                let z = Math.cos(bot.direction + offset) * personalSpace;
+                //Set the headed location to your position next to boss
+                location = boss.position.offset(x, 0, z);
+                
+                //If it is not yet the amount of blocks "personalSpace" away from the location, walk
+                if (bot.entity.position.xzDistanceTo(location) > personalSpace) {
+                    // Face the location it is heading
+                    const mcData = require('minecraft-data')(bot.version)
+                    const movements = new Movements(bot, mcData)
+
+                    bot.pathfinder.setMovements(movements)
+
+                    bot.pathfinder.setGoal(new goals.GoalBlock(location.x, location.y, location.z), false)
+                    bot.lookAt(location);
+                }
+            }
         });
+
+        // Loading plugins
+        bot.loadPlugin(pathfinder)
 
         bot.on('playerCollect', (collector, itemDrop) => {
             if (collector !== bot.entity) return
@@ -120,11 +166,11 @@ const createSwarm = (botNames, botConf, mineflayer) => {
             console.log("Auto Eat stopped!")
         })
 
-        bot.on("health", () => {
-            if (bot.food === 20) bot.autoEat.disable()
-            // Disable the plugin if the bot is at 20 food points
-            else bot.autoEat.enable() // Else enable the plugin again
-        })
+        // bot.on("health", () => {
+        //     if (bot.food === 20) bot.autoEat.disable()
+        //     // Disable the plugin if the bot is at 20 food points
+        //     else bot.autoEat.enable() // Else enable the plugin again
+        // })
 
         let guardPos = null
 
