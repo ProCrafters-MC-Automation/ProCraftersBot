@@ -53,8 +53,10 @@ const createSwarm = (botNames, master, botConf, mineflayer) => {
         // bot.loadPlugin(autoeat)
         //bot.loadPlugin(mother)
 
-        // Applying listeners
-        bot.on('physicTick', onTick)
+        // Bodyguard Master
+        bot.id = names.indexOf(name);
+        bot.direction = Math.PI * 2 / names.length * names.indexOf(name);
+        bot.physicsEnabled = true;
 
         // Loading bot components
         movement.load(bot)
@@ -62,12 +64,7 @@ const createSwarm = (botNames, master, botConf, mineflayer) => {
         convention.load(bot)
         blockfinder.load(bot)
 
-        // Bodyguard Master
-        bot.id = names.indexOf(name);
-        bot.direction = Math.PI * 2 / names.length * names.indexOf(name);
-        bot.physicsEnabled = true;
-
-        console.log(bot.id)
+        // Applying listeners
 
         bot.once("spawn", botConf.initCallback.bind(this, bot), () => {
             let botMove = new pathFinder.Movements(bot, mcData);
@@ -75,9 +72,9 @@ const createSwarm = (botNames, master, botConf, mineflayer) => {
             botMove.allowParkour = true;
             botMove.allowFreeMotion = true;
             bot.pathfinder.thinkTimeout = 100;
-            bot.autoEat.options.priority = "foodPoints"
-            bot.autoEat.options.bannedFood = []
-            bot.autoEat.options.eatingTimeout = 3
+            // bot.autoEat.options.priority = "foodPoints"
+            // bot.autoEat.options.bannedFood = []
+            // bot.autoEat.options.eatingTimeout = 3
 
         })
 
@@ -92,56 +89,27 @@ const createSwarm = (botNames, master, botConf, mineflayer) => {
 
         //to be tested
         bot.on("physicsTick", () => {
-            if (bot.health < 10) {
-                const prevItem = bot.heldItem;
-                const gapple = bot.inventory.items().find((item) => item.name.includes("apple"));
-                const pot = bot.inventory.items().find((item) => item.name.includes("potion"));
-                if (gapple) {
-                    bot.equip(gapple);
-                    bot.autoEat.eat(function (err) {
-                        if (err) {
-                            return;
-                        } else {
-                            console.log('I ate an apple!');
-                        }
-                        bot.equip(prevItem);
-                    });
-                } else if (pot) {
-                    bot.equip(pot);
-                    bot.autoEat.eat();
-                    bot.equip(prevItem);
-                }
-            }
-
-            if(bot.state == "bodyguard") {
-
-                let boss = bot.players[master].entity;
-
-                //Abort if the boss is not close
-                if (!boss) return;
-
-                offset = boss.yaw;
-                //Location is where the bot is supposed to be headed
-                let location;
-
-                //If there is no enemy (no combat), return to or keep staying with boss
-                let x = Math.sin(bot.direction + offset) * personalSpace;
-                let z = Math.cos(bot.direction + offset) * personalSpace;
-                //Set the headed location to your position next to boss
-                location = boss.position.offset(x, 0, z);
-                
-                //If it is not yet the amount of blocks "personalSpace" away from the location, walk
-                if (bot.entity.position.xzDistanceTo(location) > personalSpace) {
-                    // Face the location it is heading
-                    const mcData = require('minecraft-data')(bot.version)
-                    const movements = new Movements(bot, mcData)
-
-                    bot.pathfinder.setMovements(movements)
-
-                    bot.pathfinder.setGoal(new goals.GoalBlock(location.x, location.y, location.z), false)
-                    bot.lookAt(location);
-                }
-            }
+            bot.checkForTargets(bot)
+            // if (bot.health < 10) {
+            //     const prevItem = bot.heldItem;
+            //     const gapple = bot.inventory.items().find((item) => item.name.includes("apple"));
+            //     const pot = bot.inventory.items().find((item) => item.name.includes("potion"));
+            //     if (gapple) {
+            //         bot.equip(gapple);
+            //         bot.autoEat.eat(function (err) {
+            //             if (err) {
+            //                 return;
+            //             } else {
+            //                 console.log('I ate an apple!');
+            //             }
+            //             bot.equip(prevItem);
+            //         });
+            //     } else if (pot) {
+            //         bot.equip(pot);
+            //         bot.autoEat.eat();
+            //         bot.equip(prevItem);
+            //     }
+            // }
         });
 
         // Loading plugins
@@ -175,11 +143,6 @@ const createSwarm = (botNames, master, botConf, mineflayer) => {
         let guardPos = null
 
         return bot;
-
-        // Events
-        function onTick() {
-            bot.checkForTargets()
-        }
     };
 
 

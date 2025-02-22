@@ -40,7 +40,7 @@ function stopMoving() {
 
     bot.pathfinder.setMovements(movements)
 
-    bot.pathfinder.setGoal(new goals.GoalBlock(bot.entity.position.x, bot.entity.position.y, bot.entity.position.z), false)
+    bot.pathfinder.stop()
 }
 
 module.exports = {

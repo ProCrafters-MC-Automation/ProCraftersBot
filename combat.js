@@ -213,14 +213,14 @@ function checkForTargets() {
         }
     } else {
         if (bot.state === 'combat') {
-          bot.state = 'idle'
-          bot.substate = 'none'
+            bot.state = 'idle'
+            bot.substate = 'none'
 
-          if (isShieldActive) {
-              isShieldActive = false
-              bot.deactivateItem(true);
-          }
-      }
+            if (isShieldActive) {
+                isShieldActive = false
+                bot.deactivateItem(true);
+            }
+        }
     }
     eatTick += 1
 }
