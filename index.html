@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style/main.css">
+  <link id="customCss" rel="stylesheet" href="">
+  <title>ProCrafters</title>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="drag center-elements">
+      <span>ProCrafters</span>
+    </div>
+    <div class="nodrag center-elements">
+      <img id="btnMinimize" class="btn minimize" src="./assets/icons/minus.svg">
+      <img id="btnClose" class="btn close" src="./assets/icons/x.svg">
+    </div>
+  </div>
+  <div class="sidebar">
+    <ul class="flex-colum flex tab-selectors" style="border: none; opacity: 1;">
+      <button class="button tab active" onclick="openTab('general')">General</button>
+      <button id="btnBotting" class="button tab" onclick="openTab('botting')">Botting</button>
+      <button class="button tab" onclick="openTab('bodyguardTab')">Bodyguard</button>
+      <button class="button tab" onclick="openTab('printersTab')">Printers</button>
+      <button class="button tab" onclick="openTab('tasksTab')">Tasks</button>
+      <button class="button tab" onclick="openTab('scripting')">Scripting</button>
+      <button class="button tab" onclick="openTab('proxyTab')">Proxy</button>
+      <button class="button tab" onclick="openTab('settings')">Settings</button>
+      <button class="button tab" onclick="openTab('about')">About</button>
+    </ul>
+  </div>
+  <div class="contentArea">
+    <div id="general" class="tab-pane m-4 mu-4" style="display: block;">
+      <div class="flex">
+        <div id="usernameDiv">
+
+          <span class="label-text"> Username:</span>
+
+          <input id="accountFilePath" type="file" accept=".txt" class="" hidden>
+          <label id="usernameFileSelector" class="select-file" for="accountFilePath" hidden></label>
+
+          <input type="text" id="botUsename" class="text-input" placeholder="username">
+
+          <select id="usernameMethod" class="select-input">
+            <option value="default">Default</option>
+            <option value="random">Random</option>
+            <option value="legit">Legit</option>
+            <option value="file">File</option>
+          </select>
+
+        </div>
+
+        <div id="easymcDiv" hidden>
+          <span class="label-text"> Alt Token:</span>
+          <input type="text" id="easymcAuthToken" class="text-input" placeholder="EasyMC alt token">
+        </div>
+
+        <div class="m-4">
+          <span class="label-text"> Auth Type:</span>
+          <select id="botAuthType" class="select-input">
+            <option value="">Cracked</option>
+            <option value="microsoft">Microsoft</option>
+            <option value="easymc">EasyMC</option>
+          </select>
+        </div>
+      </div>
+      <div class="mu-4">
+        <span class="label-text"> Server address:</span>
+        <input type="text" id="botConnectIp" class="text-input" placeholder="localhost:25565">
+        <span class="label-text"> Version:</span>
+        <select id="botversion" class="select-input">
+          <option value="">Version Auto</option>
+          <option value="1.21.1">1.21.1</option>
+          <option value="1.21">1.21</option>
+          <option value="1.20.6">1.20.6</option>
+          <option value="1.20.5">1.20.5</option>
+          <option value="1.20.4">1.20.4</option>
+          <option value="1.20.3">1.20.3</option>
+          <option value="1.20.2">1.20.2</option>
+          <option value="1.20.1">1.20.1</option>
+          <option value="1.20">1.20</option>
+          <option value="1.19.4">1.19.4</option>
+          <option value="1.19.3">1.19.3</option>
+          <option value="1.19.2">1.19.2</option>
+          <option value="1.19.1">1.19.1</option>
+          <option value="1.19">1.19</option>
+          <option value="1.18.2">1.18.2</option>
+          <option value="1.18.1">1.18.1</option>
+          <option value="1.18">1.18</option>
+          <option value="1.17.1">1.17.1</option>
+          <option value="1.17">1.17</option>
+          <option value="1.16.5">1.16.5</option>
+          <option value="1.16.4">1.16.4</option>
+          <option value="1.16.3">1.16.3</option>
+          <option value="1.16.2">1.16.2</option>
+          <option value="1.16.1">1.16.1</option>
+          <option value="1.16">1.16</option>
+          <option value="1.15.2">1.15.2</option>
+          <option value="1.15.1">1.15.1</option>
+          <option value="1.15">1.15</option>
+          <option value="1.14.4">1.14.4</option>
+          <option value="1.14.3">1.14.3</option>
+          <option value="1.14.1">1.14.1</option>
+          <option value="1.14">1.14</option>
+          <option value="1.13.2">1.13.2</option>
+          <option value="1.13.1">1.13.1</option>
+          <option value="1.13">1.13</option>
+          <option value="1.12.2">1.12.2</option>
+          <option value="1.12.1">1.12.1</option>
+          <option value="1.12">1.12</option>
+          <option value="1.11.2">1.11.2</option>
+          <option value="1.11">1.11</option>
+          <option value="1.10.2">1.10.2</option>
+          <option value="1.10.1">1.10.1</option>
+          <option value="1.10">1.10</option>
+          <option value="1.9">1.9</option>
+          <option value="1.8">1.8.x</option>
+        </select>
+      </div>
+      <div class="mu-4">
+        <span class="label-text"> Max accounts:</span>
+        <input type="number" min="1" id="botCount" class="text-input" placeholder="1">
+      </div>
+      <div class="mu-4">
+        <span class="label-text"> Join delay:</span>
+        <input type="number" id="joinDelay" class="text-input" placeholder="1000 (ms)">
+      </div>
+      <div class="mu-4">
+        <span class="label-text"> Join message:</span>
+        <input type="text" id="joinMessage" class="text-input" placeholder="/register">
+      </div>
+      <div class="mu-4">
+        <button id="btnStart" class="button">Start</button>
+        <button id="btnStop" class="button">Stop</button>
+      </div>
+    </div>
+    <div id="botting" class="tab-pane">
+      <div class="flex">
+        <div class="pl-4">
+          <span>Bots list</span>
+          <ul id="botList" class="flex-colum" style="height: 11pc; width:15pc; margin-top: 0;"></ul>
+          <div style="display: flex; position: relative; top: -12px; width:15pc;">
+            <label class="container">
+              <input id="toggleAutoSelect" type="checkbox" checked>
+              <span class="checkmark"></span>
+            </label>
+            <button style="flex: 1;" class="button" onclick="selectAll()">All</button>
+            <button style="flex: 1;" class="button" onclick="selectRemove()">None</button>
+          </div>
+          <ul id="ul-options" class="flex-colum input-group selectors"
+            style="height: 14pc; width:15pc; position: relative; top: -20px; opacity: 1;">
+            <button class="button button-selected" data-target=".controls">Controls</button>
+            <button class="button" data-target=".chat">Chat</button>
+            <button class="button" data-target=".spam">Spam</button>
+            <button class="button" data-target=".setHotbatSlot">Set hotbar slot</button>
+            <button class="button" data-target=".clickWindow">Click window</button>
+            <button class="button" data-target=".moveDirection">Control move</button>
+            <button class="button" data-target=".look">Look</button>
+            <button class="button" data-target=".drop">Drop</button>
+            <button class="button" data-target=".antiafk">Anti-AFK</button>
+            <button class="button" data-target=".killaura">Killaura</button>
+          </ul>
+        </div>
+        <div id="main-options" class="pl-4">
+          <div id="windowName">
+            <span id="botOpenWindowName">Window</span>
+          </div>
+          <ul id="botOpenWindow" class="flex-colum" style="height: 11pc; width:15pc; margin: 0;"></ul>
+          <img src="./assets/images/chest_inventory.png" alt="Chest Inventory">
+          <img src="./assets/images/inventory.png" alt="Inventory">
+          <div id="controls" class="controls functsBtn">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Main controls</label>
+              </span>
+              <div class="input-group flex-colum">
+                <button id="btnDisconnect" class="button">Disconnect</button>
+                <button id="btnReconnect" class="button">Reconnect</button>
+                <button id="btnUseHeld" class="button">Use Held</button>
+                <button id="btnCloseWin" class="button">Close Window</button>
+              </div>
+            </div>
+          </div>
+          <div id="chat" class="chat functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Send message</label>
+              </span>
+              <div class="input-group flex-colum">
+                <input id="chatMessage" class="input" type="text" placeholder="Message">
+                <button id="btnChatMessage" class="button mu-4">Send</button>
+              </div>
+            </div>
+          </div>
+          <div id="spam" class="spam functsBtn" style="display:none">
+            <div class="input-group center-elements flex-colum">
+              <span class="label">
+                <label class="label-text">Spam message</label>
+              </span>
+              <div class="input-group flex-colum">
+                <input id="spamMessageBox" class="input" type="text" placeholder="Message">
+                <input id="spamDelay" class="input" type="number" min="0" placeholder="Spam Delay 1000 (ms)">
+              </div>
+              <div class="flex center-elements mu-4">
+                <button id="startSpam" class="button">Start</button>
+                <button id="stopSpam" class="button">Stop</button>
+              </div>
+              <div class="flex mu-4">
+                <label class="container">
+                  <label>Anti-spam</label>
+                  <input id="checkAntiSpam" type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+                <input id="antiSpamLength" type="number" min="1" class="input-sm m-1" placeholder="Random char (5)">
+              </div>
+            </div>
+          </div>
+          <div id="setHotbatSlot" class="setHotbatSlot functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Set hotbar slot</label>
+              </span>
+              <select id="hotbarSlot" class="select-input">
+                <option value="0">Slot 1</option>
+                <option value="1">Slot 2</option>
+                <option value="2">Slot 3</option>
+                <option value="3">Slot 4</option>
+                <option value="4">Slot 5</option>
+                <option value="5">Slot 6</option>
+                <option value="6">Slot 7</option>
+                <option value="7">Slot 8</option>
+                <option value="8">Slot 9</option>
+              </select>
+              <button id="btnSetHotbar" class="button mu-4">Set</button>
+            </div>
+          </div>
+          <div id="clickWindow" class="clickWindow functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Click window</label>
+              </span>
+              <input id="windowValue" class="input" type="number" placeholder="Slot">
+              <select id="clickWindowLorR" class="select-input">
+                <option value="0">Left click</option>
+                <option value="1">Right click</option>
+              </select>
+              <button id="btnWindowClick" class="button mu-4">Click</button>
+            </div>
+          </div>
+          <div id="moveDirection" class="moveDirection functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Control move</label>
+              </span>
+              <select id="controlValue" class="select-input">
+                <option value="forward">Forward</option>
+                <option value="back">Back</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+                <option value="jump">Jump</option>
+                <option value="sneak">Sneak</option>
+              </select>
+              <div class="flex mu-4">
+                <button id="startControl" class="button m-1">Start</button>
+                <button id="stopControl" class="button m-1">Stop</button>
+              </div>
+            </div>
+          </div>
+          <div id="look" class="look functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Look</label>
+              </span>
+              <select id="lookValue" class="select-input">
+                <option value="0">North</option>
+                <option value="3">East</option>
+                <option value="-3">West</option>
+                <option value="1.5">South</option>
+              </select>
+              <button id="setLook" class="button mu-4">Set</button>
+            </div>
+          </div>
+          <div id="drop" class="drop functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Drop inventory</label>
+              </span>
+              <input id="dropValue" class="input" type="number" placeholder="Inventory Slot">
+              <button id="btnDrop" class="button mu-4">Drop</button>
+            </div>
+          </div>
+          <div id="antiafk" class="antiafk functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Anti-AFK</label>
+              </span>
+              <button id="startAfk" class="button mu-4">Start</button>
+              <button id="stopAfk" class="button mu-4">Stop</button>
+            </div>
+          </div>
+          <div id="killaura" class="killaura functsBtn" style="display:none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Killaura</label>
+              </span>
+              <div class="flex">
+                <input id="kaRange" type="number" min="1" class="input-sm m-1" placeholder="Range (4)">
+                <input id="kaDelay" type="number" min="1" class="input-sm m-1" placeholder="Delay (500ms)">
+              </div>
+              <div class="border">
+                <label class="container">
+                  <label>Attack Mobs</label>
+                  <input id="kaTm" type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                  <label>Attack Animals</label>
+                  <input id="kaTa" type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                  <label>Attack Vehicles</label>
+                  <input id="kaTv" type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                  <label>Attack Players</label>
+                  <input id="kaTp" type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="flex mu-4">
+                <label class="container">
+                  <label>Look at entity</label>
+                  <input id="toggleKaLook" type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+                <button id="toggleka" class="button m-1">Toggle</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="chat-logs" class="pl-4">
+          <ul id="chatBox" class="flex-colum chat-box" style="height: 18pc; width:28pc; margin-top: 0;"></ul>
+          <div class="flex">
+            <label class="container">
+              <label>Show chat</label>
+              <input id="showChatCheck" type="checkbox" checked>
+              <span class="checkmark"></span>
+            </label>
+            <button class="button m-4" onclick="clearChat()">Clear logs</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODYGUARD TAB -->
+    <div id="bodyguardTab" class="tab-pane m-4">
+      <div class="flex" style="flex-wrap: wrap;">
+        <!-- Boss Target & Formation -->
+        <div class="border m-4" style="min-width: 300px;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Protection Target</label>
+          </span>
+          <div class="mu-2">
+            <span class="label-text">Boss / Player:</span>
+            <input type="text" id="bgBossTarget" class="text-input" placeholder="Player username (e.g. Master)">
+          </div>
+          <div class="mu-2">
+            <span class="label-text">Personal space:</span>
+            <input type="number" min="1" id="bgPersonalSpace" class="text-input input-sm" value="4" placeholder="4">
+          </div>
+          <div class="mu-4 flex">
+            <button id="btnBgAssignSelected" class="button m-1">Protect with Selected</button>
+            <button id="btnBgAssignAll" class="button m-1">Protect with All</button>
+          </div>
+          <div class="mu-2">
+            <button id="btnBgStop" class="button m-1" style="width: 100%;">Stop Bodyguarding</button>
+          </div>
+        </div>
+
+        <!-- Spawn New Guards -->
+        <div class="border m-4" style="min-width: 300px;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Spawn New Bodyguards</label>
+          </span>
+          <div class="mu-2">
+            <span class="label-text">Guard Count:</span>
+            <input type="number" min="1" id="bgNewCount" class="text-input input-sm" value="2">
+          </div>
+          <div class="mu-2">
+            <span class="label-text">Name Prefix:</span>
+            <input type="text" id="bgNewPrefix" class="text-input" value="Guard" placeholder="Guard">
+          </div>
+          <div class="mu-4 flex">
+            <button id="btnBgSpawnNew" class="button m-1">Spawn Guards</button>
+            <button id="btnBgDismiss" class="button m-1">Dismiss Guards</button>
+          </div>
+        </div>
+
+        <!-- Combat & Threat Defense -->
+        <div class="border m-4" style="min-width: 300px;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Combat & Target Commands</label>
+          </span>
+          <div class="mu-2">
+            <span class="label-text">Target to attack:</span>
+            <input type="text" id="bgAttackTarget" class="text-input" placeholder="Username or entity name">
+          </div>
+          <div class="mu-4 flex">
+            <button id="btnBgAttack" class="button m-1">Attack Target</button>
+            <button id="btnBgHalt" class="button m-1">Halt Attack</button>
+          </div>
+          <div class="mu-2">
+            <label class="label-text" id="bgStatusLabel" style="color: #6cf;">Ready to protect.</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRINTERS TAB -->
+    <div id="printersTab" class="tab-pane m-4">
+      <div class="flex" style="flex-wrap: wrap;">
+        <!-- Common Origin & Image -->
+        <div class="border m-4" style="width: 100%;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Image & Coordinates</label>
+          </span>
+          <div class="flex mu-2" style="gap: 10px; align-items: center;">
+            <span class="label-text">Origin:</span>
+            <input type="number" id="printX" class="text-input input-sm" placeholder="X" value="0">
+            <input type="number" id="printY" class="text-input input-sm" placeholder="Y" value="64">
+            <input type="number" id="printZ" class="text-input input-sm" placeholder="Z" value="0">
+            <button id="btnGetPlayerPos" class="button m-1" title="Get coordinates from first bot/player">Use Bot Pos</button>
+          </div>
+          <div class="flex mu-2" style="gap: 10px; align-items: center;">
+            <span class="label-text">Image Path:</span>
+            <input type="text" id="printImagePath" class="text-input" placeholder="image.jpg" value="image.jpg" style="flex: 1;">
+            <input type="file" id="printFilePicker" accept="image/*" class="select-file">
+          </div>
+        </div>
+
+        <!-- Commands Printer (Fast /setblock & /fill) -->
+        <div class="border m-4" style="min-width: 330px; flex: 1;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Commands 2D Printer</label>
+          </span>
+          <div class="mu-2">
+            <span class="label-text">Bot Source:</span>
+            <select id="cmdPrintMode" class="select-input">
+              <option value="selected">Use Selected Bots</option>
+              <option value="all">Use All Existing Bots</option>
+              <option value="new">Spawn New Bots</option>
+            </select>
+          </div>
+          <div id="cmdNewBotsRow" class="mu-2 flex" style="display: none;">
+            <span class="label-text">Bots:</span>
+            <input type="number" min="1" id="cmdPrintNewCount" class="text-input input-sm" value="2">
+            <span class="label-text m-1">Prefix:</span>
+            <input type="text" id="cmdPrintPrefix" class="text-input input-sm" value="CmdPrinter">
+          </div>
+          <div class="mu-2">
+            <span class="label-text">Delay (ms):</span>
+            <input type="number" min="1" id="cmdPrintDelay" class="text-input input-sm" value="5">
+          </div>
+          <div class="mu-4 flex">
+            <button id="btnCmdPrintStart" class="button m-1">Start Commands Print</button>
+            <button id="btnCmdPrintStop" class="button m-1">Stop</button>
+          </div>
+        </div>
+
+        <!-- Placer Printer (Physical Block Placement) -->
+        <div class="border m-4" style="min-width: 330px; flex: 1;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Placer 2D Printer</label>
+          </span>
+          <div class="mu-2">
+            <span class="label-text">Bot Source:</span>
+            <select id="placerPrintMode" class="select-input">
+              <option value="selected">Use Selected Bots</option>
+              <option value="all">Use All Existing Bots</option>
+              <option value="new">Spawn New Bots</option>
+            </select>
+          </div>
+          <div class="mu-2">
+            <span class="label-text">Palette:</span>
+            <select id="placerPalette" class="select-input">
+              <option value="concrete">Concrete (Full)</option>
+              <option value="concrete-basic">Concrete (Basic)</option>
+              <option value="concrete-binary">Concrete (Black & White)</option>
+              <option value="glass">Stained Glass</option>
+              <option value="wool">Wool</option>
+              <option value="terracotta">Terracotta</option>
+            </select>
+          </div>
+          <div class="mu-2">
+            <span class="label-text">Dimensions:</span>
+            <input type="text" id="placerDimensions" class="text-input input-sm" value="32x32" placeholder="32x32">
+          </div>
+          <div id="placerNewBotsRow" class="mu-2 flex" style="display: none;">
+            <span class="label-text">Bots:</span>
+            <input type="number" min="1" id="placerNewCount" class="text-input input-sm" value="1">
+            <span class="label-text m-1">Prefix:</span>
+            <input type="text" id="placerPrefix" class="text-input input-sm" value="Placer">
+          </div>
+          <div class="mu-4 flex">
+            <button id="btnPlacerPrintStart" class="button m-1">Start Placer Print</button>
+            <button id="btnPlacerPrintStop" class="button m-1">Stop</button>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="border m-4" style="width: 100%;">
+          <label class="label-text" id="printerStatusLabel" style="color: #6cf;">Printers idle.</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWARM AUTOMATION TASKS TAB -->
+    <div id="tasksTab" class="tab-pane m-4">
+      <div class="flex" style="flex-wrap: wrap;">
+        <!-- Movement & Location Tasks -->
+        <div class="border m-4" style="min-width: 320px; flex: 1;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Movement & Navigation</label>
+          </span>
+          <div class="mu-2 flex">
+            <input type="text" id="taskPlayerTarget" class="text-input" placeholder="Player name (e.g. Master)">
+            <button id="btnTaskCome" class="button m-1">Come Here</button>
+            <button id="btnTaskFollow" class="button m-1">Follow</button>
+          </div>
+          <div class="mu-2 flex" style="align-items: center; gap: 5px;">
+            <span class="label-text">Goto:</span>
+            <input type="number" id="taskGotoX" class="text-input input-sm" placeholder="X">
+            <input type="number" id="taskGotoY" class="text-input input-sm" placeholder="Y">
+            <input type="number" id="taskGotoZ" class="text-input input-sm" placeholder="Z">
+            <button id="btnTaskGoto" class="button m-1">Go</button>
+          </div>
+          <div class="mu-2 flex">
+            <button id="btnTaskSetHome" class="button m-1">Set Home</button>
+            <button id="btnTaskGoHome" class="button m-1">Go Home</button>
+          </div>
+          <div class="mu-4">
+            <button id="btnTaskStopAll" class="button" style="width: 100%;">Stop All Movement & Tasks</button>
+          </div>
+        </div>
+
+        <!-- Harvesting & Crafting Tasks -->
+        <div class="border m-4" style="min-width: 320px; flex: 1;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Harvest, Mine & Craft</label>
+          </span>
+          <div class="mu-2 flex" style="align-items: center; gap: 5px;">
+            <input type="text" id="taskBlockName" class="text-input" placeholder="Block name (e.g. oak_log)">
+            <input type="number" min="1" id="taskBlockCount" class="text-input input-sm" value="5" placeholder="Qty">
+            <button id="btnTaskHarvest" class="button m-1">Harvest</button>
+          </div>
+          <div class="mu-2 flex" style="align-items: center; gap: 5px;">
+            <input type="text" id="taskCraftName" class="text-input" placeholder="Item to craft (e.g. planks)">
+            <input type="number" min="1" id="taskCraftCount" class="text-input input-sm" value="4" placeholder="Qty">
+            <button id="btnTaskCraft" class="button m-1">Craft</button>
+          </div>
+          <div class="mu-2 flex" style="align-items: center; gap: 5px;">
+            <span class="label-text">Hunt:</span>
+            <input type="number" min="1" id="taskHuntCount" class="text-input input-sm" value="3" placeholder="Qty">
+            <button id="btnTaskHunt" class="button m-1">Hunt Animals</button>
+            <button id="btnTaskCollect" class="button m-1">Collect Drops</button>
+          </div>
+          <div class="mu-2 flex" style="align-items: center; gap: 5px;">
+            <input type="text" id="taskDropItem" class="text-input" placeholder="Item name to drop">
+            <button id="btnTaskDropItem" class="button m-1">Drop Item</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="scripting" class="tab-pane">
+      <div class="flex">
+        <div class="m-4">
+          <div>
+            <textarea id="scriptPath" class="textbox" placeholder="Chat hello!"></textarea>
+          </div>
+          <div>
+            <button id="btnStartScript" class="button">Run</button>
+          </div>
+        </div>
+        <div class="m-4">
+          <div class="border">
+            <label class="container">
+              <label>Run on connect</label>
+              <input id="scriptCheck" type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+            <label class="container">
+              <label>Run on respawn</label>
+              <input id="scriptCheckOnDeath" type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+            <label class="container">
+              <label>Run on world change/respawn</label>
+              <input id="scriptCheckOnRespawn" type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="proxyTab" class="tab-pane">
+      <div class="flex">
+
+        <div class="m-4">
+          <div>
+            <textarea id="proxyTextBox" class="textbox" placeholder="Proxy list"></textarea>
+          </div>
+          <div class="flex">
+            <button id="buttonStartCheckBoxList" class="button">Check list</button>
+            <button id="buttonStopCheck" class="button">Stop</button>
+            <button class="button" onclick="removeDuplicateLines()">UnDupe</button>
+          </div>
+        </div>
+        <div class="m-4">
+
+          <div class="border">
+
+            <div>
+              <label class="label-text">Proxy file:</label>
+              <input id="proxyFilePath" type="file" accept=".txt" class="select-file">
+            </div>
+
+            <div class="mu-2">
+              <span class="label-text"> Delay:</span>
+              <input type="number" min="1" id="proxyCheckDelay" class="text-input input-sm" placeholder="100(ms)">
+            </div>
+
+            <div class="mu-2">
+              <span class="label-text"> Proxy timeout:</span>
+              <input type="number" min="1" id="proxyTimeout" class="text-input input-sm" placeholder="1000(ms)">
+            </div>
+
+            <div class="flex mu-2">
+              <div class="flex">
+                <select id="proxyCheckProtocol" class="select-input">
+                  <option value="4">SOCKS4</option>
+                  <option value="5">SOCKS5</option>
+                </select>
+              </div>
+              <button class="button m-1" id="checkProxyfile">Check file</button>
+            </div>
+          </div>
+
+          <div class="border mu-2">
+            <div class="flex">
+              <div class="flex">
+                <select id="proxyScrapeProtocol" class="select-input">
+                  <option value="4">SOCKS4</option>
+                  <option value="5">SOCKS5</option>
+                </select>
+              </div>
+              <button id="proxyScrapeStart" class="button m-1">Scrape proxy</button>
+            </div>
+
+          </div>
+
+          <div class="border mu-2">
+            <div class="flex">
+
+              <label class="container">
+                <label>Use proxy</label>
+                <input id="useProxy" type="checkbox">
+                <span class="checkmark"></span>
+              </label>
+
+              <select id="proxyType" class="select-input m-1">
+                <option value="4">SOCKS4</option>
+                <option value="5">SOCKS5</option>
+              </select>
+            </div>
+          </div>
+
+          <ul id="proxyLogs" style="height: 137px; width: 490px; user-select: text;"></ul>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="settings" class="tab-pane m-4">
+      <div class="flex">
+        <div class="border">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Bot settings</label>
+          </span>
+          <div class="flex">
+            <label class="container">
+              <label>Linear</label>
+            </label>
+            <input id="linearValue" type="number" min="0" class="input-sm m-1" placeholder="delay (0ms)">
+            <img src="./assets/icons/info.svg" class="icon-sm hpop" data-popup="popupLinear">
+            <div class="popup" id="popupLinear">
+              <span>Delay between each bots</span>
+            </div>
+          </div>
+          <div class="flex">
+            <label class="container">
+              <label>Auto reconnect</label>
+              <input id="checkboxAutoRc" type="checkbox">
+              <span class="checkmark"></span>
+            </label>
+            <input id="reconDelay" type="number" min="0" class="input-sm m-1" placeholder="delay (0ms)">
+          </div>
+          <label class="container">
+            <label>Sprint</label>
+            <input id="checkboxSprint" type="checkbox">
+            <span class="checkmark"></span>
+          </label>
+          <label class="container">
+            <label>Ignore selected bots in Killaura</label>
+            <input id="checkKaIgnoreSelected" type="checkbox">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="border m-4" style="width: 275px;">
+          <span class="label" style="position: relative; top:-25px">
+            <label class="label-text">Theme</label>
+          </span>
+          <div>
+            <input id="customCssFile" type="file" accept=".css" class="select-file">
+            <button class="button" id="btnSaveTheme">Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="border mu-4" style="width: 420px;">
+        <span class="label" style="position: relative; top:-25px">
+          <label class="label-text">Proxy settings</label>
+        </span>
+        <label class="container">
+          <label>Random proxy order</label>
+          <input id="proxyOrderRnd" type="checkbox">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+    <div id="about" class="tab-pane" style="width: 800px;">
+      <div class="flex center-elements">
+        <img src="./assets/icons/icon.png" style="width: 50px;">
+        <h1>ProCrafters</h1>
+      </div>
+      <div class="flex center-elements">
+        <img class="icon" src="./assets/icons/github.svg" style="width: 40px;"
+          onclick="shell.openExternal('https://github.com/ProCrafters-MC-Automation')">
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="downbar flex">
+    <span class="label">
+      <img src="./assets/icons/user.svg" class="icon-sm">
+      <label>Bots:</label>
+      <label id="downbarBotCount" class="m-1">0</label>
+    </span>
+    <span class="label">
+      <img src="./assets/icons/clock.svg" class="icon-sm">
+      <label>Uptime:</label>
+      <label id="uptime" class="m-1">00:00</label>
+    </span>
+    <span id="outdatedVersion" class="label" style="display:none"
+      onClick="shell.openExternal('https://github.com/ProCrafters-MC-Automation/ProCraftersBot/releases')">
+      <img src="./assets/icons/alert-triangle.svg" class="icon-sm error-icon">
+      <label class="m-1 error-text" style="cursor: pointer">Outdated version</label>
+    </span>
+
+    <span id="proxyInfoDownbar" style="display: none" class="label">
+      <img src="./assets/icons/code.svg" class="icon-sm">
+      <label>Checking:</label>
+      <label id="proxyInfoDownbarCount" class="m-1">0/0</label>
+    </span>
+
+  </div>
+  <img class="bgimg">
+  <ul id="listul"
+    style="pointer-events: none; position: fixed; bottom: 10px; right: 10px; border: none; opacity: 1; background: transparent; "
+    dir="rtl"></ul>
+</body>
+<script defer src="./js/bot.js"></script>
+<script defer src="./js/htmlControl.js"></script>
+
+</html>

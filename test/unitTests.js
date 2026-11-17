@@ -5,6 +5,7 @@ const { CommandsPrinter } = require('../src/commandsPrinter');
 const { PlacerPrinter } = require('../src/placerPrinter');
 const { SwarmManager } = require('../src/swarmManager');
 const { createCommandHandler } = require('../src/commandHandler');
+const mcData = require('minecraft-data');
 
 async function runTests() {
     console.log('--- Running ProCraftersBot Unified Tests ---');
@@ -157,7 +158,6 @@ async function runTests() {
 
         // Test status command
         await handler('Admin', 'Alpha status', testBot, ['Admin']);
-        // Status should be queued in chat
         const { defaultChatQueue } = require('../src/chat');
         assert.strictEqual(defaultChatQueue.queue.length > 0, true);
         defaultChatQueue.clear();
@@ -174,6 +174,22 @@ async function runTests() {
         defaultChatQueue.clear();
 
         console.log(' Command Handler Routing Passed.');
+    }
+
+    // 7. Recent Minecraft Version Support tests
+    console.log('Testing Recent Minecraft Versions Support...');
+    {
+        const protocolVersions = mcData.versions.pc.map(v => v.minecraftVersion);
+        assert.strictEqual(protocolVersions.includes('1.21.1') || protocolVersions.includes('1.21'), true);
+
+        // Full block and item data support verification for latest releases
+        const targetFullDataVersions = ['1.20.6', '1.20.4', '1.20.2', '1.20.1', '1.20', '1.19.4', '1.18.2'];
+        for (const ver of targetFullDataVersions) {
+            const data = mcData(ver);
+            assert.strictEqual(!!data && !!data.blocks, true, `Version data for ${ver} should have blocks`);
+        }
+        console.log(` Recent versions with full data verified: ${targetFullDataVersions.join(', ')}.`);
+        console.log(' Recent Version Support Passed.');
     }
 
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');
