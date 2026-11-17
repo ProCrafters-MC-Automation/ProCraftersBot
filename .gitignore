@@ -1,9 +1,11 @@
 node_modules
-
-# Ignore Gradle build output directory
 build
-UltimateBot/ultimateDebug.txt
-CommandsPrinter/commandsPrinterDebug.txt
-PlacerPrinter/placerPrinterDebug.txt
-UltimateBot/ultimateDebug.log
-/.AddCompLib
+dist
+out
+.AddCompLib
+*.log
+*Debug.txt
+ultimateDebug.txt
+commandsPrinterDebug.txt
+placerPrinterDebug.txt
+.env
