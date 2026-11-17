@@ -1,0 +1,98 @@
+{
+    "concrete-binary": [
+        {"block": "black_concrete", "colour": [0, 0, 0]},
+        {"block": "white_concrete", "colour": [255, 255, 255]}
+    ],
+    "concrete-basic": [
+        {"block": "black_concrete", "colour": [0, 0, 0]},
+        {"block": "gray_concrete", "colour": [64, 64, 64]},
+        {"block": "light_gray_concrete", "colour": [128, 128, 128]},
+        {"block": "white_concrete", "colour": [255, 255, 255]},
+        {"block": "red_concrete", "colour": [255, 0, 0]},
+        {"block": "lime_concrete", "colour": [0, 255, 0]},
+        {"block": "blue_concrete", "colour": [0, 0, 255]}
+    ],
+    "concrete": [
+        {"block": "white_concrete", "colour": [208, 214, 215]},
+        {"block": "orange_concrete", "colour": [225, 98, 1]},
+        {"block": "magenta_concrete", "colour": [169, 48, 159]},
+        {"block": "light_blue_concrete", "colour": [36, 138, 200]},
+        {"block": "yellow_concrete", "colour": [242, 176, 21]},
+        {"block": "lime_concrete", "colour": [93, 168, 24]},
+        {"block": "pink_concrete", "colour": [214, 101, 143]},
+        {"block": "gray_concrete", "colour": [55, 58, 62]},
+        {"block": "light_gray_concrete", "colour": [126, 126, 116]},
+        {"block": "cyan_concrete", "colour": [22, 120, 137]},
+        {"block": "purple_concrete", "colour": [101, 32, 157]},
+        {"block": "blue_concrete", "colour": [44, 46, 142]},
+        {"block": "brown_concrete", "colour": [96, 59, 31]},
+        {"block": "green_concrete", "colour": [73, 91, 36]},
+        {"block": "red_concrete", "colour": [143, 34, 34]},
+        {"block": "black_concrete", "colour": [9, 11, 16]}
+    ],
+    "glass": [
+        {"block": "white_stained_glass", "colour": [208, 214, 215]},
+        {"block": "orange_stained_glass", "colour": [225, 98, 1]},
+        {"block": "magenta_stained_glass", "colour": [169, 48, 159]},
+        {"block": "light_blue_stained_glass", "colour": [36, 138, 200]},
+        {"block": "yellow_stained_glass", "colour": [242, 176, 21]},
+        {"block": "lime_stained_glass", "colour": [93, 168, 24]},
+        {"block": "pink_stained_glass", "colour": [214, 101, 143]},
+        {"block": "gray_stained_glass", "colour": [55, 58, 62]},
+        {"block": "light_gray_stained_glass", "colour": [126, 126, 116]},
+        {"block": "cyan_stained_glass", "colour": [22, 120, 137]},
+        {"block": "purple_stained_glass", "colour": [101, 32, 157]},
+        {"block": "blue_stained_glass", "colour": [44, 46, 142]},
+        {"block": "brown_stained_glass", "colour": [96, 59, 31]},
+        {"block": "green_stained_glass", "colour": [73, 91, 36]},
+        {"block": "red_stained_glass", "colour": [143, 34, 34]},
+        {"block": "black_stained_glass", "colour": [9, 11, 16]}
+    ],
+    "planks-binary": [
+        {"block": "oak_planks", "colour": [255, 255, 255]},
+        {"block": "dark_oak_planks", "colour": [0, 0, 0]}
+    ],
+    "stone-basic": [
+        {"block": "stone", "colour": [125, 125, 125]},
+        {"block": "cobblestone", "colour": [169, 169, 169]},
+        {"block": "stone_bricks", "colour": [164, 164, 164]},
+        {"block": "blackstone", "colour": [0, 0, 0]}
+    ],
+    "terracotta": [
+        {"block": "white_terracotta", "colour": [209, 177, 161]},
+        {"block": "orange_terracotta", "colour": [160, 83, 37]},
+        {"block": "magenta_terracotta", "colour": [149, 87, 108]},
+        {"block": "light_blue_terracotta", "colour": [112, 108, 138]},
+        {"block": "yellow_terracotta", "colour": [185, 132, 35]},
+        {"block": "lime_terracotta", "colour": [103, 117, 52]},
+        {"block": "pink_terracotta", "colour": [160, 77, 78]},
+        {"block": "gray_terracotta", "colour": [57, 42, 36]},
+        {"block": "light_gray_terracotta", "colour": [135, 106, 97]},
+        {"block": "cyan_terracotta", "colour": [86, 90, 91]},
+        {"block": "purple_terracotta", "colour": [118, 69, 86]},
+        {"block": "blue_terracotta", "colour": [74, 59, 91]},
+        {"block": "brown_terracotta", "colour": [77, 50, 36]},
+        {"block": "green_terracotta", "colour": [75, 82, 42]},
+        {"block": "red_terracotta", "colour": [142, 60, 46]},
+        {"block": "black_terracotta", "colour": [37, 22, 16]},
+        {"block": "terracotta", "colour": [149, 91, 66]}
+    ],
+    "wool": [
+        {"block": "white_wool", "colour": [222, 226, 227]},
+        {"block": "orange_wool", "colour": [235, 107, 10]},
+        {"block": "magenta_wool", "colour": [180, 59, 170]},
+        {"block": "light_blue_wool", "colour": [48, 162, 210]},
+        {"block": "yellow_wool", "colour": [246, 188, 30]},
+        {"block": "lime_wool", "colour": [103, 177, 24]},
+        {"block": "pink_wool", "colour": [243, 124, 159]},
+        {"block": "gray_wool", "colour": [59, 63, 66]},
+        {"block": "light_gray_wool", "colour": [134, 134, 126]},
+        {"block": "cyan_wool", "colour": [21, 129, 141]},
+        {"block": "purple_wool", "colour": [111, 36, 164]},
+        {"block": "blue_wool", "colour": [49, 51, 150]},
+        {"block": "brown_wool", "colour": [106, 66, 36]},
+        {"block": "green_wool", "colour": [79, 101, 31]},
+        {"block": "red_wool", "colour": [152, 35, 33]},
+        {"block": "black_wool", "colour": [14, 15, 20]}
+    ]
+}

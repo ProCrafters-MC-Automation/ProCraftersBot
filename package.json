@@ -1,4 +1,12 @@
 {
+  "name": "procrafters-bot",
+  "version": "1.0.0",
+  "description": "Unified Minecraft Swarm Bot System with Bodyguard, Commands Printer and Placer Printer",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js localhost 25565 Password Master Alpha Beta",
+    "test": "node test/unitTests.js"
+  },
   "dependencies": {
     "assert": "^2.1.0",
     "child_process": "^1.0.2",
@@ -22,8 +30,5 @@
     "stuffs": "^0.1.37",
     "uuid-1345": "^1.0.2",
     "vec3": "^0.1.10"
-  },
-  "scripts": {
-    "start": "node index.js localhost 25565 Password Master Alpha Beta"
   }
 }

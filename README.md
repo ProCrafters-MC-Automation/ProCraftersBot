@@ -1,95 +1,128 @@
-# ProCraftersBot
-A handful of bots that will automate Minecraft tasks. This includes [PvP Bot](###Ultimate-Bots), [Bodyguard Bots](###Bodyguard-Bots), and [Printer Bots](###Printer-Bots).
-## Appendix
+# ProCraftersBot - Unified Minecraft Automation Swarm
 
-## ProCrafters Bots
-### [Ultimate Bots](https://github.com/ProCrafters-MC-Automation/ProCraftersBot/tree/main/UltimateBot)
-  - 💞 Cool-looking output messages
-  - 🤖 Operator rank system
-  - 🌐 Pathfinding
-  - 🗡️ Combat and PVP
-  - ⛏️ Block mining
-  - 🎒 Inventory management
-  - 🍒 Automatic food management
-  - 🛡️ Automatic armor management
-  - 🔧 Utility commands
-  - Features:
-    - 1->N bots,  put the names of the bots in the command
-    - Control all bots with "`swarm`" or specific bots with their name
-    - Bots will defend themselves and other nearby bots and friendly players when they take damage
+ProCraftersBot is a unified, modular multi-bot system for Minecraft (Mineflayer), combining the features of the swarm bots, bodyguard bots, commands printer, and placer printer under a single, tidy architecture.
 
-#### Commands List
-  - Status: Prints out ‘HP: [Health of Bots] Food: [Saturation]’
-    - Command: `swarm/bot_name status`
-  - Target: Bot(s) try to kill the player, if and only if player is close to the Bot(s).
-    - Command: `swarm/bot_name target [Player to kill]`
-  - Come: Bot(s) comes to the boss's location when the message is sent, and stays their
-    - Command: `swarm/bot_name come`
-  - Follow: Bots(s) Follows the boss  (say stop to make bot stop following).
-    - Command: `swarm/bot_name follow`
-  - Stop: Bot(s) stops what they are doing right away.
-    - Command: `swarm/bot_name stop`
-  - Info: Bot(s) outputs `Info about [playerName] Pos: [x, y, z] Vel: [velocity]`
-    - Command: `swarm/bot_name info`
-  - Print: Starts the printer bots to print a 2D image
-    - Placer: Starts a printer bot who prints a 2D image by placing.
-    - Placer: `swarm/bot_name placer [x of the origin] [y of the origin] [z of the origin] [imageFile]`
-    - Command: Starts a printer bot who prints a 2D image by executing commands.
-    - Command: `swarm/bot_name command [x of the origin] [y of the origin] [z of the origin] [botCount] [prefix] [imageFile]`
-  - Inventory: Lists the number of items the Bot(s) has of a item.
-    - Command: `swarm/bot_name inventory`
-  - Drop: Bot(s) drops the amount of items requested by the user unless the amount < request.
-    - Command: `swarm/bot_name drop [item_name] [quantity]`
-  - Harvest/ Mine: Bot(s) mine the blocks requested by the user.
-    - Command: `swarm/bot_name harvest/ mine [count] [block]`
-  - Find: Finds all the one block the user requested to find.
-    - Command: `swarm/bot_name find [block]`
-  - Collect: Collects all the drops near the bot.
-    - Command: `swarm/bot_name collect`
-  - Goto/ Go: Bot(s) go to the exact coordinates entered by the user.
-    - Home: Bot(s) go to the coordinates of home, previously set by the user.
-    - Command: `swarm/bot_name goto/go [x] [y] [z]`/ `swarm/bot_name goto/go home`
-  - Learn: Debugging tool to output the actions done by the user.
-    - Command: `swarm/bot_name learn`
-  - Learn Stop: Stops debugging tool to output the actions done by the user.
-    - Command: `swarm/bot_name learnStop`
-  - Craft: Crafts the object entered by the user
-    - Command: `swarm/bot_name craft [block]/[item]`
-  - Set Home: Sets the home where the Bot(s) is/are, that the bot can go to when said to by the user, see Goto/ Go.
-    - Command: `swarm/bot_name setHome`
-  - Say: Bot(s) says exactly what you write after 'say ', the bot can say commands this way.
-    - Command: `swarm/bot_name say [message]/[command]`
-  - Use: Uses the item on the hotbar slot it currently is in.
-    - Command: `swarm/bot_name use`
-  - Disuse: Uses the item on the hotbar slot it currently is in.
-    - Command: `swarm/bot_name disuse`
-  - Leave: All the bots leave, no command can revert this except starting the bots again.
-    - Command: `swarm/bot_name leave`
-  - Locate: Bot(s) finds all entities that matches the entity entered by the user.
-    - Command: `swarm/bot_name locate [entity]`
-  - Remember: Remembers as many words/ numbers or whatever as needed after 'remember '.
-    - Command: `swarm/bot_name remember [to_remember]`
-  - Value of: Outputs the thing told to the bot[s] previously, this won't erase the memory.
-    - Command: `swarm/bot_name valueOf`
-  - Guard: Guards the area against monsters where the user is.
-    - Command: `swarm/bot_name guard`
-  - Bodyguards: Starts bots that guard the boss with the Username. - `[bot who spawned bodyguards]Boss #[Bot Number]`
-    - Command: `swarm/bot_name bodyguards [botCount]`
-  - Selfguard: Starts bots that guard the boss with the Username. - `[bot who spawned bodyguards]Bot #[Bot Number]`
-    - Command: `swarm/bot_name selfguard [botCount]`
-### [Bodyguard Bots](https://github.com/ProCrafters-MC-Automation/ProCraftersBot/tree/main/BodyguardBots)
-  - Minecraft bots that protects a player with x amount of bots
- 
-#### Commands List
-  - Kill: Bodyguards kill the player indicated by the Boss.
-    - Command: `kill [user_name]`
-  - Halt: Bodyguards stop killing the player and return to Boss.
-    - Command: `halt`
-  - Cease: Bodyguards leave, there is no command to undo this except starting them again from the gui, or via the Ultimate Bots.
-### [Printer Bots](https://github.com/ProCrafters-MC-Automation/ProCraftersBot/tree/main/PrinterBots)
-  - Minecraft Bot that prints images with blocks 
-#### Placer Printer
-  - Draw: Prints the image entered in the GUI.
-    - Command: `draw`
-  - Sheep: Gets the blocks from the sheep.
-    - Command: `sheep [block_of_wool]`
+---
+
+## Features
+
+- **Unified Swarm Architecture**: Control bots individually (`<botName> <command>`) or as an entire fleet (`swarm <command>`).
+- **Flexible Bodyguard System**:
+  - Assign **existing bots** from the swarm to bodyguard the user in dynamic circular formation.
+  - Dynamically spawn **new bots** to join the server and bodyguard the user.
+  - Automatic threat detection, shield defense, weapon equipping, and boss defense.
+- **Commands 2D Printer**:
+  - Print images into Minecraft using optimized `/setblock` and `/fill` commands with scaffold placement.
+  - Choose **which existing bots** execute the command print (split across chunks).
+  - Or spawn **new bots** that join the server, print, and finish.
+- **Placer 2D Printer**:
+  - Physically place blocks in the world matching image colors using predefined palettes (concrete, wool, glass, terracotta, etc.).
+  - Works with **existing bots** or **new bots**.
+  - Supports Creative mode inventory feeding and Survival block placement.
+- **Full Utility & Survival Capabilities**: Pathfinding, auto-eating, mining, hunting, drop collection, crafting, and PvP combat.
+
+---
+
+## Installation & Running
+
+```bash
+# Install dependencies
+npm install
+
+# Start with default options (localhost:25565, Master user, Alpha & Beta bots)
+npm start
+
+# Custom launch arguments:
+# Format: node index.js <host:port|host port> <password> <master> [botNames...]
+node index.js localhost:25565 Password Steve Alpha Beta Gamma
+
+# Run unit tests
+npm test
+```
+
+---
+
+## Command Reference
+
+Send commands via in-game Minecraft chat or whisper. Commands can target an individual bot (`Alpha <command>`) or all bots (`swarm <command>`).
+
+### 1. Bodyguard Commands
+
+- **Use Existing Bots**:
+  - `<botName> bodyguard [target]` - Makes this bot bodyguard the player (default: you).
+  - `swarm bodyguard [target]` - Makes all active bots bodyguard the player.
+  - `swarm bodyguard existing <bot1,bot2|all> [target]` - User specifies exactly which existing bots become bodyguards.
+- **Spawn New Bodyguards**:
+  - `swarm bodyguard new <count> [prefix] [target]` - Spawns `<count>` new bots that join the server and protect the target.
+  - `swarm bodyguards <count>` - (Backward-compatible) Spawns `<count>` new bodyguard bots for the boss.
+- **Combat & Control**:
+  - `kill <player>` / `target <player>` - Orders bodyguards (or bot) to attack the specified target.
+  - `halt` - Disengages bodyguards from combat and orders them back into formation.
+  - `<botName|swarm> bodyguard stop` - Stops bodyguard duty and returns bots to idle state.
+  - `swarm bodyguard dismiss [prefix]` - Disconnects spawned bodyguard bots.
+
+---
+
+### 2. Commands Printer (`print command`)
+
+Prints images onto the server using Minecraft `/setblock` and `/fill` commands.
+
+- **Using Existing Bots**:
+  - `swarm print command existing <bot1,bot2|all> <x> <y> <z> [imageFile]` - User chooses which existing bots print the image.
+  - `<botName> print command <x> <y> <z> [imageFile]` - Uses that existing bot to print.
+  - `swarm print command <x> <y> <z> [imageFile]` - Splits the work across all existing swarm bots.
+- **Using New Bots**:
+  - `swarm print command new <count> <prefix> <x> <y> <z> [imageFile]` - Spawns `<count>` new bots to join and perform command printing.
+  - `swarm print command <x> <y> <z> <count> <prefix> <imageFile>` - (Backward-compatible syntax).
+- **Stop**:
+  - `swarm print stop` - Stops active printing.
+
+---
+
+### 3. Placer Printer (`print placer`)
+
+Physically builds images in-game by placing blocks.
+
+- **Using Existing Bots**:
+  - `swarm print placer existing <bot1,bot2|all> <x> <y> <z> [imageFile] [palette] [size]` - Existing bots place blocks.
+  - `<botName> print placer <x> <y> <z> [imageFile] [palette] [size]` - That bot places blocks.
+  - `swarm print placer <x> <y> <z> [imageFile] [palette] [size]` - All existing bots place blocks.
+- **Using New Bots**:
+  - `swarm print placer new <count> <prefix> <x> <y> <z> [imageFile] [palette] [size]` - Spawns `<count>` new bots to join and place blocks.
+- **Parameters**:
+  - `palette`: `concrete` (default), `glass`, `terracotta`, `wool`, or combined `concrete+wool`.
+  - `size`: Target dimensions, e.g. `32x32` or `64x64`.
+
+---
+
+### 4. General Bot Commands
+
+- `status` - Returns bot health, food, role, and current state.
+- `bots` - Lists all currently connected bots and their roles.
+- `come` - Navigates to the commanding player.
+- `follow [player]` - Follows the player.
+- `goto <x> <y> <z>` / `goto <player>` / `goto home` - Pathfinds to coordinates, player, or saved home.
+- `setHome` - Sets the current position as home.
+- `stop` - Halts all movement, mining, combat, or printing tasks.
+- `inventory` - Displays current inventory items.
+- `drop <item>` - Drops matching item from inventory.
+- `harvest <count> <block>` / `mine <count> <block>` - Mines specified blocks.
+- `find <block>` - Searches for blocks nearby.
+- `collect` - Collects nearby dropped items.
+- `hunt <count>` - Hunts passive animals for food.
+- `craft <item> [count]` - Crafts items using a nearby crafting table.
+- `say <message>` - Makes the bot say a message in chat.
+- `leave` - Disconnects the bot.
+
+---
+
+## Architecture Overview
+
+- `src/swarmManager.js`: Centralized manager for all active bots and dynamic bot spawning/removal.
+- `src/botInit.js`: Initializes plugins, combat, movement, block finding, eating, and event handlers per bot.
+- `src/bodyguard.js`: Dynamic formation geometry, boss tracking, entity defense, and bodyguard lifecycle.
+- `src/commandsPrinter.js`: Jimp image loading, color-mapping, `/fill` horizontal optimization, chunk distribution.
+- `src/placerPrinter.js`: Physical block placing, palette distance matching, and creative/survival placement.
+- `src/commandHandler.js`: Chat & whisper parsing, master verification, and command routing.
+- `src/chat.js`: Rate-limited message queue preventing server spam kicks.
+- `src/config.js`: Flexible command-line configuration parser.
