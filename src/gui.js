@@ -16,6 +16,9 @@ try {
 const debug = process.env.NODE_ENV === 'development';
 
 function createWindow() {
+  const iconPath = path.resolve(__dirname, '..', 'assets', 'icons', 'icon.png');
+  const htmlPath = path.resolve(__dirname, '..', 'index.html');
+
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 760,
@@ -24,7 +27,7 @@ function createWindow() {
     show: false,
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
-    icon: path.join(__dirname, 'assets', 'icons', 'icon.png'),
+    icon: iconPath,
     webPreferences: {
       devTools: debug,
       nodeIntegration: true,
@@ -32,7 +35,7 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile(htmlPath);
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show();

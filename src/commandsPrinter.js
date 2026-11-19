@@ -1,7 +1,17 @@
 const path = require('path');
 const fs = require('fs');
 const Jimp = require('jimp');
-const colorMap = require('../colorMap.json');
+
+let colorMap;
+try {
+    colorMap = require('./data/colorMap.json');
+} catch (e) {
+    try {
+        colorMap = require('../colorMap.json');
+    } catch {
+        colorMap = { white: '#ffffff', black: '#000000' };
+    }
+}
 const getNearestBlockByColor = require('nearest-color').from(colorMap);
 const chillout = require('chillout');
 
@@ -50,21 +60,23 @@ class CommandsPrinter {
      * Resolve image file path safely
      */
     resolveImagePath(imageFile) {
-        if (!imageFile) return path.resolve('image.jpg');
+        if (!imageFile) return path.resolve(__dirname, 'data', 'image.jpg');
         if (path.isAbsolute(imageFile) && fs.existsSync(imageFile)) {
             return imageFile;
         }
         const candidates = [
             path.resolve(imageFile),
+            path.resolve(__dirname, 'data', imageFile),
             path.resolve('CommandsPrinter', imageFile),
             path.resolve('PlacerPrinter', imageFile),
             path.resolve(__dirname, '..', imageFile),
+            path.resolve(__dirname, 'data', 'image.jpg'),
             path.resolve('image.jpg')
         ];
         for (const c of candidates) {
             if (fs.existsSync(c)) return c;
         }
-        return path.resolve('image.jpg');
+        return path.resolve(__dirname, 'data', 'image.jpg');
     }
 
     /**

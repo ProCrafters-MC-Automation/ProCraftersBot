@@ -6,7 +6,7 @@
 
 if (process.versions.electron || process.argv.includes('--gui')) {
     // Launch Electron GUI mode
-    require('./gui.js');
+    require('./src/gui.js');
 } else {
     // Launch CLI Swarm mode
     const { parseConfig } = require('./src/config');

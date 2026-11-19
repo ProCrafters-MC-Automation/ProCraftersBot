@@ -26,6 +26,7 @@ class PlacerPrinter {
 
     loadPalettes() {
         const palettePaths = [
+            path.resolve(__dirname, 'data', 'palettes.json'),
             path.resolve('palettes.json'),
             path.resolve('PlacerPrinter', 'palettes.json'),
             path.resolve(__dirname, '..', 'palettes.json')
@@ -41,21 +42,23 @@ class PlacerPrinter {
     }
 
     resolveImagePath(imageFile) {
-        if (!imageFile) return path.resolve('image.jpg');
+        if (!imageFile) return path.resolve(__dirname, 'data', 'image.jpg');
         if (path.isAbsolute(imageFile) && fs.existsSync(imageFile)) {
             return imageFile;
         }
         const candidates = [
             path.resolve(imageFile),
+            path.resolve(__dirname, 'data', imageFile),
             path.resolve('PlacerPrinter', imageFile),
             path.resolve('CommandsPrinter', imageFile),
             path.resolve(__dirname, '..', imageFile),
+            path.resolve(__dirname, 'data', 'image.jpg'),
             path.resolve('image.jpg')
         ];
         for (const c of candidates) {
             if (fs.existsSync(c)) return c;
         }
-        return path.resolve('image.jpg');
+        return path.resolve(__dirname, 'data', 'image.jpg');
     }
 
     getNearestBlockFromPalette(r, g, b, paletteList) {
@@ -246,6 +249,7 @@ class PlacerPrinter {
             })
         );
 
+        // Give them a moment to complete login
         await sleep(1000);
 
         await this.printWithBots(spawnedBots, coords, imagePath, {

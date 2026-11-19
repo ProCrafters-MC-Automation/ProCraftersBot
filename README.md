@@ -1,6 +1,6 @@
 # ProCraftersBot - Unified Minecraft Automation Swarm & GUI
 
-ProCraftersBot is a unified, modular multi-bot system for Minecraft (Mineflayer), combining the features of the swarm bots, bodyguard bots, commands printer, placer printer, and an interactive desktop GUI under a clean, organized architecture.
+ProCraftersBot is a unified, modular multi-bot system for Minecraft (Mineflayer), combining the features of the swarm bots, bodyguard bots, commands printer, placer printer, resource bots, and an interactive desktop GUI under a clean, organized architecture.
 
 ---
 
@@ -12,10 +12,11 @@ ProCraftersBot is a unified, modular multi-bot system for Minecraft (Mineflayer)
   - **Bodyguard System**: Assign existing bots or spawn new bots to protect the player with circular formation, auto-defense, and combat controls.
   - **Commands 2D Printer**: Print images in seconds using optimized `/fill` and `/setblock` commands. Choose existing bots or spawn new bots.
   - **Placer 2D Printer**: Physically build images by placing blocks using configurable color palettes (concrete, wool, glass, terracotta). Choose existing bots or spawn new bots.
-  - **Swarm Automation Tasks**: One-click Come, Follow, Goto, Set/Go Home, Harvest/Mine, Craft, Hunt, Drop, and Stop.
+  - **Swarm Automation Tasks**: One-click Come, Follow, Goto, Relative Move, Dig Hole, Set/Go Home, Harvest/Mine, Craft, Hunt, Drop/Toss, Equip, Scan Nearby, Area Protect, Guard Pos, Learn/Recite, and Stop.
   - **Botting Controls**: Individual bot selection, chat sender, anti-spam, hotbar selection, inventory/chest clicker, manual motion, look controls, Anti-AFK, and Killaura.
   - **Proxy Scraper & Checker**: Built-in SOCKS4 and SOCKS5 proxy scraper and tester.
   - **Scripting Engine**: Run custom scripts on connect, on death, or on respawn.
+- **Resource Bots Integration**: Complete excavation (`hole`), surface block analysis (`nearby`), interactive block construction recording (`learn`/`recite`), persistent memory (`remember`/`valueof`), entity detection (`locate`), and automatic friendly entity defense.
 - **Support for Recent Minecraft Versions**: Auto-detects server versions and supports recent versions including 1.21.x, 1.20.6, 1.20.4, 1.20.2, 1.20.1, 1.20 down to 1.8.
 
 ---
@@ -95,7 +96,23 @@ Physically builds images in-game by placing blocks.
 
 ---
 
-### 4. General Bot Commands
+### 4. Resource Bots & Automation Commands
+
+- `hole <WxLxD>` - Digs out a specified excavation volume centered at the bot (e.g. `hole 5x5x3`).
+- `nearby` - Analyzes and reports counts of visible blocks within 16 blocks.
+- `equip <item>` - Equips matching item into main hand (e.g. `equip diamond_sword`).
+- `drop [amount] <item>` - Tosses matching item and quantity directly to the commanding player.
+- `protect` - Defends area by attacking the nearest hostile mob within range.
+- `guard` - Guards the commanding player's location against hostile monsters.
+- `move <x> <y> <z>` - Relative coordinate movement offset from bot's current position.
+- `learn` / `learnstop` (or `recite`) - Starts recording player block modifications and recites learned instructions upon completion.
+- `locate <player|entity>` - Locates coordinates of target player or mob.
+- `remember <key> <value>` / `valueof <key>` - Stores and reads arbitrary key-value bot memory.
+- `Auto-Protect`: All bots automatically rush to protect masters and fellow swarm bots when damaged.
+
+---
+
+### 5. General Bot Commands
 
 - `status` - Returns bot health, food, role, and current state.
 - `bots` - Lists all currently connected bots and their roles.
@@ -105,7 +122,6 @@ Physically builds images in-game by placing blocks.
 - `setHome` - Sets the current position as home.
 - `stop` - Halts all movement, mining, combat, or printing tasks.
 - `inventory` - Displays current inventory items.
-- `drop <item>` - Drops matching item from inventory.
 - `harvest <count> <block>` / `mine <count> <block>` - Mines specified blocks.
 - `find <block>` - Searches for blocks nearby.
 - `collect` - Collects nearby dropped items.
@@ -118,15 +134,31 @@ Physically builds images in-game by placing blocks.
 
 ## Architecture Overview
 
-- `gui.js`: Electron main process controlling the application window, state persistence, and themes.
-- `index.html`: Modern desktop UI with General, Botting, Bodyguard, Printers, Tasks, Scripting, Proxy, and Settings tabs.
-- `js/bot.js` & `js/utils.js`: Client-side GUI controller bridge to backend systems and Mineflayer events.
-- `src/swarmManager.js`: Centralized manager for all active bots and dynamic bot spawning/removal.
-- `src/botInit.js`: Initializes plugins, combat, movement, block finding, eating, and event handlers per bot.
-- `src/bodyguard.js`: Dynamic formation geometry, boss tracking, entity defense, and bodyguard lifecycle.
-- `src/commandsPrinter.js`: Jimp image loading, color-mapping, `/fill` horizontal optimization, chunk distribution.
-- `src/placerPrinter.js`: Physical block placing, palette distance matching, and creative/survival placement.
-- `src/commandHandler.js`: Chat & whisper parsing, master verification, and command routing.
-- `src/chat.js`: Rate-limited message queue preventing server spam kicks.
-- `src/config.js`: Flexible command-line configuration parser.
-- `legacy/`: Preserved legacy standalone scripts and prototypes.
+```
+ProCraftersBot/
+├── index.js                  # Main unified entrypoint (CLI Swarm & Electron launch)
+├── index.html                # Desktop GUI interface (all control tabs)
+├── package.json              # Dependency manifests and scripts
+├── src/                      # Core unified backend modules
+│   ├── gui.js                # Electron window manager & state persistence
+│   ├── swarmManager.js       # Centralized swarm manager & bot lifecycle
+│   ├── botInit.js            # Mineflayer bot setup, plugins, events & auto-protect
+│   ├── bodyguard.js          # Circular formation, threat defense & bodyguarding
+│   ├── commandsPrinter.js    # Horizontal /fill span optimizer & command generator
+│   ├── placerPrinter.js      # Palette block placer & 2D physical builder
+│   ├── commandHandler.js     # Chat/whisper parsing & full command routing
+│   ├── utils.js              # ResourceBots actions (hole, nearby, protect, craft)
+│   ├── combat.js             # Combat ticks, weapon attack cooldowns & shields
+│   ├── movement.js           # Pathfinder movements & path generation
+│   ├── blockfinder.js        # Block queries and spatial scanning
+│   ├── chat.js               # Rate-limited chat queue preventing spam kicks
+│   ├── config.js             # CLI argument parser
+│   └── data/                 # Attack speeds, color maps, palettes & default images
+├── js/                       # GUI client controllers
+│   ├── bot.js                # IPC & DOM bridge for swarm, bodyguards, tasks & printers
+│   ├── utils.js              # GUI helper utilities & account authenticators
+│   └── plugins/              # Anti-AFK & Proxy testing plugins
+├── assets/                   # Icons, themes, fonts & application assets
+├── style/                    # CSS stylesheets
+└── test/                     # Automated unit test suite
+```

@@ -1,4 +1,13 @@
-const attackSpeeds = require('../AttackSpeeds.json');
+let attackSpeeds;
+try {
+    attackSpeeds = require('./data/AttackSpeeds.json');
+} catch (e) {
+    try {
+        attackSpeeds = require('../AttackSpeeds.json');
+    } catch {
+        attackSpeeds = { other: 1.6 };
+    }
+}
 
 function getAttackSpeed(weaponName) {
     if (!weaponName) return attackSpeeds.other || 1.6;
@@ -38,72 +47,80 @@ function load(bot) {
         if (typeof bot.supportFeature === 'function' && bot.supportFeature('doesntHaveOffHandSlot')) {
             return false;
         }
-        const destSlot = bot.getEquipmentDestSlot ? bot.getEquipmentDestSlot('off-hand') : null;
-        if (destSlot !== null && bot.inventory.slots[destSlot]) {
-            return (bot.inventory.slots[destSlot].name || '').includes('shield');
-        }
-        return !!bot.inventory.items().find(i => i.name.includes('shield'));
+        const offhand = bot.inventory.slots[45];
+        return offhand && offhand.name.includes('shield');
     };
 
-    bot.equipForCombat = function (prioritizeAxe = false) {
-        if (prioritizeAxe) {
-            const axe = bot.inventory.items().find(i => i.name.includes('axe'));
-            if (axe) {
-                bot.equip(axe, 'hand').catch(() => {});
-                return;
-            }
+    bot.useShield = function (active = true) {
+        if (!bot.hasShield()) return;
+        if (active && !bot.combatState.isShieldActive) {
+            bot.activateItem(true);
+            bot.combatState.isShieldActive = true;
+        } else if (!active && bot.combatState.isShieldActive) {
+            bot.deactivateItem();
+            bot.combatState.isShieldActive = false;
         }
-        const sword = bot.inventory.items().find(i => i.name.includes('sword'));
-        if (sword) {
-            bot.equip(sword, 'hand').catch(() => {});
-        }
-        const shield = bot.inventory.items().find(i => i.name.includes('shield'));
-        if (shield && bot.getEquipmentDestSlot) {
-            bot.equip(shield, 'off-hand').catch(() => {});
-        }
-        if (bot.armorManager && typeof bot.armorManager.equipAll === 'function') {
-            bot.armorManager.equipAll();
+    };
+
+    bot.attackTarget = function (target) {
+        if (!target || !target.isValid) return;
+
+        const mainHand = bot.heldItem;
+        const weaponName = mainHand ? mainHand.name : null;
+        const cooldownTicks = getCooldown(weaponName);
+
+        if (bot.combatState.attackTick >= cooldownTicks) {
+            bot.lookAt(target.position.offset(0, target.height * 0.85, 0), true);
+            bot.attack(target);
+            bot.combatState.attackTick = 0;
         }
     };
 
     bot.checkForTargets = function () {
+        bot.combatState.attackTick++;
+        bot.combatState.mvTick++;
+
         if (bot.combatState.targets.length === 0) return;
 
-        const filter = e => {
-            if (!e || e === bot.entity) return false;
-            return bot.combatState.targets.includes(e.username) ||
-                   bot.combatState.targets.includes(e.name) ||
-                   bot.combatState.targets.includes(e.displayName);
-        };
+        let bestTarget = null;
+        let bestDist = 16;
 
-        const entity = bot.nearestEntity(filter);
-        const minimumDistance = 4.5;
+        for (const entityId in bot.entities) {
+            const entity = bot.entities[entityId];
+            if (!entity || !entity.isValid || entity === bot.entity) continue;
 
-        if (entity && entity.isValid) {
-            bot.combatState.mvTick += 1;
-            if (bot.combatState.mvTick > 10) {
-                bot.combatState.mvTick = 0;
-                bot.moveTo(entity.position);
-            }
+            const matches = bot.combatState.targets.some(filter => {
+                if (typeof filter === 'string') {
+                    return (entity.name && entity.name.toLowerCase().includes(filter.toLowerCase())) ||
+                           (entity.username && entity.username.toLowerCase().includes(filter.toLowerCase()));
+                }
+                if (typeof filter === 'function') {
+                    return filter(entity);
+                }
+                return false;
+            });
 
-            bot.state = 'combat';
-            bot.equipForCombat();
-
-            if (bot.entity.position.distanceTo(entity.position) > minimumDistance) {
-                bot.moveTo(entity.position);
-            } else {
-                if (bot.pvp) {
-                    bot.pvp.attack(entity);
-                } else {
-                    bot.attack(entity);
+            if (matches) {
+                const dist = bot.entity.position.distanceTo(entity.position);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestTarget = entity;
                 }
             }
-        } else if (bot.state === 'combat') {
-            bot.state = 'idle';
+        }
+
+        if (bestTarget) {
+            if (bot.pvp && typeof bot.pvp.attack === 'function' && !bot.pvp.target) {
+                bot.pvp.attack(bestTarget);
+            } else {
+                bot.attackTarget(bestTarget);
+            }
         }
     };
 }
 
 module.exports = {
-    load
+    load,
+    getAttackSpeed,
+    getCooldown
 };

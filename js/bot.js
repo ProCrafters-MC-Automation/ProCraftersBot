@@ -168,6 +168,26 @@ const idBtnTaskHunt = document.getElementById('btnTaskHunt');
 const idBtnTaskCollect = document.getElementById('btnTaskCollect');
 const idTaskDropItem = document.getElementById('taskDropItem');
 const idBtnTaskDropItem = document.getElementById('btnTaskDropItem');
+// Resource Bots Tasks DOM elements
+const idTaskRelX = document.getElementById('taskRelX');
+const idTaskRelY = document.getElementById('taskRelY');
+const idTaskRelZ = document.getElementById('taskRelZ');
+const idBtnTaskRelMove = document.getElementById('btnTaskRelMove');
+const idTaskHoleDim = document.getElementById('taskHoleDim');
+const idBtnTaskHole = document.getElementById('btnTaskHole');
+const idTaskEquipName = document.getElementById('taskEquipName');
+const idBtnTaskEquip = document.getElementById('btnTaskEquip');
+const idBtnTaskNearby = document.getElementById('btnTaskNearby');
+const idTaskLocateTarget = document.getElementById('taskLocateTarget');
+const idBtnTaskLocate = document.getElementById('btnTaskLocate');
+const idBtnTaskProtect = document.getElementById('btnTaskProtect');
+const idBtnTaskGuardPos = document.getElementById('btnTaskGuardPos');
+const idBtnTaskLearn = document.getElementById('btnTaskLearn');
+const idBtnTaskRecite = document.getElementById('btnTaskRecite');
+const idTaskMemoryKey = document.getElementById('taskMemoryKey');
+const idTaskMemoryVal = document.getElementById('taskMemoryVal');
+const idBtnTaskRemember = document.getElementById('btnTaskRemember');
+const idBtnTaskValueOf = document.getElementById('btnTaskValueOf');
 
 function getSelectedBots() {
     const list = selectedList();
@@ -667,6 +687,165 @@ if (idBtnTaskDropItem) {
             if (item) bot.tossStack(item);
         });
         sendLog(`[Tasks] Dropped ${itemName} from ${bots.length} bot(s).`);
+    };
+}
+
+if (idBtnTaskRelMove) {
+    idBtnTaskRelMove.onclick = () => {
+        const bots = getSelectedBots();
+        const dx = parseInt(idTaskRelX ? idTaskRelX.value : '0', 10) || 0;
+        const dy = parseInt(idTaskRelY ? idTaskRelY.value : '0', 10) || 0;
+        const dz = parseInt(idTaskRelZ ? idTaskRelZ.value : '5', 10) || 0;
+        bots.forEach(bot => {
+            if (bot.entity) {
+                const targetPos = bot.entity.position.offset(dx, dy, dz);
+                const mcData = require('minecraft-data')(bot.version);
+                const { Movements } = require('mineflayer-pathfinder');
+                Utils.goToTarget(bot, { position: targetPos }, new Movements(bot, mcData), 1);
+            }
+        });
+        sendLog(`[Tasks] Moving ${bots.length} bot(s) relative by (${dx}, ${dy}, ${dz}).`);
+    };
+}
+
+if (idBtnTaskHole) {
+    idBtnTaskHole.onclick = () => {
+        const bots = getSelectedBots();
+        const dimStr = (idTaskHoleDim ? idTaskHoleDim.value : '5x5x3').trim();
+        const parts = dimStr.split('x').map(n => parseInt(n, 10));
+        const W = parts[0] || 5;
+        const L = parts[1] || 5;
+        const D = parts[2] || 3;
+        bots.forEach(bot => {
+            const mcData = require('minecraft-data')(bot.version);
+            const { Movements } = require('mineflayer-pathfinder');
+            Utils.hole(bot, W, L, D, new Movements(bot, mcData), () => {
+                sendLog(`[Tasks: ${bot.username}] Completed digging ${W}x${L}x${D} hole.`);
+            });
+        });
+        sendLog(`[Tasks] Started digging hole ${W}x${L}x${D} with ${bots.length} bot(s).`);
+    };
+}
+
+if (idBtnTaskEquip) {
+    idBtnTaskEquip.onclick = async () => {
+        const bots = getSelectedBots();
+        const itemName = idTaskEquipName ? idTaskEquipName.value.trim() : '';
+        if (!itemName) return createPopup('Enter an item name to equip.');
+        for (const bot of bots) {
+            const res = await Utils.equipByName(bot, itemName);
+            sendLog(`[Tasks: ${bot.username}] Equip ${itemName}: ${res ? 'success' : 'not found / failed'}`);
+        }
+    };
+}
+
+if (idBtnTaskNearby) {
+    idBtnTaskNearby.onclick = () => {
+        const bots = getSelectedBots();
+        bots.forEach(bot => {
+            const counts = Utils.nearbyBlocks(bot, 16);
+            const summary = Object.entries(counts).slice(0, 8).map(([b, c]) => `${b}: ${c}`).join(', ');
+            sendLog(`[Nearby: ${bot.username}] Found: ${summary || 'None'}`);
+        });
+    };
+}
+
+if (idBtnTaskLocate) {
+    idBtnTaskLocate.onclick = () => {
+        const bots = getSelectedBots();
+        const target = (idTaskLocateTarget ? idTaskLocateTarget.value : '').trim();
+        if (!target) return createPopup('Enter a player or entity name to locate.');
+        bots.forEach(bot => {
+            const foundPlayer = bot.players[target];
+            if (foundPlayer && foundPlayer.entity) {
+                const pos = foundPlayer.entity.position;
+                sendLog(`[Locate: ${bot.username}] Found player ${target} at (${Math.round(pos.x)}, ${Math.round(pos.y)}, ${Math.round(pos.z)})`);
+                return;
+            }
+            const foundEntity = Object.values(bot.entities).find(e => e.name === target || e.username === target);
+            if (foundEntity) {
+                const pos = foundEntity.position;
+                sendLog(`[Locate: ${bot.username}] Found entity ${target} at (${Math.round(pos.x)}, ${Math.round(pos.y)}, ${Math.round(pos.z)})`);
+            } else {
+                sendLog(`[Locate: ${bot.username}] Could not find ${target}.`);
+            }
+        });
+    };
+}
+
+if (idBtnTaskProtect) {
+    idBtnTaskProtect.onclick = () => {
+        const bots = getSelectedBots();
+        bots.forEach(bot => {
+            const mcData = require('minecraft-data')(bot.version);
+            const { Movements } = require('mineflayer-pathfinder');
+            Utils.attackNearestMob(bot, new Movements(bot, mcData), 16);
+        });
+        sendLog(`[Tasks] Sent ${bots.length} bot(s) to protect area and attack hostiles.`);
+    };
+}
+
+if (idBtnTaskGuardPos) {
+    idBtnTaskGuardPos.onclick = () => {
+        const bots = getSelectedBots();
+        bots.forEach(bot => {
+            if (bot.entity) {
+                bot.guardPos = bot.entity.position.clone();
+                bot.state = 'guarding';
+                const mcData = require('minecraft-data')(bot.version);
+                const { Movements } = require('mineflayer-pathfinder');
+                Utils.guardArea(bot, bot.guardPos, new Movements(bot, mcData));
+            }
+        });
+        sendLog(`[Tasks] Guarding current positions with ${bots.length} bot(s).`);
+    };
+}
+
+if (idBtnTaskLearn) {
+    idBtnTaskLearn.onclick = () => {
+        const bots = getSelectedBots();
+        const targetName = (idTaskPlayerTarget ? idTaskPlayerTarget.value : '').trim() || 'Master';
+        bots.forEach(bot => {
+            const player = bot.players[targetName];
+            Utils.learn(bot, player);
+        });
+        sendLog(`[Tasks] Started learning block modifications near ${targetName}.`);
+    };
+}
+
+if (idBtnTaskRecite) {
+    idBtnTaskRecite.onclick = () => {
+        const bots = getSelectedBots();
+        bots.forEach(bot => {
+            Utils.finishLearn(bot);
+        });
+        sendLog(`[Tasks] Stopped learning and recited blocks for ${bots.length} bot(s).`);
+    };
+}
+
+if (idBtnTaskRemember) {
+    idBtnTaskRemember.onclick = () => {
+        const bots = getSelectedBots();
+        const key = idTaskMemoryKey ? idTaskMemoryKey.value.trim() : '';
+        const val = idTaskMemoryVal ? idTaskMemoryVal.value.trim() : '';
+        if (!key) return createPopup('Enter a key to remember.');
+        bots.forEach(bot => {
+            if (!bot.memory) bot.memory = {};
+            bot.memory[key] = val;
+        });
+        sendLog(`[Memory] Set ${key} = ${val} on ${bots.length} bot(s).`);
+    };
+}
+
+if (idBtnTaskValueOf) {
+    idBtnTaskValueOf.onclick = () => {
+        const bots = getSelectedBots();
+        const key = idTaskMemoryKey ? idTaskMemoryKey.value.trim() : '';
+        if (!key) return createPopup('Enter a key to query.');
+        bots.forEach(bot => {
+            const val = bot.memory ? bot.memory[key] : undefined;
+            sendLog(`[Memory: ${bot.username}] ${key} = ${val !== undefined ? val : '<undefined>'}`);
+        });
     };
 }
 

@@ -1,61 +1,57 @@
 const mineflayer = require('mineflayer');
-const toolPlugin = require('mineflayer-tool').plugin;
+const { pathfinder } = require('mineflayer-pathfinder');
 const armorManager = require('mineflayer-armor-manager');
+const toolPlugin = require('mineflayer-tool').plugin;
 const pvp = require('mineflayer-pvp').plugin;
-const { pathfinder, Movements } = require('mineflayer-pathfinder');
+const blockfinderPlugin = require('mineflayer-blockfinder')(mineflayer);
 
 const movement = require('./movement');
 const combat = require('./combat');
 const convention = require('./convention');
-const blockfinder = require('./blockfinder');
-const { addChat } = require('./chat');
 
-function initBot(bot, options = {}) {
-    const { password, master, commandHandler, role = 'general' } = options;
+function initBot(options, master, commandHandler) {
+    const bot = mineflayer.createBot(options);
 
+    // Initialize custom state
     bot.state = 'idle';
-    bot.substate = 'none';
-    bot.role = role;
+    bot.home = null;
+    bot.learnedBlocks = [];
+    bot.isLearning = false;
+    bot.memory = {};
 
-    // Load plugins
-    bot.loadPlugin(pvp);
+    // Load standard plugins
     bot.loadPlugin(pathfinder);
     bot.loadPlugin(armorManager);
     bot.loadPlugin(toolPlugin);
+    bot.loadPlugin(pvp);
+    bot.loadPlugin(blockfinderPlugin);
 
-    // Load custom component systems
+    // Load custom sub-modules
     movement.load(bot);
     combat.load(bot);
     convention.load(bot);
-    blockfinder.load(bot);
 
-    // Auto-login helper
-    const autoLogin = () => {
-        if (!password) return;
-        addChat(bot, `/register ${password} ${password}`);
-        addChat(bot, `/login ${password}`);
-    };
-
+    // Auto-equip armor and weapons on login/spawn
     bot.once('spawn', () => {
-        try {
-            const mcData = require('minecraft-data')(bot.version);
-            const defaultMove = new Movements(bot, mcData);
-            defaultMove.allowFreeMotion = true;
-            defaultMove.allowParkour = true;
-            bot.pathfinder.setMovements(defaultMove);
-        } catch (e) {}
-
-        console.log(`[Bot Online] ${bot.username} (Role: ${bot.role})`);
-        autoLogin();
-
-        if (master && master.length > 0) {
-            master.forEach(m => addChat(bot, "I'm online", m));
+        if (bot.armorManager && typeof bot.armorManager.equipAll === 'function') {
+            bot.armorManager.equipAll();
         }
-    });
 
-    // Auto-equip sword and shield when collected
-    bot.on('playerCollect', (collector) => {
-        if (collector !== bot.entity) return;
+        // Set default pathfinder movements once spawned
+        const mcData = require('minecraft-data')(bot.version);
+        const { Movements } = require('mineflayer-pathfinder');
+        bot.defaultMove = new Movements(bot, mcData);
+        bot.defaultMove.canDig = false;
+        bot.defaultMove.allow1by1towers = false;
+        bot.pathfinder.setMovements(bot.defaultMove);
+
+        // Auto-login commands support (e.g. offline servers with /login)
+        if (options.password) {
+            setTimeout(() => {
+                bot.chat(`/login ${options.password}`);
+                bot.chat(`/register ${options.password} ${options.password}`);
+            }, 1000);
+        }
 
         setTimeout(() => {
             const sword = bot.inventory.items().find(i => i.name.includes('sword'));
@@ -84,6 +80,21 @@ function initBot(bot, options = {}) {
     bot.on('physicsTick', () => {
         if (bot.checkForTargets && bot.state !== 'bodyguard') {
             bot.checkForTargets();
+        }
+    });
+
+    // Auto-protect friendly entities / bots when hurt
+    bot.on('entityHurt', (entity) => {
+        if (!entity) return;
+        const masters = Array.isArray(master) ? master : [master];
+        const isMaster = entity.username && masters.includes(entity.username);
+        const isSwarmMember = bot.swarmManager && entity.username && Boolean(bot.swarmManager.getBot(entity.username));
+        if ((isMaster || isSwarmMember) && bot.state !== 'bodyguard') {
+            const Utils = require('./utils');
+            const mcData = require('minecraft-data')(bot.version);
+            const { Movements } = require('mineflayer-pathfinder');
+            const moves = bot.defaultMove || new Movements(bot, mcData);
+            Utils.protectFriendly(bot, entity, moves);
         }
     });
 

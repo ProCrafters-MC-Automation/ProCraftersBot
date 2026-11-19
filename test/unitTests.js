@@ -31,7 +31,7 @@ async function runTests() {
         assert.strictEqual(cfgDefault.host, 'localhost');
         assert.strictEqual(cfgDefault.port, 25565);
         assert.strictEqual(cfgDefault.botNames.length > 0, true);
-        console.log(' Config Parser Passed.');
+        console.log('  Config Parser Passed.');
     }
 
     // 2. Swarm Manager tests
@@ -48,7 +48,7 @@ async function runTests() {
         assert.strictEqual(sm.getBots('Alpha,Beta').length, 2);
         assert.strictEqual(sm.getBots('all').length, 2);
         assert.strictEqual(sm.getBots('Alpha').length, 1);
-        console.log(' Swarm Manager Passed.');
+        console.log('  Swarm Manager Passed.');
     }
 
     // 3. Bodyguard System tests
@@ -95,7 +95,7 @@ async function runTests() {
         bg.stopGuards(fakeBot1, 'BossPlayer');
         assert.strictEqual(fakeBot1.state, 'idle');
         assert.strictEqual(bg.getGuardsForBoss('BossPlayer').length, 1);
-        console.log(' Bodyguard System Passed.');
+        console.log('  Bodyguard System Passed.');
     }
 
     // 4. Commands Printer tests
@@ -114,8 +114,8 @@ async function runTests() {
         const cmd = result.commands[0];
         assert.strictEqual(cmd.type === 'setblock' || cmd.type === 'fill', true);
         assert.strictEqual(typeof cmd.blockName, 'string');
-        console.log(` Commands Printer Generated ${result.commands.length} optimized commands from ${result.width}x${result.height} image.`);
-        console.log(' Commands Printer Passed.');
+        console.log(`  Commands Printer Generated ${result.commands.length} optimized commands from ${result.width}x${result.height} image.`);
+        console.log('  Commands Printer Passed.');
     }
 
     // 5. Placer Printer tests
@@ -129,7 +129,7 @@ async function runTests() {
             { block: 'blue_concrete', colour: [0, 0, 255] }
         ]);
         assert.strictEqual(block, 'red_concrete');
-        console.log(' Placer Printer Passed.');
+        console.log('  Placer Printer Passed.');
     }
 
     // 6. Command Handler routing tests
@@ -173,7 +173,7 @@ async function runTests() {
         assert.strictEqual(testBot.state, 'idle');
         defaultChatQueue.clear();
 
-        console.log(' Command Handler Routing Passed.');
+        console.log('  Command Handler Routing Passed.');
     }
 
     // 7. Recent Minecraft Version Support tests
@@ -188,11 +188,30 @@ async function runTests() {
             const data = mcData(ver);
             assert.strictEqual(!!data && !!data.blocks, true, `Version data for ${ver} should have blocks`);
         }
-        console.log(` Recent versions with full data verified: ${targetFullDataVersions.join(', ')}.`);
-        console.log(' Recent Version Support Passed.');
+        console.log(`  Recent versions with full data verified: ${targetFullDataVersions.join(', ')}.`);
+        console.log('  Recent Version Support Passed.');
+    }
+
+    // 8. ResourceBots Actions tests
+    console.log('Testing ResourceBots Actions...');
+    {
+        const Utils = require('../src/utils');
+        assert.strictEqual(typeof Utils.hole, 'function');
+        assert.strictEqual(typeof Utils.nearbyBlocks, 'function');
+        assert.strictEqual(typeof Utils.equipByName, 'function');
+        assert.strictEqual(typeof Utils.protectFriendly, 'function');
+        assert.strictEqual(typeof Utils.learn, 'function');
+        assert.strictEqual(typeof Utils.finishLearn, 'function');
+        assert.strictEqual(typeof Utils.guardArea, 'function');
+        assert.strictEqual(typeof Utils.tossItem, 'function');
+        assert.strictEqual(typeof Utils.craft, 'function');
+        assert.strictEqual(typeof Utils.hunt, 'function');
+        assert.strictEqual(typeof Utils.collectDrops, 'function');
+        console.log('  ResourceBots Actions Passed.');
     }
 
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');
+    process.exit(0);
 }
 
 runTests().catch(err => {

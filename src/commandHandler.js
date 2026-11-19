@@ -70,7 +70,7 @@ function createCommandHandler(swarmManager) {
             case 'selfguard': {
                 const subCmd = (args[0] || '').toLowerCase();
 
-                // Option 1: Stop bodyguarding
+                // Stop bodyguarding
                 if (subCmd === 'stop') {
                     if (isSwarm) {
                         bodyguardSystem.stopGuards(swarmManager.getAllBots(), username);
@@ -82,7 +82,7 @@ function createCommandHandler(swarmManager) {
                     break;
                 }
 
-                // Option 2: Dismiss spawned bodyguard bots
+                // Dismiss spawned bodyguard bots
                 if (subCmd === 'dismiss') {
                     const prefix = args[1] || null;
                     const count = bodyguardSystem.dismissGuards(swarmManager, username, prefix);
@@ -90,8 +90,7 @@ function createCommandHandler(swarmManager) {
                     break;
                 }
 
-                // Option 3: Existing bots bodyguarding
-                // Syntax: bodyguard existing <bot1,bot2|'all'> [bossName]
+                // Existing bots bodyguarding
                 if (subCmd === 'existing') {
                     const botSelection = args[1] || (isSwarm ? 'all' : bot.username);
                     const bossName = args[2] || username;
@@ -108,9 +107,7 @@ function createCommandHandler(swarmManager) {
                     break;
                 }
 
-                // Option 4: New bots join the server and bodyguard
-                // Syntax: bodyguard new <count> [prefix] [bossName]
-                // OR: bodyguards <count> / selfguard <count> (backward-compatible)
+                // New bots join the server and bodyguard
                 if (subCmd === 'new' || (!isNaN(parseInt(subCmd, 10)) && subCmd !== '')) {
                     let count = 1;
                     let prefix = 'Guard';
@@ -121,7 +118,6 @@ function createCommandHandler(swarmManager) {
                         prefix = args[2] || 'Guard';
                         bossName = args[3] || username;
                     } else {
-                        // Backward-compatible: bodyguards 3 / selfguard 2
                         count = parseInt(subCmd, 10) || 1;
                         if (cmd === 'selfguard') {
                             bossName = bot.username;
@@ -143,8 +139,7 @@ function createCommandHandler(swarmManager) {
                     break;
                 }
 
-                // Option 5: Default to making targeted bot(s) bodyguard the user
-                // e.g. "Alpha bodyguard" or "swarm bodyguard" or "Alpha bodyguard Steve"
+                // Default to making targeted bot(s) bodyguard the user
                 const bossTarget = args[0] || username;
                 if (isSwarm) {
                     const allBots = swarmManager.getAllBots();
@@ -177,7 +172,6 @@ function createCommandHandler(swarmManager) {
                     return;
                 }
 
-                // If sender has bodyguards, assign target to bodyguards
                 const guards = bodyguardSystem.getGuardsForBoss(username);
                 if (guards.length > 0) {
                     bodyguardSystem.setTargetForGuards(username, entityToAttack);
@@ -197,8 +191,8 @@ function createCommandHandler(swarmManager) {
             // COMMANDS & PLACER PRINTER FUNCTIONALITY
             // ==========================================
             case 'print': {
-                const printerType = (args[0] || '').toLowerCase(); // 'command' or 'placer'
-                const modeOrFirst = (args[1] || '').toLowerCase();  // 'existing', 'new', or coordinate
+                const printerType = (args[0] || '').toLowerCase();
+                const modeOrFirst = (args[1] || '').toLowerCase();
 
                 if (printerType === 'stop') {
                     commandsPrinter.stop();
@@ -207,11 +201,8 @@ function createCommandHandler(swarmManager) {
                     break;
                 }
 
-                // ------------------------------------------
                 // COMMANDS PRINTER
-                // ------------------------------------------
                 if (printerType === 'command') {
-                    // Syntax A: print command existing <bot1,bot2|'all'> <x> <y> <z> [image]
                     if (modeOrFirst === 'existing') {
                         const botSelection = args[2] || (isSwarm ? 'all' : bot.username);
                         const coords = { x: args[3], y: args[4], z: args[5] };
@@ -231,7 +222,6 @@ function createCommandHandler(swarmManager) {
                         break;
                     }
 
-                    // Syntax B: print command new <count> <prefix> <x> <y> <z> [image]
                     if (modeOrFirst === 'new') {
                         const count = parseInt(args[2], 10) || 1;
                         const prefix = args[3] || 'CmdPrinter';
@@ -246,8 +236,6 @@ function createCommandHandler(swarmManager) {
                         break;
                     }
 
-                    // Backward-compatible Syntax:
-                    // print command <x> <y> <z> <botCount> <prefix> <imageFile>
                     if (args.length >= 6 && !isNaN(parseInt(args[4], 10))) {
                         const coords = { x: args[1], y: args[2], z: args[3] };
                         const count = parseInt(args[4], 10) || 1;
@@ -261,8 +249,6 @@ function createCommandHandler(swarmManager) {
                         break;
                     }
 
-                    // Default to current bot or swarm existing bots
-                    // print command <x> <y> <z> [image]
                     const coords = { x: args[1], y: args[2], z: args[3] };
                     const imageFile = args[4] || 'image.jpg';
                     const botsToUse = isSwarm ? swarmManager.getAllBots() : [bot];
@@ -274,11 +260,8 @@ function createCommandHandler(swarmManager) {
                     break;
                 }
 
-                // ------------------------------------------
                 // PLACER PRINTER
-                // ------------------------------------------
                 if (printerType === 'placer') {
-                    // Syntax A: print placer existing <bot1,bot2|'all'> <x> <y> <z> [image] [palette] [size]
                     if (modeOrFirst === 'existing') {
                         const botSelection = args[2] || (isSwarm ? 'all' : bot.username);
                         const coords = { x: args[3], y: args[4], z: args[5] };
@@ -302,7 +285,6 @@ function createCommandHandler(swarmManager) {
                         break;
                     }
 
-                    // Syntax B: print placer new <count> <prefix> <x> <y> <z> [image] [palette] [size]
                     if (modeOrFirst === 'new') {
                         const count = parseInt(args[2], 10) || 1;
                         const prefix = args[3] || 'Placer';
@@ -320,8 +302,6 @@ function createCommandHandler(swarmManager) {
                         break;
                     }
 
-                    // Backward-compatible Syntax:
-                    // print placer <x> <y> <z> [image] [palette] [size]
                     const coords = { x: args[1], y: args[2], z: args[3] };
                     const imageFile = args[4] || 'image.jpg';
                     const palette = args[5] || 'concrete';
@@ -338,6 +318,170 @@ function createCommandHandler(swarmManager) {
                 }
 
                 addChat(bot, 'Unknown print type. Use "print command" or "print placer".', returnAddress);
+                break;
+            }
+
+            // ==========================================
+            // RESOURCE BOTS & AUTOMATION TASKS
+            // ==========================================
+            case 'hole': {
+                Utils.hole(bot, args, defaultMove, (msg) => {
+                    addChat(bot, msg, returnAddress);
+                });
+                break;
+            }
+
+            case 'nearby': {
+                const nearby = Utils.nearbyBlocks(bot);
+                addChat(bot, nearby.length > 0 ? `Nearby blocks: ${nearby.join(', ')}` : 'No exposed blocks found nearby.', returnAddress);
+                break;
+            }
+
+            case 'equip': {
+                if (!args[0]) {
+                    addChat(bot, 'Usage: equip <itemName>', returnAddress);
+                    return;
+                }
+                Utils.equipByName(bot, args[0], mcData, (msg) => {
+                    addChat(bot, msg, returnAddress);
+                });
+                break;
+            }
+
+            case 'drop': {
+                // Supports: drop <itemName> OR drop <amount> <itemName>
+                if (args.length >= 2 && !isNaN(parseInt(args[0], 10))) {
+                    const amount = parseInt(args[0], 10);
+                    const itemName = args[1];
+                    Utils.tossItem(bot, itemName, amount, username, (msg) => {
+                        addChat(bot, msg, returnAddress);
+                    });
+                } else if (args[0]) {
+                    Utils.tossItem(bot, args[0], null, username, (msg) => {
+                        addChat(bot, msg, returnAddress);
+                    });
+                } else {
+                    addChat(bot, 'Usage: drop [amount] <itemName>', returnAddress);
+                }
+                break;
+            }
+
+            case 'protect': {
+                addChat(bot, "Protecting area against hostile mobs...", returnAddress);
+                Utils.attackNearestMob(bot, defaultMove, (msg) => {
+                    addChat(bot, msg, returnAddress);
+                });
+                break;
+            }
+
+            case 'guard': {
+                if (!targetEntity) {
+                    addChat(bot, "I can't see you to guard your position.", returnAddress);
+                    return;
+                }
+                addChat(bot, "Guarding your location against monsters.", returnAddress);
+                const guardPos = targetEntity.position.clone();
+
+                const guardTick = () => {
+                    if (bot.state !== 'guardArea') {
+                        bot.removeListener('physicsTick', guardTick);
+                        return;
+                    }
+                    if (bot.pvp && bot.pvp.target) return;
+
+                    const hostileFilter = e => e.kind === 'Hostile mobs' && e.isValid && e.position.distanceTo(guardPos) < 16;
+                    const mob = bot.nearestEntity(hostileFilter);
+                    if (mob) {
+                        const sword = bot.inventory.items().find(i => i.name.includes('sword'));
+                        if (sword) bot.equip(sword, 'hand').catch(() => {});
+                        if (bot.pvp) bot.pvp.attack(mob);
+                        else bot.attack(mob);
+                    } else if (bot.entity.position.distanceTo(guardPos) > 3) {
+                        Utils.goToTarget(bot, { position: guardPos }, defaultMove, 1);
+                    }
+                };
+
+                bot.state = 'guardArea';
+                bot.on('physicsTick', guardTick);
+                break;
+            }
+
+            case 'move': {
+                if (args.length < 3) {
+                    addChat(bot, 'Usage: move <xOffset> <yOffset> <zOffset>', returnAddress);
+                    return;
+                }
+                const dx = parseInt(args[0], 10) || 0;
+                const dy = parseInt(args[1], 10) || 0;
+                const dz = parseInt(args[2], 10) || 0;
+                const dest = bot.entity.position.offset(dx, dy, dz);
+                Utils.goToTarget(bot, { position: dest }, defaultMove, 0, (success) => {
+                    addChat(bot, success ? `Moved by ${dx}, ${dy}, ${dz}.` : `Could not complete relative move.`, returnAddress);
+                });
+                break;
+            }
+
+            case 'learn': {
+                if (!targetEntity) {
+                    addChat(bot, "I can't see you to learn your actions.", returnAddress);
+                    return;
+                }
+                Utils.learn(bot, targetEntity, () => {
+                    addChat(bot, "Learning started. Place or break blocks near you.", returnAddress);
+                });
+                break;
+            }
+
+            case 'learnstop':
+            case 'recite': {
+                const instructions = Utils.finishLearn(bot);
+                if (instructions.length === 0) {
+                    addChat(bot, "No block actions recorded.", returnAddress);
+                } else {
+                    addChat(bot, `Recorded ${instructions.length} actions: ${instructions.slice(0, 5).join('; ')}`, returnAddress);
+                }
+                break;
+            }
+
+            case 'locate': {
+                const targetName = args[0];
+                if (!targetName) {
+                    addChat(bot, 'Usage: locate <entityOrBlockName>', returnAddress);
+                    return;
+                }
+                // Check entities first
+                const entity = bot.nearestEntity(e => e.name === targetName || e.username === targetName || e.displayName === targetName);
+                if (entity && entity.position) {
+                    const p = entity.position.floored();
+                    addChat(bot, `Found entity ${targetName} at ${p.x} / ${p.y} / ${p.z}.`, returnAddress);
+                    return;
+                }
+                // Check blocks
+                if (mcData && mcData.blocksByName[targetName] && bot.findBlocks) {
+                    const blocks = bot.findBlocks({ matching: mcData.blocksByName[targetName].id, maxDistance: 64, count: 1 });
+                    if (blocks.length > 0) {
+                        addChat(bot, `Found ${targetName} at ${blocks[0].x} / ${blocks[0].y} / ${blocks[0].z}.`, returnAddress);
+                        return;
+                    }
+                }
+                addChat(bot, `Could not locate "${targetName}" nearby.`, returnAddress);
+                break;
+            }
+
+            case 'remember': {
+                if (args.length > 0) {
+                    const text = args.join(' ');
+                    memory[bot.username] = text;
+                    addChat(bot, 'Saved to memory!', returnAddress);
+                } else {
+                    addChat(bot, 'Usage: remember <text>', returnAddress);
+                }
+                break;
+            }
+
+            case 'valueof': {
+                const val = memory[bot.username];
+                addChat(bot, val ? `Memory: ${val}` : 'Nothing stored in memory.', returnAddress);
                 break;
             }
 
@@ -417,29 +561,16 @@ function createCommandHandler(swarmManager) {
                 bodyguardSystem.stopGuards(bot, username);
                 commandsPrinter.stop();
                 placerPrinter.stop();
+                bot.state = 'idle';
                 addChat(bot, 'Stopped all actions.', returnAddress);
                 break;
             }
 
             // ==========================================
-            // INVENTORY & UTILITIES
+            // INVENTORY & CRAFTING
             // ==========================================
             case 'inventory': {
                 addChat(bot, Utils.inventoryAsString(bot, bot.inventory.items()), returnAddress);
-                break;
-            }
-
-            case 'drop': {
-                if (args[0]) {
-                    const item = bot.inventory.items().find(i => i.name.toLowerCase().includes(args[0].toLowerCase()));
-                    if (item) {
-                        bot.tossStack(item).then(() => {
-                            addChat(bot, `Dropped ${item.name}.`, returnAddress);
-                        }).catch(e => addChat(bot, `Drop error: ${e.message}`, returnAddress));
-                    } else {
-                        addChat(bot, `Item "${args[0]}" not found in inventory.`, returnAddress);
-                    }
-                }
                 break;
             }
 
