@@ -154,10 +154,13 @@ function createCommandHandler(swarmManager) {
 
             case 'halt': {
                 bodyguardSystem.haltGuards(username);
-                addChat(bot, 'Guards halted combat.', returnAddress);
+                if (bot.pvp && typeof bot.pvp.stop === 'function') bot.pvp.stop();
+                if (bot.clearTargets) bot.clearTargets();
+                addChat(bot, 'Combat halted.', returnAddress);
                 break;
             }
 
+            case 'attack':
             case 'kill':
             case 'target': {
                 const targetName = args[0];
@@ -166,23 +169,39 @@ function createCommandHandler(swarmManager) {
                     return;
                 }
                 const playerToAttack = bot.players[targetName];
-                const entityToAttack = playerToAttack ? playerToAttack.entity : bot.nearestEntity(e => e.name === targetName || e.username === targetName);
+                const entityToAttack = playerToAttack ? playerToAttack.entity : bot.nearestEntity(e => (e.name && e.name.toLowerCase() === targetName.toLowerCase()) || (e.username && e.username.toLowerCase() === targetName.toLowerCase()));
                 if (!entityToAttack) {
                     addChat(bot, `Target "${targetName}" not found nearby.`, returnAddress);
                     return;
                 }
 
+                const isBgCommand = msg.toLowerCase().startsWith('bodyguard') || (isSwarm && bot.state === 'bodyguard');
                 const guards = bodyguardSystem.getGuardsForBoss(username);
-                if (guards.length > 0) {
+
+                if (isBgCommand && guards.length > 0) {
                     bodyguardSystem.setTargetForGuards(username, entityToAttack);
                     addChat(bot, `Bodyguards targeting ${targetName}!`, returnAddress);
                 } else {
-                    if (bot.pvp) {
-                        bot.pvp.attack(entityToAttack);
+                    if (isSwarm) {
+                        const allBots = swarmManager.getAllBots();
+                        allBots.forEach(b => {
+                            if (b.equipForCombat) b.equipForCombat();
+                            if (b.pvp && typeof b.pvp.attack === 'function') {
+                                b.pvp.attack(entityToAttack);
+                            } else if (typeof b.attack === 'function') {
+                                b.attack(entityToAttack);
+                            }
+                        });
+                        addChat(bot, `All bots attacking ${targetName}!`, returnAddress);
                     } else {
-                        bot.attack(entityToAttack);
+                        if (bot.equipForCombat) bot.equipForCombat();
+                        if (bot.pvp && typeof bot.pvp.attack === 'function') {
+                            bot.pvp.attack(entityToAttack);
+                        } else if (typeof bot.attack === 'function') {
+                            bot.attack(entityToAttack);
+                        }
+                        addChat(bot, `Attacking ${targetName}!`, returnAddress);
                     }
-                    addChat(bot, `Attacking ${targetName}!`, returnAddress);
                 }
                 break;
             }

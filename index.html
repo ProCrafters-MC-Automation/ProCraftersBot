@@ -143,8 +143,7 @@
             <button style="flex: 1;" class="button" onclick="selectAll()">All</button>
             <button style="flex: 1;" class="button" onclick="selectRemove()">None</button>
           </div>
-          <ul id="ul-options" class="flex-colum input-group selectors"
-            style="height: 14pc; width:15pc; position: relative; top: -20px; opacity: 1;">
+          <ul id="ul-options" class="flex-colum input-group selectors dynamic-selectors">
             <button class="button button-selected" data-target=".controls">Controls</button>
             <button class="button" data-target=".chat">Chat</button>
             <button class="button" data-target=".spam">Spam</button>
@@ -371,7 +370,7 @@
               </div>
             </div>
           </div>
-          <div id="bodyguard" class="bodyguard functsBtn" style="display: none">
+          <div id="bodyguard" class="bodyguard functsBtn scrollable-panel" style="display: none">
             <div class="input-group flex-colum center-elements">
               <span class="label">
                 <label class="label-text">Bodyguard System</label>
@@ -403,7 +402,7 @@
               </div>
             </div>
           </div>
-          <div id="printers" class="printers functsBtn" style="display: none">
+          <div id="printers" class="printers functsBtn scrollable-panel" style="display: none">
             <div class="input-group flex-colum center-elements">
               <span class="label">
                 <label class="label-text">2D Printers</label>
@@ -459,7 +458,7 @@
               </div>
             </div>
           </div>
-          <div id="tasks" class="tasks functsBtn" style="display: none">
+          <div id="tasks" class="tasks functsBtn scrollable-panel" style="display: none">
             <div class="input-group flex-colum center-elements">
               <span class="label">
                 <label class="label-text">Swarm & Resource Tasks</label>

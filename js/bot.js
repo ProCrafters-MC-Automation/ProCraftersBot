@@ -340,15 +340,32 @@ if (idBtnBgAttack) {
         const targetName = idBgAttackTarget.value.trim();
         if (!targetName) return createPopup("Enter a target name to attack.", "red");
 
-        const firstBot = guiSwarmManager.getAllBots()[0];
-        if (!firstBot) return;
+        const bots = getSelectedBots();
+        if (!bots || bots.length === 0) return createPopup("No bots available to attack.");
 
+        const firstBot = bots[0];
         const playerToAttack = firstBot.players[targetName];
-        const entity = playerToAttack ? playerToAttack.entity : firstBot.nearestEntity(e => e.name === targetName || e.username === targetName);
+        const entity = playerToAttack ? playerToAttack.entity : firstBot.nearestEntity(e => (e.name && e.name.toLowerCase() === targetName.toLowerCase()) || (e.username && e.username.toLowerCase() === targetName.toLowerCase()));
 
         if (entity) {
-            bodyguardSystem.setTargetForGuards(boss, entity);
-            sendLog(`[Bodyguard] Guards attacking target: ${targetName}`);
+            // Check if user has active bodyguards for this boss
+            const guards = bodyguardSystem.getGuardsForBoss(boss);
+            if (guards.length > 0) {
+                bodyguardSystem.setTargetForGuards(boss, entity);
+                sendLog(`[Bodyguard] Guards attacking target: ${targetName}`);
+            }
+
+            // Also attack directly with all selected bots independently from bodyguarding
+            bots.forEach(b => {
+                if (b.equipForCombat) b.equipForCombat();
+                if (b.pvp && typeof b.pvp.attack === 'function') {
+                    b.pvp.attack(entity);
+                } else if (typeof b.attack === 'function') {
+                    b.attack(entity);
+                }
+            });
+            sendLog(`[Combat] ${bots.length} bot(s) attacking target: ${targetName}`);
+            if (idBgStatusLabel) idBgStatusLabel.innerText = `Attacking ${targetName}...`;
         } else {
             createPopup(`Entity "${targetName}" not found nearby.`);
         }
@@ -359,7 +376,14 @@ if (idBtnBgHalt) {
     idBtnBgHalt.onclick = () => {
         const boss = idBgBossTarget.value.trim() || 'Master';
         bodyguardSystem.haltGuards(boss);
-        sendLog(`[Bodyguard] Guards halted attack and returned to formation.`);
+        const bots = getSelectedBots();
+        bots.forEach(b => {
+            if (b.pvp && typeof b.pvp.stop === 'function') b.pvp.stop();
+            if (b.clearTargets) b.clearTargets();
+            if (b.pathfinder) b.pathfinder.setGoal(null);
+        });
+        sendLog(`[Combat] Halted combat and returned bodyguards to formation.`);
+        if (idBgStatusLabel) idBgStatusLabel.innerText = `Combat halted.`;
     };
 }
 
