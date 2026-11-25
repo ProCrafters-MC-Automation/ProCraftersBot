@@ -173,6 +173,26 @@ async function runTests() {
         assert.strictEqual(testBot.state, 'idle');
         defaultChatQueue.clear();
 
+        // Test attack command triggers bot.pvp.attack
+        let pvpAttackedTarget = null;
+        testBot.pvp = {
+            attack: (entity) => { pvpAttackedTarget = entity; },
+            stop: () => { pvpAttackedTarget = null; }
+        };
+        const enemyEntity = { username: 'EnemyPlayer', isValid: true, position: { x: 5, y: 64, z: 5 } };
+        testBot.players['EnemyPlayer'] = { entity: enemyEntity };
+
+        await handler('Admin', 'Alpha attack EnemyPlayer', testBot, ['Admin']);
+        assert.strictEqual(pvpAttackedTarget, enemyEntity);
+        assert.strictEqual(testBot.huntTargetName, 'enemyplayer');
+        defaultChatQueue.clear();
+
+        // Test combat halt
+        await handler('Admin', 'Alpha halt', testBot, ['Admin']);
+        assert.strictEqual(pvpAttackedTarget, null);
+        assert.strictEqual(testBot.huntTargetName, null);
+        defaultChatQueue.clear();
+
         console.log('  Command Handler Routing Passed.');
     }
 
@@ -208,6 +228,48 @@ async function runTests() {
         assert.strictEqual(typeof Utils.hunt, 'function');
         assert.strictEqual(typeof Utils.collectDrops, 'function');
         console.log('  ResourceBots Actions Passed.');
+    }
+
+    // 9. Combat PVP & Continuous Hunting tests
+    console.log('Testing Combat PVP & Hunting...');
+    {
+        const { EventEmitter } = require('events');
+        const combat = require('../src/combat');
+        const mockCombatBot = new EventEmitter();
+        mockCombatBot.players = {};
+        mockCombatBot.entities = {};
+        mockCombatBot.inventory = { items: () => [] };
+        mockCombatBot.setControlState = () => {};
+
+        let pvpTarget = null;
+        mockCombatBot.pvp = {
+            attack: (entity) => { pvpTarget = entity; },
+            stop: () => { pvpTarget = null; }
+        };
+
+        combat.load(mockCombatBot);
+        assert.strictEqual(typeof mockCombatBot.attackPlayer, 'function');
+        assert.strictEqual(typeof mockCombatBot.findEntityByName, 'function');
+        assert.strictEqual(typeof mockCombatBot.equipForCombat, 'function');
+
+        const enemy = { username: 'TargetDummy', isValid: true, position: { x: 2, y: 64, z: 2 }, height: 1.8 };
+        mockCombatBot.players['TargetDummy'] = { entity: enemy };
+
+        // Test attackPlayer engages bot.pvp.attack
+        const res = mockCombatBot.attackPlayer('TargetDummy');
+        assert.strictEqual(res, true);
+        assert.strictEqual(pvpTarget, enemy);
+        assert.strictEqual(mockCombatBot.huntTargetName, 'targetdummy');
+
+        // Test elimination on entityDead
+        let eliminated = null;
+        mockCombatBot.on('targetKilled', (target) => { eliminated = target; });
+        mockCombatBot.emit('entityDead', enemy);
+        assert.strictEqual(eliminated, 'targetdummy');
+        assert.strictEqual(mockCombatBot.huntTargetName, null);
+        assert.strictEqual(pvpTarget, null);
+
+        console.log('  Combat PVP & Hunting Passed.');
     }
 
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');

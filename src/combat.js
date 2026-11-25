@@ -27,6 +27,8 @@ function load(bot) {
         isShieldActive: false
     };
 
+    bot.huntTargetName = null;
+
     bot.addTarget = function (filter) {
         if (!bot.combatState.targets.includes(filter)) {
             bot.combatState.targets.push(filter);
@@ -35,11 +37,15 @@ function load(bot) {
 
     bot.clearTargets = function () {
         bot.combatState.targets = [];
+        bot.huntTargetName = null;
         bot.setControlState('forward', false);
         bot.setControlState('sprint', false);
         bot.setControlState('jump', false);
         if (bot.pvp && typeof bot.pvp.stop === 'function') {
             bot.pvp.stop();
+        }
+        if (bot.pathfinder) {
+            bot.pathfinder.setGoal(null);
         }
     };
 
@@ -47,8 +53,9 @@ function load(bot) {
         if (typeof bot.supportFeature === 'function' && bot.supportFeature('doesntHaveOffHandSlot')) {
             return false;
         }
+        if (!bot.inventory || !bot.inventory.slots) return false;
         const offhand = bot.inventory.slots[45];
-        return offhand && offhand.name.includes('shield');
+        return offhand && offhand.name && offhand.name.includes('shield');
     };
 
     bot.useShield = function (active = true) {
@@ -60,6 +67,66 @@ function load(bot) {
             bot.deactivateItem();
             bot.combatState.isShieldActive = false;
         }
+    };
+
+    bot.equipForCombat = async function () {
+        if (!bot.inventory) return;
+        const items = bot.inventory.items();
+        const weapon = items.find(i => i.name && (i.name.includes('sword') || i.name.includes('axe')));
+        if (weapon) {
+            try { await bot.equip(weapon, 'hand'); } catch {}
+        }
+        const shield = items.find(i => i.name && i.name.includes('shield'));
+        if (shield && bot.getEquipmentDestSlot) {
+            try { await bot.equip(shield, 'off-hand'); } catch {}
+        }
+        if (bot.armorManager && typeof bot.armorManager.equipAll === 'function') {
+            try { bot.armorManager.equipAll(); } catch {}
+        }
+    };
+
+    bot.findEntityByName = function (name) {
+        if (!name) return null;
+        const lower = name.toLowerCase().trim();
+        // 1. Check players map (case-insensitive)
+        if (bot.players) {
+            for (const username in bot.players) {
+                if (username.toLowerCase() === lower) {
+                    const p = bot.players[username];
+                    if (p && p.entity && p.entity.isValid) return p.entity;
+                }
+            }
+        }
+        // 2. Check nearest entity matching username or name
+        if (typeof bot.nearestEntity === 'function') {
+            return bot.nearestEntity(e => {
+                if (!e || !e.isValid || e === bot.entity) return false;
+                if (e.username && e.username.toLowerCase() === lower) return true;
+                if (e.name && e.name.toLowerCase() === lower) return true;
+                return false;
+            });
+        }
+        return null;
+    };
+
+    bot.attackPlayer = function (targetName) {
+        if (!targetName) return false;
+        bot.huntTargetName = targetName.toLowerCase().trim();
+        if (typeof bot.equipForCombat === 'function') {
+            bot.equipForCombat();
+        }
+
+        const entity = bot.findEntityByName(bot.huntTargetName);
+        if (entity && entity.isValid) {
+            if (bot.pvp && typeof bot.pvp.attack === 'function') {
+                bot.pvp.attack(entity);
+                return true;
+            } else if (typeof bot.attackTarget === 'function') {
+                bot.attackTarget(entity);
+                return true;
+            }
+        }
+        return false;
     };
 
     bot.attackTarget = function (target) {
@@ -79,6 +146,23 @@ function load(bot) {
     bot.checkForTargets = function () {
         bot.combatState.attackTick++;
         bot.combatState.mvTick++;
+
+        // If continuous hunt mode is active, check and track target until killed
+        if (bot.huntTargetName) {
+            const currentPvpTarget = bot.pvp ? bot.pvp.target : null;
+            if (!currentPvpTarget || !currentPvpTarget.isValid) {
+                const targetEntity = bot.findEntityByName(bot.huntTargetName);
+                if (targetEntity && targetEntity.isValid) {
+                    if (bot.pvp && typeof bot.pvp.attack === 'function') {
+                        if (bot.pvp.target !== targetEntity) {
+                            bot.pvp.attack(targetEntity);
+                        }
+                    } else {
+                        bot.attackTarget(targetEntity);
+                    }
+                }
+            }
+        }
 
         if (bot.combatState.targets.length === 0) return;
 
@@ -117,6 +201,33 @@ function load(bot) {
             }
         }
     };
+
+    // When target dies or is removed, handle elimination
+    bot.on('entityDead', (entity) => {
+        if (!entity || !bot.huntTargetName) return;
+        const matches = (entity.username && entity.username.toLowerCase() === bot.huntTargetName) ||
+                        (entity.name && entity.name.toLowerCase() === bot.huntTargetName);
+        if (matches) {
+            if (bot.pvp && typeof bot.pvp.stop === 'function') {
+                bot.pvp.stop();
+            }
+            const killed = bot.huntTargetName;
+            bot.huntTargetName = null;
+            bot.emit('targetKilled', killed);
+        }
+    });
+
+    bot.on('stoppedAttacking', () => {
+        // If target is no longer valid or dead
+        if (bot.huntTargetName) {
+            const ent = bot.findEntityByName(bot.huntTargetName);
+            if (!ent || !ent.isValid) {
+                const killed = bot.huntTargetName;
+                bot.huntTargetName = null;
+                bot.emit('targetKilled', killed);
+            }
+        }
+    });
 }
 
 module.exports = {

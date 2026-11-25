@@ -339,49 +339,69 @@ if (idBtnBgDismiss) {
 
 if (idBtnBgAttack) {
     idBtnBgAttack.onclick = () => {
-        const boss = idBgBossTarget.value.trim() || 'Master';
-        const targetName = idBgAttackTarget.value.trim();
+        const boss = (idBgBossTarget ? idBgBossTarget.value.trim() : '') || 'Master';
+        const targetName = idBgAttackTarget ? idBgAttackTarget.value.trim() : '';
         if (!targetName) return createPopup("Enter a target name to attack.", "red");
 
         const bots = getSelectedBots();
         if (!bots || bots.length === 0) return createPopup("No bots available to attack.");
 
-        const firstBot = bots[0];
-        const playerToAttack = firstBot.players[targetName];
-        const entity = playerToAttack ? playerToAttack.entity : firstBot.nearestEntity(e => (e.name && e.name.toLowerCase() === targetName.toLowerCase()) || (e.username && e.username.toLowerCase() === targetName.toLowerCase()));
+        const findEntity = (b) => {
+            if (typeof b.findEntityByName === 'function') return b.findEntityByName(targetName);
+            const p = b.players ? b.players[targetName] : null;
+            return p && p.entity ? p.entity : (typeof b.nearestEntity === 'function' ? b.nearestEntity(e => (e.name && e.name.toLowerCase() === targetName.toLowerCase()) || (e.username && e.username.toLowerCase() === targetName.toLowerCase())) : null);
+        };
 
-        if (entity) {
-            // Check if user has active bodyguards for this boss
-            const guards = bodyguardSystem.getGuardsForBoss(boss);
-            if (guards.length > 0) {
-                bodyguardSystem.setTargetForGuards(boss, entity);
-                sendLog(`[Bodyguard] Guards attacking target: ${targetName}`);
-            }
+        // Find target entity across selected bots
+        let entity = null;
+        for (const b of bots) {
+            entity = findEntity(b);
+            if (entity && entity.isValid) break;
+        }
 
-            // Also attack directly with all selected bots independently from bodyguarding
-            bots.forEach(b => {
-                if (b.equipForCombat) b.equipForCombat();
+        // Check if user has active bodyguards for this boss
+        const guards = bodyguardSystem.getGuardsForBoss(boss);
+        if (guards.length > 0 && entity) {
+            bodyguardSystem.setTargetForGuards(boss, entity);
+            sendLog(`[Bodyguard] Guards targeting ${targetName}`);
+        }
+
+        let attackedCount = 0;
+        bots.forEach(b => {
+            b.huntTargetName = targetName.toLowerCase().trim();
+            if (b.equipForCombat) b.equipForCombat();
+
+            const targetEntity = findEntity(b) || entity;
+            if (targetEntity && targetEntity.isValid) {
+                attackedCount++;
                 if (b.pvp && typeof b.pvp.attack === 'function') {
-                    b.pvp.attack(entity);
+                    b.pvp.attack(targetEntity);
                 } else if (typeof b.attack === 'function') {
-                    b.attack(entity);
+                    b.attack(targetEntity);
                 }
-            });
-            sendLog(`[Combat] ${bots.length} bot(s) attacking target: ${targetName}`);
+            }
+        });
+
+        if (attackedCount > 0 || entity) {
+            sendLog(`[Combat] ${bots.length} bot(s) targeting ${targetName} using bot.pvp.attack until eliminated.`);
             if (idCombatStatusLabel) idCombatStatusLabel.innerText = `Attacking ${targetName}...`;
             if (idBgStatusLabel) idBgStatusLabel.innerText = `Attacking ${targetName}...`;
         } else {
-            createPopup(`Entity "${targetName}" not found nearby.`);
+            sendLog(`[Combat] ${bots.length} bot(s) hunting ${targetName} (will attack on sight with bot.pvp).`);
+            if (idCombatStatusLabel) idCombatStatusLabel.innerText = `Hunting ${targetName}...`;
+            if (idBgStatusLabel) idBgStatusLabel.innerText = `Hunting ${targetName}...`;
+            createPopup(`Target "${targetName}" not in visual range; bots will attack with bot.pvp on sight until eliminated.`);
         }
     };
 }
 
 if (idBtnBgHalt) {
     idBtnBgHalt.onclick = () => {
-        const boss = idBgBossTarget.value.trim() || 'Master';
+        const boss = (idBgBossTarget ? idBgBossTarget.value.trim() : '') || 'Master';
         bodyguardSystem.haltGuards(boss);
         const bots = getSelectedBots();
         bots.forEach(b => {
+            b.huntTargetName = null;
             if (b.pvp && typeof b.pvp.stop === 'function') b.pvp.stop();
             if (b.clearTargets) b.clearTargets();
             if (b.pathfinder) b.pathfinder.setGoal(null);
@@ -984,6 +1004,11 @@ async function newBot(options) {
 
     bot.once('spawn', () => {
         botApi.emit("spawn", bot.username);
+        bot.on('targetKilled', (killedTarget) => {
+            sendLog(`[Combat: ${bot.username}] Target ${killedTarget} eliminated!`);
+            if (idCombatStatusLabel) idCombatStatusLabel.innerText = `${killedTarget} eliminated.`;
+            if (idBgStatusLabel) idBgStatusLabel.innerText = `${killedTarget} eliminated.`;
+        });
         if (idJoinMessage && idJoinMessage.value) { bot.chat(idJoinMessage.value); }
     });
 
