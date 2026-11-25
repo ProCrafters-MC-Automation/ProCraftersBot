@@ -156,7 +156,9 @@
             <button class="button" data-target=".killaura">Killaura</button>
             <button class="button" data-target=".bodyguard">Bodyguard</button>
             <button class="button" data-target=".printers">Printers</button>
-            <button class="button" data-target=".tasks">Tasks</button>
+            <button class="button" data-target=".navtasks">Navigation</button>
+            <button class="button" data-target=".harvesttasks">Harvest & Craft</button>
+            <button class="button" data-target=".autotasks">Automation</button>
           </ul>
         </div>
         <div id="main-options" class="pl-4">
@@ -316,10 +318,10 @@
               </div>
             </div>
           </div>
-          <div id="killaura" class="killaura functsBtn" style="display: none">
+          <div id="killaura" class="killaura functsBtn scrollable-panel" style="display: none">
             <div class="input-group flex-colum center-elements">
               <span class="label">
-                <label class="label-text">Killaura</label>
+                <label class="label-text">Killaura & Combat</label>
               </span>
               <div class="input-group flex-colum">
                 <label class="container">
@@ -367,6 +369,16 @@
                     <span class="checkmark"></span>
                   </label>
                 </div>
+                <hr>
+                <span class="label">
+                  <label class="label-text" style="font-size: 16px;">Target Attack</label>
+                </span>
+                <input id="bgAttackTarget" class="input" type="text" placeholder="Target to attack">
+                <div class="flex mu-2">
+                  <button id="btnBgAttack" class="button" style="flex: 1;">Attack</button>
+                  <button id="btnBgHalt" class="button m-1" style="flex: 1;">Halt</button>
+                </div>
+                <label id="combatStatusLabel" class="label-text mu-2" style="font-size: 11px; color: #88c0d0;">Combat ready.</label>
               </div>
             </div>
           </div>
@@ -392,13 +404,7 @@
                   <button id="btnBgSpawnNew" class="button">Spawn New</button>
                   <button id="btnBgDismiss" class="button">Dismiss</button>
                 </div>
-                <hr>
-                <input id="bgAttackTarget" class="input" type="text" placeholder="Target to attack">
-                <div class="flex mu-2">
-                  <button id="btnBgAttack" class="button">Attack</button>
-                  <button id="btnBgHalt" class="button">Halt</button>
-                </div>
-                <label id="bgStatusLabel" class="label-text mu-2" style="font-size: 11px; color: #88c0d0;">Ready.</label>
+                <label id="bgStatusLabel" class="label-text mu-2" style="font-size: 11px; color: #88c0d0;">Bodyguards ready.</label>
               </div>
             </div>
           </div>
@@ -458,39 +464,58 @@
               </div>
             </div>
           </div>
-          <div id="tasks" class="tasks functsBtn scrollable-panel" style="display: none">
+          <div id="navtasks" class="navtasks functsBtn scrollable-panel" style="display: none">
             <div class="input-group flex-colum center-elements">
               <span class="label">
-                <label class="label-text">Swarm & Resource Tasks</label>
+                <label class="label-text">Navigation</label>
               </span>
               <div class="input-group flex-colum">
-                <div class="flex">
+                <span class="label-text" style="font-size: 13px; margin-top: 4px;">Follow & Target:</span>
+                <div class="flex mu-2">
                   <input id="taskPlayerTarget" class="input" type="text" placeholder="Player (Master)">
                   <button id="btnTaskCome" class="button m-1">Come</button>
                   <button id="btnTaskFollow" class="button m-1">Follow</button>
                 </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Absolute Coords:</span>
                 <div class="flex mu-2">
                   <input id="taskGotoX" class="input-sm m-1" type="number" placeholder="X">
                   <input id="taskGotoY" class="input-sm m-1" type="number" placeholder="Y">
                   <input id="taskGotoZ" class="input-sm m-1" type="number" placeholder="Z">
                   <button id="btnTaskGoto" class="button m-1">Go</button>
                 </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Relative Movement:</span>
                 <div class="flex mu-2">
                   <input id="taskRelX" class="input-sm m-1" type="number" value="0" placeholder="dX">
                   <input id="taskRelY" class="input-sm m-1" type="number" value="0" placeholder="dY">
                   <input id="taskRelZ" class="input-sm m-1" type="number" value="5" placeholder="dZ">
-                  <button id="btnTaskRelMove" class="button m-1">Rel Move</button>
+                  <button id="btnTaskRelMove" class="button m-1">Move</button>
                 </div>
-                <div class="flex mu-2">
-                  <button id="btnTaskSetHome" class="button m-1">Set Home</button>
-                  <button id="btnTaskGoHome" class="button m-1">Go Home</button>
-                </div>
-                <button id="btnTaskStopAll" class="button mu-2">Stop All Tasks</button>
                 <hr>
+                <span class="label-text" style="font-size: 13px;">Home Location:</span>
+                <div class="flex mu-2">
+                  <button id="btnTaskSetHome" class="button m-1" style="flex: 1;">Set Home</button>
+                  <button id="btnTaskGoHome" class="button m-1" style="flex: 1;">Go Home</button>
+                </div>
+                <hr>
+                <button id="btnTaskStopAll" class="button mu-2" style="background-color: #bf616a;">Stop Movement / Tasks</button>
+              </div>
+            </div>
+          </div>
+          <div id="harvesttasks" class="harvesttasks functsBtn scrollable-panel" style="display: none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Harvest & Craft</label>
+              </span>
+              <div class="input-group flex-colum">
+                <span class="label-text" style="font-size: 13px; margin-top: 4px;">Digging:</span>
                 <div class="flex mu-2">
                   <input id="taskHoleDim" class="input" type="text" value="5x5x3" placeholder="5x5x3">
                   <button id="btnTaskHole" class="button m-1">Dig Hole</button>
                 </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Mining & Crafting:</span>
                 <div class="flex mu-2">
                   <input id="taskBlockName" class="input" type="text" placeholder="Block (oak_log)">
                   <input id="taskBlockCount" class="input-sm m-1" type="number" min="1" value="5" style="width: 50px;">
@@ -501,6 +526,8 @@
                   <input id="taskCraftCount" class="input-sm m-1" type="number" min="1" value="4" style="width: 50px;">
                   <button id="btnTaskCraft" class="button m-1">Craft</button>
                 </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Hunting & Items:</span>
                 <div class="flex mu-2">
                   <button id="btnTaskHunt" class="button m-1">Hunt Animals</button>
                   <input id="taskHuntCount" class="input-sm m-1" type="number" min="1" value="3" style="width: 50px;">
@@ -514,25 +541,45 @@
                   <input id="taskEquipName" class="input" type="text" placeholder="Equip item">
                   <button id="btnTaskEquip" class="button m-1">Equip</button>
                 </div>
+                <hr>
+                <button id="btnTaskStopHarvest" class="button mu-2" style="background-color: #bf616a;">Stop Tasks</button>
+              </div>
+            </div>
+          </div>
+          <div id="autotasks" class="autotasks functsBtn scrollable-panel" style="display: none">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Automation & AI</label>
+              </span>
+              <div class="input-group flex-colum">
+                <span class="label-text" style="font-size: 13px; margin-top: 4px;">Guard & Scan:</span>
                 <div class="flex mu-2">
                   <button id="btnTaskNearby" class="button m-1" style="flex: 1;">Scan Nearby</button>
                   <button id="btnTaskProtect" class="button m-1" style="flex: 1;">Protect Area</button>
                   <button id="btnTaskGuardPos" class="button m-1" style="flex: 1;">Guard Pos</button>
                 </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Search & Locate:</span>
+                <div class="flex mu-2">
+                  <input id="taskLocateTarget" class="input" type="text" placeholder="Locate entity / player">
+                  <button id="btnTaskLocate" class="button m-1">Locate</button>
+                </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Learning & Recite:</span>
                 <div class="flex mu-2">
                   <button id="btnTaskLearn" class="button m-1" style="flex: 1;">Start Learn</button>
                   <button id="btnTaskRecite" class="button m-1" style="flex: 1;">Recite / Stop</button>
                 </div>
-                <div class="flex mu-2">
-                  <input id="taskLocateTarget" class="input" type="text" placeholder="Locate target">
-                  <button id="btnTaskLocate" class="button m-1">Locate</button>
-                </div>
+                <hr>
+                <span class="label-text" style="font-size: 13px;">Memory Store:</span>
                 <div class="flex mu-2">
                   <input id="taskMemoryKey" class="input-sm m-1" type="text" placeholder="Key">
                   <input id="taskMemoryVal" class="input-sm m-1" type="text" placeholder="Val">
                   <button id="btnTaskRemember" class="button m-1">Remember</button>
                   <button id="btnTaskValueOf" class="button m-1">Get</button>
                 </div>
+                <hr>
+                <button id="btnTaskStopAuto" class="button mu-2" style="background-color: #bf616a;">Stop Automation</button>
               </div>
             </div>
           </div>

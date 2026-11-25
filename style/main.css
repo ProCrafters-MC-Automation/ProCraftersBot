@@ -386,9 +386,9 @@ ul li {
 
 /* Dynamic Scrollable Function Selector Menu */
 .dynamic-selectors {
-    height: calc(100vh - 355px);
-    min-height: 140px;
-    max-height: 480px;
+    height: calc(100vh - 280px);
+    min-height: 200px;
+    max-height: calc(100vh - 240px);
     width: 15pc;
     position: relative;
     top: -20px;
@@ -396,6 +396,16 @@ ul li {
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 2px;
+}
+
+.dynamic-selectors button {
+    padding: 6px 14px;
+    min-height: 28px;
+    font-size: 13px;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .dynamic-selectors::-webkit-scrollbar {

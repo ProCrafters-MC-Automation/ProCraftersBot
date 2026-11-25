@@ -121,6 +121,9 @@ const idBgAttackTarget = document.getElementById('bgAttackTarget');
 const idBtnBgAttack = document.getElementById('btnBgAttack');
 const idBtnBgHalt = document.getElementById('btnBgHalt');
 const idBgStatusLabel = document.getElementById('bgStatusLabel');
+const idCombatStatusLabel = document.getElementById('combatStatusLabel');
+const idBtnTaskStopHarvest = document.getElementById('btnTaskStopHarvest');
+const idBtnTaskStopAuto = document.getElementById('btnTaskStopAuto');
 
 // Printers DOM elements
 const idPrintX = document.getElementById('printX');
@@ -365,6 +368,7 @@ if (idBtnBgAttack) {
                 }
             });
             sendLog(`[Combat] ${bots.length} bot(s) attacking target: ${targetName}`);
+            if (idCombatStatusLabel) idCombatStatusLabel.innerText = `Attacking ${targetName}...`;
             if (idBgStatusLabel) idBgStatusLabel.innerText = `Attacking ${targetName}...`;
         } else {
             createPopup(`Entity "${targetName}" not found nearby.`);
@@ -383,6 +387,7 @@ if (idBtnBgHalt) {
             if (b.pathfinder) b.pathfinder.setGoal(null);
         });
         sendLog(`[Combat] Halted combat and returned bodyguards to formation.`);
+        if (idCombatStatusLabel) idCombatStatusLabel.innerText = `Combat halted.`;
         if (idBgStatusLabel) idBgStatusLabel.innerText = `Combat halted.`;
     };
 }
@@ -626,18 +631,19 @@ if (idBtnTaskGoHome) {
     };
 }
 
-if (idBtnTaskStopAll) {
-    idBtnTaskStopAll.onclick = () => {
-        const bots = getSelectedBots();
-        bots.forEach(bot => {
-            Utils.stop(bot);
-            bodyguardSystem.stopGuards(bot);
-        });
-        commandsPrinter.stop();
-        placerPrinter.stop();
-        sendLog(`[Tasks] Stopped all tasks on ${bots.length} bot(s).`);
-    };
-}
+const stopAllTasksHandler = () => {
+    const bots = getSelectedBots();
+    bots.forEach(bot => {
+        Utils.stop(bot);
+        bodyguardSystem.stopGuards(bot);
+    });
+    commandsPrinter.stop();
+    placerPrinter.stop();
+    sendLog(`[Tasks] Stopped all tasks on ${bots.length} bot(s).`);
+};
+if (idBtnTaskStopAll) idBtnTaskStopAll.onclick = stopAllTasksHandler;
+if (idBtnTaskStopHarvest) idBtnTaskStopHarvest.onclick = stopAllTasksHandler;
+if (idBtnTaskStopAuto) idBtnTaskStopAuto.onclick = stopAllTasksHandler;
 
 if (idBtnTaskHarvest) {
     idBtnTaskHarvest.onclick = () => {
