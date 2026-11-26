@@ -575,6 +575,66 @@ async function runTests() {
         console.log('  Combat Obstacle Navigation & Anti-Stuck Behavior Passed.');
     }
 
+    // 13. Weapon Auto-Equip & Block Hit Prevention tests
+    console.log('Testing Combat Weapon Auto-Equip & Block Hit Prevention...');
+    {
+        const { EventEmitter } = require('events');
+        const combat = require('../src/combat');
+        const { isWeapon, getWeaponScore } = combat;
+
+        // 1. Weapon detection and ranking
+        assert.strictEqual(isWeapon({ name: 'diamond_sword' }), true);
+        assert.strictEqual(isWeapon({ name: 'netherite_axe' }), true);
+        assert.strictEqual(isWeapon({ name: 'iron_sword' }), true);
+        assert.strictEqual(isWeapon({ name: 'cobblestone' }), false);
+        assert.strictEqual(isWeapon({ name: 'dirt' }), false);
+        assert.strictEqual(isWeapon({ name: 'diamond_pickaxe' }), false);
+        assert.strictEqual(getWeaponScore({ name: 'diamond_sword' }) > getWeaponScore({ name: 'wooden_sword' }), true);
+
+        // 2. Hotbar fast-path: bot holding block automatically switches to sword slot
+        const testBot = new EventEmitter();
+        testBot.quickBarSlot = 0;
+        const blockInHand = { name: 'dirt', slot: 36 };
+        const swordInHotbar = { name: 'diamond_sword', slot: 38 };
+        testBot.heldItem = blockInHand;
+        testBot.inventory = {
+            slots: {
+                36: blockInHand,
+                38: swordInHotbar
+            },
+            items: () => [blockInHand, swordInHotbar]
+        };
+        testBot.setQuickBarSlot = (slot) => {
+            testBot.quickBarSlot = slot;
+            testBot.heldItem = testBot.inventory.slots[36 + slot];
+        };
+        let attackCalled = false;
+        testBot.attack = (target) => {
+            attackCalled = true;
+        };
+
+        combat.load(testBot);
+
+        // Verify initial state has block in hand
+        assert.strictEqual(testBot.heldItem.name, 'dirt');
+
+        // Calling ensureWeaponEquipped switches immediately to quickBarSlot 2 (slot 38)
+        testBot.ensureWeaponEquipped();
+        assert.strictEqual(testBot.quickBarSlot, 2);
+        assert.strictEqual(testBot.heldItem.name, 'diamond_sword');
+
+        // 3. Attack interception: if bot somehow holds a block again, attack() automatically switches to weapon first
+        testBot.quickBarSlot = 0;
+        testBot.heldItem = blockInHand;
+        assert.strictEqual(testBot.heldItem.name, 'dirt');
+
+        testBot.attack({ isValid: true });
+        assert.strictEqual(testBot.heldItem.name, 'diamond_sword', 'Wrapped bot.attack should auto-switch away from blocks to weapon before swinging');
+        assert.strictEqual(attackCalled, true);
+
+        console.log('  Combat Weapon Auto-Equip & Block Hit Prevention Passed.');
+    }
+
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');
     process.exit(0);
 }

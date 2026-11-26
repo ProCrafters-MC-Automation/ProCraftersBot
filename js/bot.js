@@ -375,7 +375,7 @@ if (idBtnBgAttack) {
         let attackedCount = 0;
         bots.forEach(b => {
             b.huntTargetName = targetName.toLowerCase().trim();
-            if (b.equipForCombat) b.equipForCombat();
+            if (typeof b.ensureWeaponEquipped === 'function') b.ensureWeaponEquipped(); else if (b.equipForCombat) b.equipForCombat();
 
             if (typeof b.attackPlayer === 'function') {
                 const started = b.attackPlayer(targetName);
@@ -995,6 +995,7 @@ async function newBot(options) {
         idBtnRc.addEventListener('click', () => { botApi.emit(bot.username + 'reconnect'); });
 
         botApi.on(bot.username + 'hit', () => {
+            if (typeof bot.ensureWeaponEquipped === 'function') bot.ensureWeaponEquipped();
             const entities = Object.values(bot.entities);
             entities.forEach((entity) => {
                 if (!entity || !entity.position) return;

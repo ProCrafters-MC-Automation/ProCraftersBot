@@ -58,7 +58,9 @@ class BodyguardSystem {
 
             this.setupGuardListeners(bot, bossUsername);
 
-            if (bot.equipForCombat) {
+            if (typeof bot.ensureWeaponEquipped === 'function') {
+                bot.ensureWeaponEquipped();
+            } else if (bot.equipForCombat) {
                 bot.equipForCombat();
             }
 
@@ -115,7 +117,11 @@ class BodyguardSystem {
 
             // Combat target state: pursue and fight with pathfinder + PVP
             if (bot.guardTarget && bot.guardTarget.isValid) {
-                if (bot.equipForCombat) bot.equipForCombat();
+                if (typeof bot.ensureWeaponEquipped === 'function') {
+                    bot.ensureWeaponEquipped();
+                } else if (bot.equipForCombat) {
+                    bot.equipForCombat();
+                }
 
                 const targetDist = bot.entity.position.distanceTo(bot.guardTarget.position);
                 if (bot.pvp && typeof bot.pvp.attack === 'function') {
@@ -222,7 +228,11 @@ class BodyguardSystem {
         const guards = this.getGuardsForBoss(bossUsername);
         guards.forEach(guard => {
             guard.guardTarget = targetEntity;
-            if (guard.equipForCombat) guard.equipForCombat();
+            if (typeof guard.ensureWeaponEquipped === 'function') {
+                guard.ensureWeaponEquipped();
+            } else if (guard.equipForCombat) {
+                guard.equipForCombat();
+            }
             if (guard.pvp && typeof guard.pvp.attack === 'function') {
                 guard.pvp.attack(targetEntity);
             }
@@ -265,7 +275,6 @@ class BodyguardSystem {
             if (bot.pathfinder) bot.pathfinder.setGoal(null);
         }
     }
-
     dismissGuards(swarmManager, bossUsername, prefix = null) {
         const guards = this.getGuardsForBoss(bossUsername);
         const toDismiss = guards.filter(g => !prefix || g.username.startsWith(prefix));

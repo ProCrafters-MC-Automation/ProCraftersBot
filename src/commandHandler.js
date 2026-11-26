@@ -219,7 +219,7 @@ function createCommandHandler(swarmManager) {
                     let attackedCount = 0;
                     botsToOrder.forEach(b => {
                         b.huntTargetName = targetName.toLowerCase().trim();
-                        if (b.equipForCombat) b.equipForCombat();
+                        if (typeof b.ensureWeaponEquipped === 'function') b.ensureWeaponEquipped(); else if (b.equipForCombat) b.equipForCombat();
                         if (typeof b.attackPlayer === 'function') {
                             const ok = b.attackPlayer(targetName, mode);
                             if (ok) attackedCount++;
@@ -523,7 +523,7 @@ function createCommandHandler(swarmManager) {
                     const mob = bot.nearestEntity(hostileFilter);
                     if (mob) {
                         const sword = bot.inventory.items().find(i => i.name.includes('sword'));
-                        if (sword) bot.equip(sword, 'hand').catch(() => {});
+                        if (typeof bot.ensureWeaponEquipped === 'function') bot.ensureWeaponEquipped(); else if (sword) bot.equip(sword, 'hand').catch(() => {});
                         if (bot.pvp) bot.pvp.attack(mob);
                         else bot.attack(mob);
                     } else if (bot.entity.position.distanceTo(guardPos) > 3) {

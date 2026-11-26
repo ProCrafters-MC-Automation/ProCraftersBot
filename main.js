@@ -164,8 +164,19 @@ async function equipShield() {
 
 async function equipSword() {
     try {
-        const sword = bot.inventory.items().find(i => i.name.includes('sword'));
-        if (sword) {
+        if (bot.inventory && bot.inventory.slots) {
+            for (let i = 0; i < 9; i++) {
+                const item = bot.inventory.slots[36 + i];
+                if (item && item.name && (item.name.includes('sword') || (item.name.includes('axe') && !item.name.includes('pickaxe')))) {
+                    if (bot.quickBarSlot !== i && typeof bot.setQuickBarSlot === 'function') {
+                        bot.setQuickBarSlot(i);
+                    }
+                    return true;
+                }
+            }
+        }
+        const sword = bot.inventory.items().find(i => i.name && (i.name.includes('sword') || (i.name.includes('axe') && !i.name.includes('pickaxe'))));
+        if (sword && typeof bot.equip === 'function') {
             await bot.equip(sword, 'hand');
             return true;
         }

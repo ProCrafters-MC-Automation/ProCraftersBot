@@ -9,6 +9,36 @@ try {
     }
 }
 
+const WEAPON_TIER_SCORES = {
+    netherite_sword: 100,
+    diamond_sword: 90,
+    netherite_axe: 85,
+    diamond_axe: 80,
+    iron_sword: 75,
+    iron_axe: 70,
+    stone_sword: 60,
+    stone_axe: 55,
+    golden_sword: 50,
+    golden_axe: 45,
+    wooden_sword: 40,
+    wooden_axe: 35,
+    trident: 82,
+    mace: 88
+};
+
+function getWeaponScore(item) {
+    if (!item || !item.name) return -1;
+    const name = item.name.toLowerCase();
+    if (WEAPON_TIER_SCORES[name]) return WEAPON_TIER_SCORES[name];
+    if (name.endsWith('_sword') || name.includes('sword')) return 30;
+    if ((name.endsWith('_axe') || name.includes('axe')) && !name.includes('pickaxe')) return 25;
+    return -1;
+}
+
+function isWeapon(item) {
+    return getWeaponScore(item) > 0;
+}
+
 function getAttackSpeed(weaponName) {
     if (!weaponName) return attackSpeeds.other || 1.6;
     return attackSpeeds[weaponName] || attackSpeeds.other || 1.6;
@@ -91,21 +121,83 @@ function load(bot) {
         }
     };
 
-    bot.equipSword = async function () {
-        if (!bot.inventory || typeof bot.inventory.items !== 'function') return;
-        const items = bot.inventory.items();
-        const weapon = items.find(i => i.name && (i.name.includes('sword') || i.name.includes('axe')));
-        if (weapon && typeof bot.equip === 'function') {
-            try { await bot.equip(weapon, 'hand'); } catch {}
+    // Ensure best weapon is in main hand (hotbar switch is synchronous and instant)
+    bot.ensureWeaponEquipped = async function () {
+        if (!bot.inventory) return false;
+
+        // 1. Hotbar Fast-Path (synchronous in 0ms):
+        // Scan quickbar slots (indices 0-8, corresponding to inventory slots 36-44)
+        let bestHotbarIndex = -1;
+        let bestHotbarScore = -1;
+        let bestHotbarItem = null;
+
+        if (bot.inventory.slots) {
+            for (let i = 0; i < 9; i++) {
+                const item = bot.inventory.slots[36 + i];
+                if (item) {
+                    const score = getWeaponScore(item);
+                    if (score > bestHotbarScore) {
+                        bestHotbarScore = score;
+                        bestHotbarIndex = i;
+                        bestHotbarItem = item;
+                    }
+                }
+            }
         }
-        const shield = items.find(i => i.name && i.name.includes('shield'));
-        if (shield && bot.getEquipmentDestSlot && typeof bot.equip === 'function') {
-            try { await bot.equip(shield, 'off-hand'); } catch {}
+
+        const currentHeldScore = getWeaponScore(bot.heldItem);
+
+        // If a weapon is available in the hotbar and currently held item is not a weapon (or is a weaker weapon)
+        if (bestHotbarIndex !== -1 && (currentHeldScore < bestHotbarScore)) {
+            if (typeof bot.setQuickBarSlot === 'function' && bot.quickBarSlot !== bestHotbarIndex) {
+                bot.setQuickBarSlot(bestHotbarIndex);
+            }
         }
+
+        // 2. Check main inventory (slots 9-35) for a higher-tier weapon than hotbar
+        const items = typeof bot.inventory.items === 'function' ? bot.inventory.items() : [];
+        let bestOverallItem = bestHotbarItem;
+        let bestOverallScore = Math.max(bestHotbarScore, getWeaponScore(bot.heldItem));
+
+        for (const item of items) {
+            const score = getWeaponScore(item);
+            if (score > bestOverallScore) {
+                bestOverallScore = score;
+                bestOverallItem = item;
+            }
+        }
+
+        if (bestOverallItem && typeof bot.equip === 'function') {
+            const isAlreadyHeld = bot.heldItem && bot.heldItem.name === bestOverallItem.name;
+            if (!isAlreadyHeld) {
+                try {
+                    await bot.equip(bestOverallItem, 'hand');
+                } catch (e) {}
+            }
+        }
+
+        // 3. Shield off-hand check
+        if (bot.inventory.slots) {
+            const offhand = bot.inventory.slots[45];
+            const hasShieldEquipped = offhand && offhand.name && offhand.name.includes('shield');
+            if (!hasShieldEquipped) {
+                const shield = items.find(i => i.name && i.name.includes('shield'));
+                if (shield && bot.getEquipmentDestSlot && typeof bot.equip === 'function') {
+                    try { await bot.equip(shield, 'off-hand'); } catch (e) {}
+                }
+            }
+        }
+
+        // 4. Armor
         if (bot.armorManager && typeof bot.armorManager.equipAll === 'function') {
-            try { bot.armorManager.equipAll(); } catch {}
+            try { bot.armorManager.equipAll(); } catch (e) {}
         }
+
+        return isWeapon(bot.heldItem);
     };
+
+    bot.equipSword = bot.ensureWeaponEquipped;
+    bot.equipForCombat = bot.ensureWeaponEquipped;
 
     bot.equipBow = async function () {
         if (!bot.inventory || typeof bot.inventory.items !== 'function') return;
@@ -119,7 +211,25 @@ function load(bot) {
         }
     };
 
-    bot.equipForCombat = bot.equipSword;
+    // Intercept and wrap bot.attack to guarantee a weapon is in hand before striking
+    const wrapAttack = () => {
+        if (!bot._weaponWrappedAttack && typeof bot.attack === 'function') {
+            const originalAttack = bot.attack.bind(bot);
+            bot.attack = function (target, swing = true) {
+                if (bot.combatState && bot.combatState.currentWeapon !== 'bow') {
+                    if (!bot.heldItem || !isWeapon(bot.heldItem)) {
+                        bot.ensureWeaponEquipped();
+                    }
+                }
+                return originalAttack(target, swing);
+            };
+            bot._weaponWrappedAttack = true;
+        }
+    };
+    wrapAttack();
+    if (typeof bot.on === 'function') {
+        bot.on('spawn', wrapAttack);
+    }
 
     bot.findEntityByName = function (name) {
         if (!name) return null;
@@ -149,8 +259,8 @@ function load(bot) {
         if (!target || !target.isValid) return false;
         bot.combatState.target = target;
         bot.combatState.currentWeapon = 'sword';
-        if (typeof bot.equipSword === 'function') {
-            bot.equipSword().catch(() => {});
+        if (typeof bot.ensureWeaponEquipped === 'function') {
+            bot.ensureWeaponEquipped().catch(() => {});
         }
 
         if (bot.bowpvp && typeof bot.bowpvp.stop === 'function') {
@@ -242,6 +352,12 @@ function load(bot) {
     bot.attackTarget = function (target) {
         if (!target || !target.isValid) return;
 
+        if (!bot.heldItem || !isWeapon(bot.heldItem)) {
+            if (typeof bot.ensureWeaponEquipped === 'function') {
+                bot.ensureWeaponEquipped();
+            }
+        }
+
         const mainHand = bot.heldItem;
         const weaponName = mainHand ? mainHand.name : null;
         const cooldownTicks = getCooldown(weaponName);
@@ -268,6 +384,15 @@ function load(bot) {
 
                 const hasPos = bot.entity && bot.entity.position && targetEntity.position;
                 const dist = hasPos ? bot.entity.position.distanceTo(targetEntity.position) : 0;
+
+                // Ensure the bot is holding a weapon and not a block/item while chasing/fighting
+                if (bot.combatState.currentWeapon !== 'bow') {
+                    if (!bot.heldItem || !isWeapon(bot.heldItem)) {
+                        if (typeof bot.ensureWeaponEquipped === 'function') {
+                            bot.ensureWeaponEquipped();
+                        }
+                    }
+                }
 
                 // Adaptive mode distance switching
                 if (bot.combatState.mode === 'auto' && hasPos) {
@@ -426,5 +551,7 @@ function load(bot) {
 module.exports = {
     load,
     getAttackSpeed,
-    getCooldown
+    getCooldown,
+    getWeaponScore,
+    isWeapon
 };
