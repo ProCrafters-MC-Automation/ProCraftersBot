@@ -1,14 +1,16 @@
 {
     "name": "pvp-bot",
     "version": "1.4",
-    "description": "A pvp bot",
+    "description": "Advanced Minecraft PvP Bot powered by @nxg-org/mineflayer-custom-pvp",
     "main": "main.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node main.js",
+        "test": "node test/pvpTest.js"
     },
     "author": "1ProCrafter",
     "license": "MIT",
     "dependencies": {
+        "@nxg-org/mineflayer-custom-pvp": "^1.7.16",
         "chalk": "^5.3.0",
         "minecraft-data": "^3.49.0",
         "mineflayer": "^4.14.0",
