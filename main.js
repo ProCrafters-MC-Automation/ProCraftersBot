@@ -243,6 +243,15 @@ async function startSwordPvP(target) {
     await equipSword();
     await equipShield();
 
+    // If target is beyond immediate reach, engage pathfinder GoalFollow to navigate around obstacles
+    if (bot.pathfinder && bot.entity && bot.entity.position && target.position) {
+        const dist = bot.entity.position.distanceTo(target.position);
+        if (dist > 2.8) {
+            const { goals } = require('mineflayer-pathfinder');
+            bot.pathfinder.setGoal(new goals.GoalFollow(target, 2.0), true);
+        }
+    }
+
     if (bot.swordpvp) {
         bot.swordpvp.attack(target);
     }
@@ -317,6 +326,25 @@ bot.on('physicsTick', () => {
     if (!target || !target.isValid) return;
 
     const dist = bot.entity.position.distanceTo(target.position);
+
+    // Pathfinding & obstacle traversal
+    if (bot.pathfinder) {
+        const { goals } = require('mineflayer-pathfinder');
+        if (dist > 2.8 && bot.combatState.currentWeapon === 'sword') {
+            const curGoal = bot.pathfinder.goal;
+            if (!curGoal || curGoal.entity !== target) {
+                bot.pathfinder.setGoal(new goals.GoalFollow(target, 2.0), true);
+            }
+        } else if (dist <= 2.8 && bot.pathfinder.goal) {
+            bot.pathfinder.setGoal(null);
+        }
+    }
+
+    // Auto-jump over 1-block obstacles while chasing
+    if (bot.entity.isCollidedHorizontally) {
+        bot.setControlState('jump', true);
+        setTimeout(() => bot.setControlState('jump', false), 150);
+    }
 
     // If target moved closer than 6.5m, switch from bow to sword
     if (dist <= 6.5 && bot.combatState.currentWeapon !== 'sword') {

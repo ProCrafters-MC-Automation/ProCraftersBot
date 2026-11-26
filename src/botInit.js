@@ -104,6 +104,10 @@ function initBot(botOrOptions, optionsOrMaster, maybeCommandHandler) {
                 bot.defaultMove = new Movements(bot, mcData);
                 bot.defaultMove.canDig = false;
                 bot.defaultMove.allow1by1towers = false;
+                bot.defaultMove.allowFreeMotion = true;
+                bot.defaultMove.allowParkour = true;
+                bot.defaultMove.allowSprinting = true;
+                bot.defaultMove.canOpenDoors = true;
                 if (bot.pathfinder) {
                     bot.pathfinder.setMovements(bot.defaultMove);
                 }

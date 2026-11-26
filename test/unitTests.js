@@ -408,6 +408,10 @@ async function runTests() {
         assert.strictEqual(mockClientBot.swordpvp.options.shieldConfig.mode, 'legit');
         assert.strictEqual(mockClientBot.swordpvp.options.tapConfig.mode, 'wtap');
         assert.strictEqual(mockClientBot.swordpvp.options.strafeConfig.mode.mode, 'intelligent');
+        assert.strictEqual(mockClientBot.defaultMove.allowFreeMotion, true);
+        assert.strictEqual(mockClientBot.defaultMove.allowParkour, true);
+        assert.strictEqual(mockClientBot.defaultMove.allowSprinting, true);
+        assert.strictEqual(mockClientBot.defaultMove.canOpenDoors, true);
 
         console.log('  @nxg-org/mineflayer-custom-pvp Integration Passed.');
     }
@@ -496,6 +500,79 @@ async function runTests() {
         assert.strictEqual(typeof initInspector, 'function');
 
         console.log('  Bot Inspector (Hearts, Hunger, Radar, Perspectives) Passed.');
+    }
+
+    // 12. Combat Obstacle Navigation & Anti-Stuck tests
+    console.log('Testing Combat Obstacle Navigation & Anti-Stuck Behavior...');
+    {
+        const { EventEmitter } = require('events');
+        const { Vec3 } = require('vec3');
+        const combat = require('../src/combat');
+        const mockCombatBot = new EventEmitter();
+        mockCombatBot.entity = {
+            position: new Vec3(0, 64, 0),
+            velocity: new Vec3(0, 0, 0),
+            height: 1.6,
+            isCollidedHorizontally: false
+        };
+        let goalSet = null;
+        let controlStates = {};
+        mockCombatBot.pathfinder = {
+            setGoal: (goal, dynamic) => {
+                goalSet = goal;
+                mockCombatBot.pathfinder.goal = goal;
+            },
+            goal: null
+        };
+        mockCombatBot.setControlState = (name, val) => {
+            controlStates[name] = val;
+        };
+        mockCombatBot.clearControlStates = () => {
+            controlStates = {};
+        };
+        mockCombatBot.swordpvp = {
+            attack: () => {},
+            stop: () => {}
+        };
+        mockCombatBot.bowpvp = {
+            attack: () => {},
+            stop: () => {}
+        };
+        mockCombatBot.inventory = { items: () => [{ name: 'diamond_sword' }] };
+
+        combat.load(mockCombatBot);
+
+        // Distant target (> 2.8 blocks): should engage GoalFollow
+        const distantTarget = {
+            name: 'EnemyTarget',
+            username: 'EnemyTarget',
+            isValid: true,
+            height: 1.8,
+            position: new Vec3(10, 64, 0)
+        };
+        mockCombatBot.players = { EnemyTarget: { entity: distantTarget } };
+
+        mockCombatBot.attackPlayer('EnemyTarget', 'sword');
+        assert.strictEqual(goalSet !== null, true, 'GoalFollow should be set when target distance > 2.8m');
+        assert.strictEqual(goalSet.entity, distantTarget);
+        assert.strictEqual(goalSet.rangeSq, 4);
+
+        // Target moves into close striking range (<= 2.8 blocks) during checkForTargets
+        distantTarget.position = new Vec3(1.5, 64, 0);
+        mockCombatBot.checkForTargets();
+        assert.strictEqual(mockCombatBot.pathfinder.goal, null, 'Goal should be cleared within close range to yield to swordpvp');
+
+        // Obstacle collision test: horizontal collision should trigger auto-jump
+        mockCombatBot.entity.isCollidedHorizontally = true;
+        mockCombatBot.checkForTargets();
+        assert.strictEqual(controlStates.jump, true, 'Horizontal collision against blocks should trigger auto-jump');
+
+        // Clear targets: releases pathfinder and resets stuck states
+        mockCombatBot.clearTargets();
+        assert.strictEqual(mockCombatBot.huntTargetName, null);
+        assert.strictEqual(mockCombatBot.combatState.stuckTicks, 0);
+
+        console.log('  Combat Obstacle Navigation & Anti-Stuck Behavior Passed.');
     }
 
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');

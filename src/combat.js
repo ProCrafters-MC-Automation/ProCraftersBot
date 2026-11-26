@@ -157,6 +157,17 @@ function load(bot) {
             try { bot.bowpvp.stop(); } catch {}
         }
 
+        // If target is beyond immediate reach, engage pathfinder GoalFollow to navigate around obstacles
+        if (bot.pathfinder && typeof bot.pathfinder.setGoal === 'function' && bot.entity && bot.entity.position && target.position) {
+            const dist = bot.entity.position.distanceTo(target.position);
+            if (dist > 2.8) {
+                try {
+                    const { goals } = require('mineflayer-pathfinder');
+                    bot.pathfinder.setGoal(new goals.GoalFollow(target, 2.0), true);
+                } catch (e) {}
+            }
+        }
+
         if (bot.swordpvp && typeof bot.swordpvp.attack === 'function') {
             bot.swordpvp.attack(target);
             return true;
@@ -255,13 +266,76 @@ function load(bot) {
             if (targetEntity && targetEntity.isValid) {
                 bot.combatState.target = targetEntity;
 
+                const hasPos = bot.entity && bot.entity.position && targetEntity.position;
+                const dist = hasPos ? bot.entity.position.distanceTo(targetEntity.position) : 0;
+
                 // Adaptive mode distance switching
-                if (bot.combatState.mode === 'auto' && bot.entity && bot.entity.position && targetEntity.position) {
-                    const dist = bot.entity.position.distanceTo(targetEntity.position);
+                if (bot.combatState.mode === 'auto' && hasPos) {
                     if (dist <= 6.5 && bot.combatState.currentWeapon !== 'sword') {
                         bot.startSwordPvP(targetEntity);
                     } else if (dist > 8.0 && bot.combatState.currentWeapon !== 'bow' && bot.hasBowAndArrows()) {
                         bot.startBowPvP(targetEntity);
+                    }
+                }
+
+                // Intelligent Pathfinding & Anti-Stuck Block Traversal
+                if (hasPos && bot.combatState.currentWeapon !== 'bow') {
+                    // Navigate around blocks when chasing
+                    if (bot.pathfinder && typeof bot.pathfinder.setGoal === 'function') {
+                        const { goals } = require('mineflayer-pathfinder');
+                        if (dist > 2.8) {
+                            const curGoal = bot.pathfinder.goal;
+                            const isFollowingTarget = curGoal && curGoal.entity === targetEntity;
+                            if (!isFollowingTarget) {
+                                try {
+                                    bot.pathfinder.setGoal(new goals.GoalFollow(targetEntity, 2.0), true);
+                                } catch (e) {}
+                            }
+                        } else {
+                            // Within close striking distance - yield pathfinder so swordpvp can execute strafes and crits
+                            if (bot.pathfinder.goal) {
+                                try {
+                                    bot.pathfinder.setGoal(null);
+                                } catch (e) {}
+                            }
+                        }
+                    }
+
+                    // Auto-jump over 1-block steps & obstacles
+                    if (bot.entity.isCollidedHorizontally && typeof bot.setControlState === 'function') {
+                        bot.setControlState('jump', true);
+                        setTimeout(() => {
+                            if (typeof bot.setControlState === 'function') bot.setControlState('jump', false);
+                        }, 150);
+                    }
+
+                    // Anti-stuck watchdog: if stuck attempting to chase, hop and re-route
+                    if (!bot.combatState.lastPos) {
+                        bot.combatState.lastPos = bot.entity.position.clone();
+                        bot.combatState.stuckTicks = 0;
+                    } else {
+                        const dMoved = bot.entity.position.distanceTo(bot.combatState.lastPos);
+                        if (dist > 2.5 && dMoved < 0.08) {
+                            bot.combatState.stuckTicks = (bot.combatState.stuckTicks || 0) + 1;
+                            if (bot.combatState.stuckTicks >= 6) {
+                                if (typeof bot.setControlState === 'function') {
+                                    bot.setControlState('jump', true);
+                                    setTimeout(() => {
+                                        if (typeof bot.setControlState === 'function') bot.setControlState('jump', false);
+                                    }, 150);
+                                }
+                                if (bot.pathfinder && typeof bot.pathfinder.setGoal === 'function') {
+                                    try {
+                                        const { goals } = require('mineflayer-pathfinder');
+                                        bot.pathfinder.setGoal(new goals.GoalFollow(targetEntity, 2.0), true);
+                                    } catch (e) {}
+                                }
+                                bot.combatState.stuckTicks = 0;
+                            }
+                        } else {
+                            bot.combatState.stuckTicks = 0;
+                            bot.combatState.lastPos = bot.entity.position.clone();
+                        }
                     }
                 }
 
