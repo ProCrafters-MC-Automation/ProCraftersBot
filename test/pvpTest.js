@@ -2,6 +2,8 @@ const assert = require('assert');
 const { EventEmitter } = require('events');
 const fs = require('fs');
 const path = require('path');
+const { Movements } = require('mineflayer-pathfinder');
+const { setupScaffolding, isWeaponItem } = require('../main');
 
 console.log('--- Testing mineflayer-custom-pvp Local Base & Bot Setup ---');
 
@@ -28,11 +30,13 @@ bot.supportFeature = () => false;
 bot.inventory = {
     slots: {},
     items: () => [
-        { name: 'diamond_sword' },
-        { name: 'shield' },
-        { name: 'bow' },
-        { name: 'arrow', count: 64 },
-        { name: 'diamond_axe' }
+        { name: 'diamond_sword', type: mcData.itemsByName.diamond_sword.id, count: 1 },
+        { name: 'shield', type: mcData.itemsByName.shield.id, count: 1 },
+        { name: 'bow', type: mcData.itemsByName.bow.id, count: 1 },
+        { name: 'arrow', type: mcData.itemsByName.arrow.id, count: 64 },
+        { name: 'diamond_axe', type: mcData.itemsByName.diamond_axe.id, count: 1 },
+        { name: 'cobblestone', type: mcData.itemsByName.cobblestone.id, count: 64 },
+        { name: 'oak_planks', type: mcData.itemsByName.oak_planks.id, count: 32 }
     ]
 };
 bot.entity = { position: { x: 0, y: 64, z: 0 }, velocity: { x: 0, y: 0, z: 0 }, height: 1.6 };
@@ -61,13 +65,15 @@ bot.swordpvp.options.critConfig.enabled = true;
 bot.swordpvp.options.shieldDisableConfig.enabled = true;
 bot.swordpvp.options.tapConfig.mode = 'wtap';
 bot.swordpvp.options.strafeConfig.enabled = true;
+bot.swordpvp.options.followConfig.distance = 1.8;
 
 assert.strictEqual(bot.swordpvp.options.critConfig.mode, 'hop');
 assert.strictEqual(bot.swordpvp.options.shieldDisableConfig.enabled, true);
 assert.strictEqual(bot.swordpvp.options.tapConfig.mode, 'wtap');
 assert.strictEqual(bot.swordpvp.options.strafeConfig.enabled, true);
+assert.strictEqual(bot.swordpvp.options.followConfig.distance, 1.8);
 
-console.log('4. SwordPVP configurations (critConfig, shieldDisable, wtap, strafe) validated.');
+console.log('4. SwordPVP configurations (critConfig, shieldDisable, wtap, strafe, followConfig) validated.');
 
 // 5. Verify BowPVP inventory detection
 assert.strictEqual(bot.bowpvp.hasWeapon('bow'), true);
@@ -75,4 +81,35 @@ assert.strictEqual(bot.bowpvp.hasAmmo('bow'), true);
 
 console.log('5. BowPVP weapon and ammo detection validated.');
 
+// 6. Verify Scaffolding & Towering configuration
+const moves = new Movements(bot, mcData);
+setupScaffolding(bot, moves, mcData);
+
+assert.strictEqual(moves.allow1by1towers, true, 'allow1by1towers should be enabled for towering');
+assert.strictEqual(moves.placeCost, 1, 'placeCost should be set to 1 for responsive block placement');
+assert.ok(moves.scafoldingBlocks.length > 50, 'scaffoldingBlocks should contain all solid building blocks');
+assert.ok(moves.scaffoldingSet.has(mcData.itemsByName.cobblestone.id), 'cobblestone should be recognized as scaffolding');
+assert.ok(moves.scaffoldingSet.has(mcData.itemsByName.oak_planks.id), 'oak_planks should be recognized as scaffolding');
+assert.ok(moves.scaffoldingSet.has(mcData.itemsByName.dirt.id), 'dirt should be recognized as scaffolding');
+
+// Verify inventory block counting and item retrieval
+const blockCount = moves.countScaffoldingItems();
+assert.strictEqual(blockCount, 96, 'Should count 64 cobblestone + 32 oak_planks = 96 scaffolding blocks');
+const scaffoldItem = moves.getScaffoldingItem();
+assert.ok(scaffoldItem && (scaffoldItem.name === 'cobblestone' || scaffoldItem.name === 'oak_planks'));
+
+console.log('6. Dynamic Scaffolding & Towering (allow1by1towers, solid blocks, count & item retrieval) validated.');
+
+// 7. Verify Weapon vs Block item classification
+assert.strictEqual(isWeaponItem({ name: 'diamond_sword' }), true);
+assert.strictEqual(isWeaponItem({ name: 'netherite_axe' }), true);
+assert.strictEqual(isWeaponItem({ name: 'diamond_pickaxe' }), false);
+assert.strictEqual(isWeaponItem({ name: 'cobblestone' }), false);
+assert.strictEqual(isWeaponItem({ name: 'dirt' }), false);
+assert.strictEqual(isWeaponItem({ name: 'oak_planks' }), false);
+
+console.log('7. Weapon vs block differentiation verified (prevents hitting with scaffolding blocks).');
+
 console.log('\n=== ALL PVP BOT TESTS PASSED SUCCESSFULLY! ===');
+
+process.exit(0);

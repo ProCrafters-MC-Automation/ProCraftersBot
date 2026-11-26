@@ -416,7 +416,10 @@ export class SwordPvp extends EventEmitter {
       this.bot.clearControlStates();
       return;
     }
-    const farAway = this.botReach() >= this.options.genericConfig.attackRange;
+    const dy = this.target.position.y - this.bot.entity.position.y;
+    // Direct melee is only viable if visible, not elevated above reach, and within attack range
+    const canMelee = this.wasVisible && dy <= 1.25 && this.botReach() <= this.options.genericConfig.attackRange;
+    const farAway = !canMelee;
     if (farAway) {
       const goal = generateGoal(this.bot, this.target, this.options)
       if (!this.targetGoal || !goalEquals(this.bot, this.targetGoal, goal, this.options)) {
@@ -701,6 +704,13 @@ export class SwordPvp extends EventEmitter {
       await this.bot.waitForTicks(1);
       await this.attemptAttack(reason);
       return;
+    }
+
+    // Ensure weapon is equipped rather than scaffolding block before attacking
+    const currentHeld = this.bot.inventory.slots[this.bot.getEquipmentDestSlot("hand")];
+    if (!currentHeld || !currentHeld.name.includes(this.weaponOfChoice)) {
+      const weapon = await this.checkForWeapon();
+      if (weapon) await this.equipWeapon(weapon);
     }
 
     attack(this.bot, this.target);

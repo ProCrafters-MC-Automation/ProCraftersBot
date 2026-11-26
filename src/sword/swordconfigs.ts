@@ -161,8 +161,8 @@ export const defaultConfig: FullConfig = {
   },
   followConfig: {
     mode: "standard",
-    distance: 3,
-    predictTicks: 4,
+    distance: 1.8,
+    predictTicks: 2,
   },
   cps: 15
 };
