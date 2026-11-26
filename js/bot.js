@@ -12,6 +12,7 @@ const { bodyguardSystem } = require(path.join(__dirname, 'src', 'bodyguard.js'))
 const { commandsPrinter } = require(path.join(__dirname, 'src', 'commandsPrinter.js'));
 const { placerPrinter } = require(path.join(__dirname, 'src', 'placerPrinter.js'));
 const Utils = require(path.join(__dirname, 'src', 'utils.js'));
+const { initInspector } = require(path.join(__dirname, 'js', 'inspector.js'));
 
 const guiSwarmManager = new SwarmManager({});
 
@@ -204,6 +205,11 @@ function getSelectedBots() {
 window.onload = () => {
     botApi.setMaxListeners(0);
     checkVer();
+    try {
+        initInspector(guiSwarmManager, botApi, sendLog);
+    } catch (e) {
+        console.error('Inspector init error:', e);
+    }
 };
 
 idBtnStart.onclick = () => {

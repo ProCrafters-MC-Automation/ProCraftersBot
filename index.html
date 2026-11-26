@@ -159,6 +159,7 @@
             <button class="button" data-target=".navtasks">Navigation</button>
             <button class="button" data-target=".harvesttasks">Harvest & Craft</button>
             <button class="button" data-target=".autotasks">Automation</button>
+            <button class="button" data-target=".inspector">Bot Inspector</button>
           </ul>
         </div>
         <div id="main-options" class="pl-4">
@@ -583,6 +584,160 @@
               </div>
             </div>
           </div>
+          <!-- BOT INSPECTOR & DIAGNOSTICS (RADAR, PERSPECTIVES, VITALS) -->
+          <div id="inspector" class="inspector functsBtn scrollable-panel" style="display:none; width: 340px;">
+            <div class="input-group flex-colum center-elements">
+              <span class="label">
+                <label class="label-text">Bot Inspector & Diagnostics</label>
+              </span>
+
+              <!-- Bot Selector & Online Status -->
+              <div class="flex mu-2" style="width: 100%; align-items: center; gap: 6px;">
+                <select id="inspectorBotSelect" class="input" style="flex: 1; padding: 4px 8px; font-weight: bold;"></select>
+                <button id="btnRefreshInspectorBots" class="button" style="padding: 4px 10px;" title="Refresh Bots">🔄</button>
+                <span id="inspectorStatusBadge" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #a3be8c; color: #2e3440; font-weight: bold;">Online</span>
+              </div>
+
+              <!-- Hearts & Hunger HUD -->
+              <div class="inspector-card mu-2" style="width: 100%; background: rgba(0,0,0,0.25); border: 1px solid var(--button-border-color); border-radius: 6px; padding: 8px; box-sizing: border-box;">
+                <!-- Hearts Row -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                  <span style="font-size: 11px; font-weight: bold; color: #e06c75;">HEARTS</span>
+                  <span id="inspectorHpText" style="font-size: 12px; font-weight: bold; color: #e06c75;">20 / 20 HP</span>
+                </div>
+                <div id="inspectorHeartsIcons" style="display: flex; gap: 2px; margin-bottom: 4px;"></div>
+                <div style="background: #3b4252; border-radius: 3px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 6px;">
+                  <div id="inspectorHpFill" style="background: #e06c75; height: 100%; width: 100%; transition: width 0.3s;"></div>
+                </div>
+
+                <!-- Hunger Row -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                  <span style="font-size: 11px; font-weight: bold; color: #d08770;">HUNGER</span>
+                  <span id="inspectorFoodText" style="font-size: 12px; font-weight: bold; color: #d08770;">20 / 20 Food</span>
+                </div>
+                <div id="inspectorFoodIcons" style="display: flex; gap: 2px; margin-bottom: 4px;"></div>
+                <div style="background: #3b4252; border-radius: 3px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 4px;">
+                  <div id="inspectorFoodFill" style="background: #d08770; height: 100%; width: 100%; transition: width 0.3s;"></div>
+                </div>
+
+                <!-- Saturation, Armor, Oxygen & Level Sub-bar -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px; opacity: 0.9; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
+                  <div>🍗 <span id="inspectorSatText">Sat: 5.0</span></div>
+                  <div>🛡️ <span id="inspectorArmorText">Armor: 0</span></div>
+                  <div>🫧 <span id="inspectorOxygenText">Oxygen: 20</span></div>
+                  <div>⭐ <span id="inspectorExpText">Level: 0</span></div>
+                </div>
+              </div>
+
+              <!-- Inspector Sub-Tabs -->
+              <div class="flex mu-2" style="width: 100%; gap: 4px;">
+                <button id="btnSubRadar" class="button button-selected" style="flex: 1; padding: 4px 6px; font-size: 12px;">🎯 Radar</button>
+                <button id="btnSubCamera" class="button" style="flex: 1; padding: 4px 6px; font-size: 12px;">📷 Perspectives</button>
+                <button id="btnSubDetails" class="button" style="flex: 1; padding: 4px 6px; font-size: 12px;">📋 Details</button>
+              </div>
+
+              <!-- 1. RADAR SUB-PANEL -->
+              <div id="subpanelRadar" style="width: 100%; margin-top: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <span style="font-size: 11px; opacity: 0.85;">Range:</span>
+                  <div class="flex" style="gap: 4px;">
+                    <button class="button radar-range-btn button-selected" data-range="16" style="padding: 2px 8px; font-size: 11px;">16m</button>
+                    <button class="button radar-range-btn" data-range="32" style="padding: 2px 8px; font-size: 11px;">32m</button>
+                    <button class="button radar-range-btn" data-range="64" style="padding: 2px 8px; font-size: 11px;">64m</button>
+                  </div>
+                </div>
+                <canvas id="radarCanvas" width="320" height="230" style="background: #1e1e2e; border: 1px solid #434c5e; border-radius: 6px; display: block; margin: 0 auto; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"></canvas>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 4px; opacity: 0.85;">
+                  <span id="radarEntityCount">Entities in range: 0</span>
+                  <span id="radarFacingText">Facing: South</span>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 10px; margin-top: 4px; padding: 4px; background: rgba(0,0,0,0.2); border-radius: 4px;">
+                  <span style="color: #88c0d0;">◆ Allies</span>
+                  <span style="color: #81a1c1;">● Players</span>
+                  <span style="color: #bf616a;">▲ Hostiles</span>
+                  <span style="color: #a3be8c;">■ Passives</span>
+                  <span style="color: #b48ead;">• Items</span>
+                </div>
+              </div>
+
+              <!-- 2. CAMERA PERSPECTIVES SUB-PANEL -->
+              <div id="subpanelCamera" style="width: 100%; margin-top: 6px; display: none;">
+                <!-- Toggle Button (on command, not always active!) -->
+                <div class="flex" style="width: 100%; gap: 6px; margin-bottom: 6px;">
+                  <button id="btnToggleCamera" class="button" style="flex: 1; padding: 6px 12px; font-weight: bold; background: #a3be8c; color: #2e3440;">▶ Start Camera</button>
+                  <select id="cameraPerspectiveSelect" class="input" style="flex: 1; padding: 4px 6px; font-size: 12px;">
+                    <option value="firstPerson">First Person</option>
+                    <option value="thirdPersonBack">Third Person (Back)</option>
+                    <option value="thirdPersonFront">Third Person (Front)</option>
+                    <option value="topDown">Overhead (Top-Down)</option>
+                    <option value="isometric">Isometric Orbit</option>
+                  </select>
+                </div>
+                <canvas id="cameraCanvas" width="320" height="190" style="background: #23272e; border: 1px solid #434c5e; border-radius: 6px; display: block; margin: 0 auto; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"></canvas>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 4px; opacity: 0.85;">
+                  <span id="cameraCrosshairTarget">Target: None</span>
+                  <span id="cameraFps">Status: Idle</span>
+                </div>
+
+                <!-- 3D Web Viewer Integration -->
+                <div class="inspector-card mu-2" style="background: rgba(0,0,0,0.25); border: 1px solid var(--button-border-color); border-radius: 6px; padding: 6px; margin-top: 8px;">
+                  <div style="font-size: 11px; font-weight: bold; margin-bottom: 4px;">PRISMARINE 3D WEB VIEWER (WEBGL)</div>
+                  <div class="flex" style="gap: 4px;">
+                    <button id="btnLaunch3dViewer" class="button" style="flex: 1; padding: 4px 6px; font-size: 11px;">🚀 Launch 3D Viewer</button>
+                    <button id="btnStop3dViewer" class="button" style="flex: 1; padding: 4px 6px; font-size: 11px; background: #bf616a; display: none;">⏹ Stop Viewer</button>
+                    <button id="btnOpenBrowserViewer" class="button" style="padding: 4px 8px; font-size: 11px; display: none;">🌐 Browser</button>
+                  </div>
+                  <div id="viewerIframeContainer" style="display: none; margin-top: 6px;">
+                    <iframe id="viewerIframe" style="width: 100%; height: 160px; border: 1px solid #434c5e; border-radius: 4px; background: #000;" src="about:blank"></iframe>
+                  </div>
+                  <div id="viewerStatusText" style="font-size: 10px; opacity: 0.8; margin-top: 3px;">Ready to launch on port 3007 on command.</div>
+                </div>
+              </div>
+
+              <!-- 3. DETAILS & GEAR SUB-PANEL -->
+              <div id="subpanelDetails" style="width: 100%; margin-top: 6px; display: none;">
+                <!-- Coordinates & World -->
+                <div class="inspector-card" style="background: rgba(0,0,0,0.25); border: 1px solid var(--button-border-color); border-radius: 6px; padding: 6px; margin-bottom: 6px;">
+                  <div style="font-size: 11px; font-weight: bold; margin-bottom: 3px; color: #88c0d0;">POSITION & WORLD</div>
+                  <div style="font-size: 12px; font-family: monospace;" id="inspectorPosText">X: 0.0 | Y: 0.0 | Z: 0.0</div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px; opacity: 0.85; margin-top: 2px;">
+                    <div>Dim: <span id="inspectorDimText">Overworld</span></div>
+                    <div>Biome: <span id="inspectorBiomeText">Plains</span></div>
+                    <div>Pitch: <span id="inspectorPitchText">0°</span></div>
+                    <div>Yaw: <span id="inspectorYawText">0°</span></div>
+                  </div>
+                </div>
+
+                <!-- Equipment & Hand -->
+                <div class="inspector-card" style="background: rgba(0,0,0,0.25); border: 1px solid var(--button-border-color); border-radius: 6px; padding: 6px; margin-bottom: 6px;">
+                  <div style="font-size: 11px; font-weight: bold; margin-bottom: 3px; color: #ebcb8b;">EQUIPMENT & HANDS</div>
+                  <div style="font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                    <div>🗡️ Main: <b id="inspectorMainHand">Empty</b></div>
+                    <div>🛡️ Off: <b id="inspectorOffHand">Empty</b></div>
+                    <div>🪖 Helm: <span id="inspectorHelmet">None</span></div>
+                    <div>👕 Chest: <span id="inspectorChest">None</span></div>
+                    <div>👖 Legs: <span id="inspectorLegs">None</span></div>
+                    <div>👢 Boots: <span id="inspectorBoots">None</span></div>
+                  </div>
+                </div>
+
+                <!-- Hotbar Slots -->
+                <div class="inspector-card" style="background: rgba(0,0,0,0.25); border: 1px solid var(--button-border-color); border-radius: 6px; padding: 6px; margin-bottom: 6px;">
+                  <div style="font-size: 11px; font-weight: bold; margin-bottom: 4px; color: #a3be8c;">HOTBAR SLOTS</div>
+                  <div id="inspectorHotbarSlots" style="display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; text-align: center;"></div>
+                </div>
+
+                <!-- State & Active Effects -->
+                <div class="inspector-card" style="background: rgba(0,0,0,0.25); border: 1px solid var(--button-border-color); border-radius: 6px; padding: 6px;">
+                  <div style="font-size: 11px; font-weight: bold; margin-bottom: 3px; color: #b48ead;">STATE & POTION EFFECTS</div>
+                  <div style="font-size: 11px;">State: <b id="inspectorStateText">idle</b> | Role: <b id="inspectorRoleText">general</b></div>
+                  <div style="font-size: 11px; margin-top: 2px;">Effects: <span id="inspectorEffectsText">None</span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
         <div class="flex-colum pl-4">
           <ul id="chatBox" style="height: 25pc; width:20pc; user-select: text;"></ul>

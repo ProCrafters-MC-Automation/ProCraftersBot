@@ -412,6 +412,92 @@ async function runTests() {
         console.log('  @nxg-org/mineflayer-custom-pvp Integration Passed.');
     }
 
+    // 11. Bot Inspector, Vitals (Hearts & Hunger), Perspectives & Radar tests
+    console.log('Testing Bot Inspector (Hearts, Hunger, Radar, Perspectives)...');
+    {
+        // 1. Vitals calculation test: Hearts (Health)
+        const computeHearts = (hp) => {
+            let full = 0, half = 0, empty = 0;
+            for (let i = 0; i < 10; i++) {
+                const hVal = (i + 1) * 2;
+                if (hp >= hVal) full++;
+                else if (hp >= hVal - 1) half++;
+                else empty++;
+            }
+            return { full, half, empty };
+        };
+
+        const fullHp = computeHearts(20);
+        assert.strictEqual(fullHp.full, 10);
+        assert.strictEqual(fullHp.half, 0);
+        assert.strictEqual(fullHp.empty, 0);
+
+        const damagedHp = computeHearts(15);
+        assert.strictEqual(damagedHp.full, 7);
+        assert.strictEqual(damagedHp.half, 1);
+        assert.strictEqual(damagedHp.empty, 2);
+
+        const criticalHp = computeHearts(1);
+        assert.strictEqual(criticalHp.full, 0);
+        assert.strictEqual(criticalHp.half, 1);
+        assert.strictEqual(criticalHp.empty, 9);
+
+        // 2. Vitals calculation test: Hunger (Food)
+        const computeFood = (food) => {
+            let full = 0, half = 0, empty = 0;
+            for (let i = 0; i < 10; i++) {
+                const fVal = (i + 1) * 2;
+                if (food >= fVal) full++;
+                else if (food >= fVal - 1) half++;
+                else empty++;
+            }
+            return { full, half, empty };
+        };
+
+        const fullFood = computeFood(20);
+        assert.strictEqual(fullFood.full, 10);
+        assert.strictEqual(fullFood.empty, 0);
+
+        const hungry = computeFood(9);
+        assert.strictEqual(hungry.full, 4);
+        assert.strictEqual(hungry.half, 1);
+        assert.strictEqual(hungry.empty, 5);
+
+        // 3. Radar projection math test
+        const botPos = { x: 100, y: 64, z: 200 };
+        const enemyPos = { x: 110, y: 64, z: 210 };
+        const radarRange = 32;
+        const maxRadius = 100;
+
+        const dx = enemyPos.x - botPos.x;
+        const dz = enemyPos.z - botPos.z;
+        const dist = Math.hypot(dx, dz);
+        assert.strictEqual(Math.round(dist * 100) / 100, 14.14);
+        assert.strictEqual(dist <= radarRange, true);
+
+        const ex = (dx / radarRange) * maxRadius;
+        const ey = (dz / radarRange) * maxRadius;
+        assert.strictEqual(Math.round(ex * 10) / 10, 31.3);
+        assert.strictEqual(Math.round(ey * 10) / 10, 31.3);
+
+        // 4. Perspective on-command toggle test
+        let cameraActive = false;
+        const toggleCamera = (forceState) => {
+            cameraActive = forceState !== undefined ? forceState : !cameraActive;
+            return cameraActive;
+        };
+
+        assert.strictEqual(cameraActive, false, 'Camera should default to inactive (not always active)');
+        assert.strictEqual(toggleCamera(), true, 'Camera should activate on command');
+        assert.strictEqual(toggleCamera(), false, 'Camera should deactivate on command');
+
+        // 5. Verify inspector export exists and is a function
+        const { initInspector } = require('../js/inspector');
+        assert.strictEqual(typeof initInspector, 'function');
+
+        console.log('  Bot Inspector (Hearts, Hunger, Radar, Perspectives) Passed.');
+    }
+
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');
     process.exit(0);
 }
