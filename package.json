@@ -1,16 +1,23 @@
 {
     "name": "pvp-bot",
-    "version": "1.4",
-    "description": "Advanced Minecraft PvP Bot powered by @nxg-org/mineflayer-custom-pvp",
+    "version": "1.4.0",
+    "description": "Advanced Minecraft PvP Bot powered by mineflayer-custom-pvp",
     "main": "main.js",
     "scripts": {
+        "build": "tsc",
         "start": "node main.js",
-        "test": "node test/pvpTest.js"
+        "test": "node test/pvpTest.js",
+        "test:build": "tsc --noEmit",
+        "pretest": "tsc"
     },
     "author": "1ProCrafter",
     "license": "MIT",
     "dependencies": {
         "@nxg-org/mineflayer-custom-pvp": "^1.7.16",
+        "@nxg-org/mineflayer-smooth-look": "^1.0.3",
+        "@nxg-org/mineflayer-tracker": "^1.1.1",
+        "@nxg-org/mineflayer-trajectories": "^1.2.0",
+        "@nxg-org/mineflayer-util-plugin": "^1.8.4",
         "chalk": "^5.3.0",
         "minecraft-data": "^3.49.0",
         "mineflayer": "^4.14.0",
@@ -22,5 +29,8 @@
         "mineflayer-scaffold": "^1.0.0",
         "mineflayer-web-inventory": "^1.8.4",
         "prismarine-viewer": "^1.25.0"
+    },
+    "devDependencies": {
+        "typescript": "^4.9.5"
     }
 }

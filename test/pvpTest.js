@@ -1,14 +1,24 @@
 const assert = require('assert');
 const { EventEmitter } = require('events');
+const fs = require('fs');
+const path = require('path');
 
-console.log('--- Testing @nxg-org/mineflayer-custom-pvp Bot Setup ---');
+console.log('--- Testing mineflayer-custom-pvp Local Base & Bot Setup ---');
 
-// 1. Verify plugin loading
-const customPVP = require('@nxg-org/mineflayer-custom-pvp').default || require('@nxg-org/mineflayer-custom-pvp');
-assert.strictEqual(typeof customPVP, 'function', 'customPVP should be a function');
-console.log('1. @nxg-org/mineflayer-custom-pvp package imported successfully.');
+// 1. Verify build output exists from cloned mineflayer-custom-pvp
+const libPath = path.join(__dirname, '../lib');
+assert.strictEqual(fs.existsSync(libPath), true, 'lib/ directory should exist from TypeScript compilation');
+assert.strictEqual(fs.existsSync(path.join(libPath, 'index.js')), true, 'lib/index.js should exist');
+assert.strictEqual(fs.existsSync(path.join(libPath, 'sword/swordpvp.js')), true, 'lib/sword/swordpvp.js should exist');
+assert.strictEqual(fs.existsSync(path.join(libPath, 'bow/bowpvp.js')), true, 'lib/bow/bowpvp.js should exist');
+console.log('1. Cloned mineflayer-custom-pvp compiled artifacts validated in lib/.');
 
-// 2. Test mock bot injection
+// 2. Verify local plugin loading
+const localCustomPVP = require('../lib').default || require('../lib');
+assert.strictEqual(typeof localCustomPVP, 'function', 'local customPVP should be a plugin function');
+console.log('2. Local mineflayer-custom-pvp plugin loaded successfully from ./lib.');
+
+// 3. Test mock bot injection with local mineflayer-custom-pvp
 const mcData = require('minecraft-data')('1.20');
 const bot = new EventEmitter();
 bot._client = new EventEmitter();
@@ -31,7 +41,7 @@ bot.players = {};
 bot.loadPlugin = (p) => p(bot);
 bot.getEquipmentDestSlot = () => 0;
 
-customPVP(bot);
+localCustomPVP(bot);
 
 assert.strictEqual(typeof bot.swordpvp, 'object', 'bot.swordpvp must be defined');
 assert.strictEqual(typeof bot.swordpvp.attack, 'function', 'bot.swordpvp.attack must be a function');
@@ -42,9 +52,9 @@ assert.strictEqual(typeof bot.bowpvp.stop, 'function', 'bot.bowpvp.stop must be 
 assert.strictEqual(typeof bot.bowpvp.hasWeapon, 'function', 'bot.bowpvp.hasWeapon must be a function');
 assert.strictEqual(typeof bot.bowpvp.hasAmmo, 'function', 'bot.bowpvp.hasAmmo must be a function');
 
-console.log('2. bot.swordpvp and bot.bowpvp loaded onto bot successfully.');
+console.log('3. bot.swordpvp and bot.bowpvp initialized onto bot successfully from local base.');
 
-// 3. Verify SwordPVP options configuration
+// 4. Verify SwordPVP options configuration
 assert.strictEqual(typeof bot.swordpvp.options, 'object');
 bot.swordpvp.options.critConfig.mode = 'hop';
 bot.swordpvp.options.critConfig.enabled = true;
@@ -57,12 +67,12 @@ assert.strictEqual(bot.swordpvp.options.shieldDisableConfig.enabled, true);
 assert.strictEqual(bot.swordpvp.options.tapConfig.mode, 'wtap');
 assert.strictEqual(bot.swordpvp.options.strafeConfig.enabled, true);
 
-console.log('3. SwordPVP configurations (critConfig, shieldDisable, wtap, strafe) validated.');
+console.log('4. SwordPVP configurations (critConfig, shieldDisable, wtap, strafe) validated.');
 
-// 4. Verify BowPVP inventory detection
+// 5. Verify BowPVP inventory detection
 assert.strictEqual(bot.bowpvp.hasWeapon('bow'), true);
 assert.strictEqual(bot.bowpvp.hasAmmo('bow'), true);
 
-console.log('4. BowPVP weapon and ammo detection validated.');
+console.log('5. BowPVP weapon and ammo detection validated.');
 
 console.log('\n=== ALL PVP BOT TESTS PASSED SUCCESSFULLY! ===');
