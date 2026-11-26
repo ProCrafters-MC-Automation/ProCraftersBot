@@ -1027,14 +1027,18 @@ async function newBot(options) {
         if (idJoinMessage && idJoinMessage.value) { bot.chat(idJoinMessage.value); }
     });
 
+    const getBotName = () => bot.username || options.username || 'Bot';
+
     bot.once('kicked', (reason) => {
-        guiSwarmManager.botsMap.delete(bot.username);
-        botApi.emit("kicked", bot.username, reason);
+        const name = getBotName();
+        guiSwarmManager.botsMap.delete(name);
+        botApi.emit("kicked", name, reason);
     });
 
     bot.once('end', (reason) => {
-        guiSwarmManager.botsMap.delete(bot.username);
-        botApi.emit("end", bot.username, reason);
+        const name = getBotName();
+        guiSwarmManager.botsMap.delete(name);
+        botApi.emit("end", name, reason);
         if (idCheckAutoRc && idCheckAutoRc.checked === true) {
             recon();
             async function recon() {
@@ -1045,7 +1049,15 @@ async function newBot(options) {
     });
 
     bot.once('error', (err) => {
-        botApi.emit("error", bot.username, err);
+        const name = getBotName();
+        let msg = err.message || err.toString();
+        if (err.errors && Array.isArray(err.errors)) {
+            msg = err.errors.map(e => e.message || e.code || e).join('; ');
+        }
+        if (typeof msg === 'string' && msg.includes('ECONNREFUSED')) {
+            msg = `Connection refused at ${options.host || 'localhost'}:${options.port || 25565}. Check if your Minecraft server is running.`;
+        }
+        botApi.emit("error", name, msg);
     });
 
     bot.on('messagestr', (message) => {
@@ -1092,11 +1104,22 @@ botApi.on("login", (name) => {
 });
 botApi.on("end", (name, reason) => {
     rmPlayer(name);
-    sendLog(`<li> <img src="./assets/icons/alert-triangle.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(100%) sepia(61%) saturate(4355%) hue-rotate(357deg) brightness(104%) contrast(104%)"> [${name}] ${reason}</li>`);
+    let displayReason = reason;
+    if (reason === 'socketClosed') {
+        displayReason = 'Connection closed (server offline or unreachable)';
+    }
+    sendLog(`<li> <img src="./assets/icons/alert-triangle.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(100%) sepia(61%) saturate(4355%) hue-rotate(357deg) brightness(104%) contrast(104%)"> [${name || 'Bot'}] ${displayReason}</li>`);
 });
 botApi.on("error", (name, err) => {
     errBot(name);
-    sendLog(`<li> <img src="./assets/icons/alert-triangle.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(89%) sepia(82%) saturate(799%) hue-rotate(1deg) brightness(103%) contrast(102%)"> [${name}] ${err}</li>`);
+    let displayErr = (err && err.message) ? err.message : err;
+    if (err && err.name === 'AggregateError' && err.errors) {
+        displayErr = err.errors.map(e => e.message || e.code || e).join('; ');
+    }
+    if (typeof displayErr === 'string' && displayErr.includes('ECONNREFUSED')) {
+        displayErr = 'Connection refused. Ensure your Minecraft server is running on the specified host/port.';
+    }
+    sendLog(`<li> <img src="./assets/icons/alert-triangle.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(89%) sepia(82%) saturate(799%) hue-rotate(1deg) brightness(103%) contrast(102%)"> [${name || 'Bot'}] ${displayErr}</li>`);
 });
 botApi.on("spawn", (name) => {
     sendLog(`<li> <img src="./assets/icons/arrow-right.svg" class="icon-sm" style="filter: brightness(0) saturate(100%) invert(26%) sepia(94%) saturate(5963%) hue-rotate(74deg) brightness(96%) contrast(101%)"> ${name} Spawned.</li>`);

@@ -173,11 +173,20 @@ function initBot(botOrOptions, optionsOrMaster, maybeCommandHandler) {
     });
 
     bot.on('kicked', (reason) => {
-        console.log(`[Bot Kicked] ${bot.username}:`, reason);
+        const name = bot.username || options.username || 'Bot';
+        console.log(`[Bot Kicked] ${name}:`, reason);
     });
 
     bot.on('error', (err) => {
-        console.error(`[Bot Error] ${bot.username}:`, err.message);
+        const name = bot.username || options.username || 'Bot';
+        let msg = err.message || err.toString();
+        if (err.errors && Array.isArray(err.errors)) {
+            msg = err.errors.map(e => e.message || e.code || e).join('; ');
+        }
+        if (msg.includes('ECONNREFUSED')) {
+            msg = `Connection refused at ${options.host || 'localhost'}:${options.port || 25565}. Ensure the Minecraft server is running.`;
+        }
+        console.error(`[Bot Error] ${name}:`, msg);
     });
 
     return bot;

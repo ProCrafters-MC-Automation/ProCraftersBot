@@ -506,6 +506,26 @@ rl.on('line', (line) => {
 });
 
 // Error handling
-bot.on('error', (err) => console.error('[Bot Error]', err.message));
-bot.on('kicked', (reason) => console.log('[Bot Kicked]', reason));
-bot.on('end', () => console.log('[Bot Disconnected]'));
+bot.on('error', (err) => {
+    const name = bot.username || config.botNames[0] || 'Bot';
+    let msg = err.message || err.toString();
+    if (err.errors && Array.isArray(err.errors)) {
+        msg = err.errors.map(e => e.message || e.code || e).join('; ');
+    }
+    if (msg.includes('ECONNREFUSED')) {
+        msg = `Connection refused at ${config.host}:${config.port}. Ensure your Minecraft server is running.`;
+    }
+    console.error(`[Bot Error: ${name}]`, msg);
+});
+bot.on('kicked', (reason) => {
+    const name = bot.username || config.botNames[0] || 'Bot';
+    console.log(`[Bot Kicked: ${name}]`, reason);
+});
+bot.on('end', (reason) => {
+    const name = bot.username || config.botNames[0] || 'Bot';
+    let r = reason || 'Connection ended';
+    if (r === 'socketClosed') {
+        r = 'socketClosed (server offline or unreachable)';
+    }
+    console.log(`[Bot Disconnected: ${name}]`, r);
+});
