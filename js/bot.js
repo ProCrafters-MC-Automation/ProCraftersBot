@@ -371,26 +371,33 @@ if (idBtnBgAttack) {
             b.huntTargetName = targetName.toLowerCase().trim();
             if (b.equipForCombat) b.equipForCombat();
 
-            const targetEntity = findEntity(b) || entity;
-            if (targetEntity && targetEntity.isValid) {
-                attackedCount++;
-                if (b.pvp && typeof b.pvp.attack === 'function') {
-                    b.pvp.attack(targetEntity);
-                } else if (typeof b.attack === 'function') {
-                    b.attack(targetEntity);
+            if (typeof b.attackPlayer === 'function') {
+                const started = b.attackPlayer(targetName);
+                if (started) attackedCount++;
+            } else {
+                const targetEntity = findEntity(b) || entity;
+                if (targetEntity && targetEntity.isValid) {
+                    attackedCount++;
+                    if (b.swordpvp && typeof b.swordpvp.attack === 'function') {
+                        b.swordpvp.attack(targetEntity);
+                    } else if (b.pvp && typeof b.pvp.attack === 'function') {
+                        b.pvp.attack(targetEntity);
+                    } else if (typeof b.attack === 'function') {
+                        b.attack(targetEntity);
+                    }
                 }
             }
         });
 
         if (attackedCount > 0 || entity) {
-            sendLog(`[Combat] ${bots.length} bot(s) targeting ${targetName} using bot.pvp.attack until eliminated.`);
+            sendLog(`[Combat] ${bots.length} bot(s) targeting ${targetName} using custom PvP until eliminated.`);
             if (idCombatStatusLabel) idCombatStatusLabel.innerText = `Attacking ${targetName}...`;
             if (idBgStatusLabel) idBgStatusLabel.innerText = `Attacking ${targetName}...`;
         } else {
-            sendLog(`[Combat] ${bots.length} bot(s) hunting ${targetName} (will attack on sight with bot.pvp).`);
+            sendLog(`[Combat] ${bots.length} bot(s) hunting ${targetName} (will engage in custom PvP on sight).`);
             if (idCombatStatusLabel) idCombatStatusLabel.innerText = `Hunting ${targetName}...`;
             if (idBgStatusLabel) idBgStatusLabel.innerText = `Hunting ${targetName}...`;
-            createPopup(`Target "${targetName}" not in visual range; bots will attack with bot.pvp on sight until eliminated.`);
+            createPopup(`Target "${targetName}" not in visual range; bots will attack with custom PvP on sight until eliminated.`);
         }
     };
 }
@@ -402,7 +409,15 @@ if (idBtnBgHalt) {
         const bots = getSelectedBots();
         bots.forEach(b => {
             b.huntTargetName = null;
-            if (b.pvp && typeof b.pvp.stop === 'function') b.pvp.stop();
+            if (b.swordpvp && typeof b.swordpvp.stop === 'function') {
+                try { b.swordpvp.stop(); } catch {}
+            }
+            if (b.bowpvp && typeof b.bowpvp.stop === 'function') {
+                try { b.bowpvp.stop(); } catch {}
+            }
+            if (b.pvp && typeof b.pvp.stop === 'function') {
+                b.pvp.stop();
+            }
             if (b.clearTargets) b.clearTargets();
             if (b.pathfinder) b.pathfinder.setGoal(null);
         });

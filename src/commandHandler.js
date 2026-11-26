@@ -157,7 +157,15 @@ function createCommandHandler(swarmManager) {
                 const botsToStop = isSwarm ? swarmManager.getAllBots() : [bot];
                 botsToStop.forEach(b => {
                     b.huntTargetName = null;
-                    if (b.pvp && typeof b.pvp.stop === 'function') b.pvp.stop();
+                    if (b.swordpvp && typeof b.swordpvp.stop === 'function') {
+                        try { b.swordpvp.stop(); } catch {}
+                    }
+                    if (b.bowpvp && typeof b.bowpvp.stop === 'function') {
+                        try { b.bowpvp.stop(); } catch {}
+                    }
+                    if (b.pvp && typeof b.pvp.stop === 'function') {
+                        b.pvp.stop();
+                    }
                     if (b.clearTargets) b.clearTargets();
                     if (b.pathfinder) b.pathfinder.setGoal(null);
                 });
@@ -165,12 +173,27 @@ function createCommandHandler(swarmManager) {
                 break;
             }
 
+            case 'sword':
+            case 'melee':
+            case 'bow':
+            case 'shoot':
+            case 'snipe':
             case 'attack':
             case 'kill':
             case 'target': {
-                const targetName = args[0];
+                let mode = 'auto';
+                let targetName = args[0];
+
+                if (cmd === 'sword' || cmd === 'melee') {
+                    mode = 'sword';
+                } else if (cmd === 'bow' || cmd === 'shoot' || cmd === 'snipe') {
+                    mode = 'bow';
+                } else if (args[1] && ['sword', 'bow', 'auto'].includes(args[1].toLowerCase())) {
+                    mode = args[1].toLowerCase();
+                }
+
                 if (!targetName) {
-                    addChat(bot, 'Who should I attack?', returnAddress);
+                    addChat(bot, `Who should I ${cmd}?`, returnAddress);
                     return;
                 }
 
@@ -197,25 +220,100 @@ function createCommandHandler(swarmManager) {
                     botsToOrder.forEach(b => {
                         b.huntTargetName = targetName.toLowerCase().trim();
                         if (b.equipForCombat) b.equipForCombat();
-                        const ent = findTarget(b) || entityToAttack;
-                        if (ent && ent.isValid) {
-                            attackedCount++;
-                            if (b.pvp && typeof b.pvp.attack === 'function') {
-                                b.pvp.attack(ent);
-                            } else if (typeof b.attack === 'function') {
-                                b.attack(ent);
+                        if (typeof b.attackPlayer === 'function') {
+                            const ok = b.attackPlayer(targetName, mode);
+                            if (ok) attackedCount++;
+                        } else {
+                            const ent = findTarget(b) || entityToAttack;
+                            if (ent && ent.isValid) {
+                                attackedCount++;
+                                if (b.swordpvp && typeof b.swordpvp.attack === 'function' && mode === 'sword') {
+                                    b.swordpvp.attack(ent);
+                                } else if (b.bowpvp && typeof b.bowpvp.attack === 'function' && mode === 'bow') {
+                                    b.bowpvp.attack(ent, 'bow');
+                                } else if (b.swordpvp && typeof b.swordpvp.attack === 'function') {
+                                    b.swordpvp.attack(ent);
+                                } else if (b.pvp && typeof b.pvp.attack === 'function') {
+                                    b.pvp.attack(ent);
+                                } else if (typeof b.attack === 'function') {
+                                    b.attack(ent);
+                                }
                             }
                         }
                     });
 
                     if (attackedCount > 0) {
-                        addChat(bot, `${isSwarm ? 'All bots' : 'Bot'} attacking ${targetName} using bot.pvp.attack until eliminated!`, returnAddress);
+                        addChat(bot, `${isSwarm ? 'All bots' : 'Bot'} attacking ${targetName} (${mode}) until eliminated!`, returnAddress);
                     } else if (entityToAttack) {
-                        addChat(bot, `Attacking ${targetName}!`, returnAddress);
+                        addChat(bot, `Attacking ${targetName} (${mode})!`, returnAddress);
                     } else {
-                        addChat(bot, `Hunting ${targetName} (will attack with bot.pvp on sight until eliminated)!`, returnAddress);
+                        addChat(bot, `Hunting ${targetName} (will engage in ${mode} PvP on sight until eliminated)!`, returnAddress);
                     }
                 }
+                break;
+            }
+
+            case 'crit': {
+                const critMode = (args[0] || '').toLowerCase();
+                const botsToConfig = isSwarm ? swarmManager.getAllBots() : [bot];
+                botsToConfig.forEach(b => {
+                    if (b.swordpvp && b.swordpvp.options && b.swordpvp.options.critConfig) {
+                        if (['hop', 'packet', 'shorthop'].includes(critMode)) {
+                            b.swordpvp.options.critConfig.enabled = true;
+                            b.swordpvp.options.critConfig.mode = critMode;
+                        } else if (critMode === 'off') {
+                            b.swordpvp.options.critConfig.enabled = false;
+                        }
+                    }
+                });
+                addChat(bot, `Critical hits set to: ${critMode}`, returnAddress);
+                break;
+            }
+
+            case 'shield': {
+                const shieldMode = (args[0] || '').toLowerCase();
+                const botsToConfig = isSwarm ? swarmManager.getAllBots() : [bot];
+                botsToConfig.forEach(b => {
+                    if (b.swordpvp && b.swordpvp.options && b.swordpvp.options.shieldConfig) {
+                        if (['legit', 'blatant'].includes(shieldMode)) {
+                            b.swordpvp.options.shieldConfig.enabled = true;
+                            b.swordpvp.options.shieldConfig.mode = shieldMode;
+                        } else if (shieldMode === 'off') {
+                            b.swordpvp.options.shieldConfig.enabled = false;
+                        }
+                    }
+                });
+                addChat(bot, `Shield mode set to: ${shieldMode}`, returnAddress);
+                break;
+            }
+
+            case 'strafe': {
+                const strafeMode = (args[0] || '').toLowerCase();
+                const botsToConfig = isSwarm ? swarmManager.getAllBots() : [bot];
+                botsToConfig.forEach(b => {
+                    if (b.swordpvp && b.swordpvp.options && b.swordpvp.options.strafeConfig) {
+                        if (['intelligent', 'circle', 'random'].includes(strafeMode)) {
+                            b.swordpvp.options.strafeConfig.enabled = true;
+                            b.swordpvp.options.strafeConfig.mode = { mode: strafeMode, maxOffset: Math.PI / 2 };
+                        } else if (strafeMode === 'off') {
+                            b.swordpvp.options.strafeConfig.enabled = false;
+                        }
+                    }
+                });
+                addChat(bot, `Strafe mode set to: ${strafeMode}`, returnAddress);
+                break;
+            }
+
+            case 'wtap': {
+                const tapArg = (args[0] || '').toLowerCase();
+                const enabled = tapArg === 'on' || tapArg === 'true';
+                const botsToConfig = isSwarm ? swarmManager.getAllBots() : [bot];
+                botsToConfig.forEach(b => {
+                    if (b.swordpvp && b.swordpvp.options && b.swordpvp.options.tapConfig) {
+                        b.swordpvp.options.tapConfig.enabled = enabled;
+                    }
+                });
+                addChat(bot, `W-tap ${enabled ? 'enabled' : 'disabled'}`, returnAddress);
                 break;
             }
 
@@ -594,6 +692,13 @@ function createCommandHandler(swarmManager) {
                 commandsPrinter.stop();
                 placerPrinter.stop();
                 bot.state = 'idle';
+                if (bot.swordpvp && typeof bot.swordpvp.stop === 'function') {
+                    try { bot.swordpvp.stop(); } catch {}
+                }
+                if (bot.bowpvp && typeof bot.bowpvp.stop === 'function') {
+                    try { bot.bowpvp.stop(); } catch {}
+                }
+                if (bot.clearTargets) bot.clearTargets();
                 addChat(bot, 'Stopped all actions.', returnAddress);
                 break;
             }
@@ -704,3 +809,4 @@ function createCommandHandler(swarmManager) {
 module.exports = {
     createCommandHandler
 };
+

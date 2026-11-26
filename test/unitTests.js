@@ -193,6 +193,32 @@ async function runTests() {
         assert.strictEqual(testBot.huntTargetName, null);
         defaultChatQueue.clear();
 
+        // Test PvP configuration commands via chat
+        testBot.swordpvp = {
+            options: {
+                critConfig: { enabled: true, mode: 'hop' },
+                shieldConfig: { enabled: true, mode: 'legit' },
+                strafeConfig: { enabled: true, mode: { mode: 'intelligent', maxOffset: Math.PI / 2 } },
+                tapConfig: { enabled: true, mode: 'wtap' }
+            }
+        };
+
+        await handler('Admin', 'Alpha crit packet', testBot, ['Admin']);
+        assert.strictEqual(testBot.swordpvp.options.critConfig.mode, 'packet');
+        defaultChatQueue.clear();
+
+        await handler('Admin', 'Alpha shield blatant', testBot, ['Admin']);
+        assert.strictEqual(testBot.swordpvp.options.shieldConfig.mode, 'blatant');
+        defaultChatQueue.clear();
+
+        await handler('Admin', 'Alpha strafe circle', testBot, ['Admin']);
+        assert.strictEqual(testBot.swordpvp.options.strafeConfig.mode.mode, 'circle');
+        defaultChatQueue.clear();
+
+        await handler('Admin', 'Alpha wtap off', testBot, ['Admin']);
+        assert.strictEqual(testBot.swordpvp.options.tapConfig.enabled, false);
+        defaultChatQueue.clear();
+
         console.log('  Command Handler Routing Passed.');
     }
 
@@ -270,6 +296,120 @@ async function runTests() {
         assert.strictEqual(pvpTarget, null);
 
         console.log('  Combat PVP & Hunting Passed.');
+    }
+
+    // 10. @nxg-org/mineflayer-custom-pvp Sword & Bow Integration tests
+    console.log('Testing @nxg-org/mineflayer-custom-pvp Integration...');
+    {
+        const { EventEmitter } = require('events');
+        const combat = require('../src/combat');
+        const customPvpBot = new EventEmitter();
+        customPvpBot.players = {};
+        customPvpBot.entities = {};
+        customPvpBot.entity = { position: { x: 0, y: 64, z: 0, distanceTo: (p) => Math.hypot(p.x, p.y - 64, p.z) } };
+        customPvpBot.inventory = {
+            items: () => [
+                { name: 'diamond_sword' },
+                { name: 'shield' },
+                { name: 'bow' },
+                { name: 'arrow', count: 64 }
+            ]
+        };
+        customPvpBot.setControlState = () => {};
+
+        let swordAttacked = null;
+        let bowAttacked = null;
+        let swordStopped = false;
+        let bowStopped = false;
+
+        customPvpBot.swordpvp = {
+            attack: (entity) => { swordAttacked = entity; swordStopped = false; },
+            stop: () => { swordStopped = true; swordAttacked = null; },
+            options: {
+                critConfig: { enabled: true, mode: 'hop' },
+                shieldConfig: { enabled: true, mode: 'legit' },
+                strafeConfig: { enabled: true, mode: { mode: 'intelligent', maxOffset: Math.PI / 2 } },
+                tapConfig: { enabled: true, mode: 'wtap' }
+            }
+        };
+
+        customPvpBot.bowpvp = {
+            attack: (entity, weapon) => { bowAttacked = entity; bowStopped = false; },
+            stop: () => { bowStopped = true; bowAttacked = null; },
+            useOffhand: false
+        };
+
+        combat.load(customPvpBot);
+
+        const closeTarget = { username: 'CloseEnemy', isValid: true, position: { x: 3, y: 64, z: 0 } };
+        const farTarget = { username: 'FarEnemy', isValid: true, position: { x: 15, y: 64, z: 0 } };
+        customPvpBot.players['CloseEnemy'] = { entity: closeTarget };
+        customPvpBot.players['FarEnemy'] = { entity: farTarget };
+
+        // Test auto/hybrid close range engages swordpvp
+        customPvpBot.attackPlayer('CloseEnemy', 'auto');
+        assert.strictEqual(swordAttacked, closeTarget);
+        assert.strictEqual(customPvpBot.combatState.currentWeapon, 'sword');
+
+        // Test auto/hybrid long range engages bowpvp
+        customPvpBot.attackPlayer('FarEnemy', 'auto');
+        assert.strictEqual(bowAttacked, farTarget);
+        assert.strictEqual(customPvpBot.combatState.currentWeapon, 'bow');
+
+        // Test explicit sword attack
+        customPvpBot.attackPlayer('FarEnemy', 'sword');
+        assert.strictEqual(swordAttacked, farTarget);
+        assert.strictEqual(customPvpBot.combatState.currentWeapon, 'sword');
+
+        // Test explicit bow attack
+        customPvpBot.attackPlayer('CloseEnemy', 'bow');
+        assert.strictEqual(bowAttacked, closeTarget);
+        assert.strictEqual(customPvpBot.combatState.currentWeapon, 'bow');
+
+        // Test halt/clear stops both sword and bow
+        customPvpBot.clearTargets();
+        assert.strictEqual(swordStopped, true);
+        assert.strictEqual(bowStopped, true);
+        assert.strictEqual(customPvpBot.huntTargetName, null);
+        assert.strictEqual(customPvpBot.combatState.mode, 'idle');
+
+        // Test plugin loading and configuration defaults via botInit
+        const { initBot } = require('../src/botInit');
+        const mcData120 = require('minecraft-data')('1.20');
+        const mockClientBot = new EventEmitter();
+        mockClientBot._client = new EventEmitter();
+        mockClientBot.version = '1.20';
+        mockClientBot.registry = mcData120;
+        mockClientBot.supportFeature = () => false;
+        mockClientBot.inventory = {
+            slots: {},
+            items: () => [
+                { name: 'diamond_sword' },
+                { name: 'shield' },
+                { name: 'bow' },
+                { name: 'arrow', count: 64 },
+                { name: 'diamond_axe' }
+            ]
+        };
+        mockClientBot.entity = { position: { x: 0, y: 64, z: 0 }, velocity: { x: 0, y: 0, z: 0 }, height: 1.6 };
+        mockClientBot.entities = {};
+        mockClientBot.players = {};
+        mockClientBot.loadPlugin = (p) => {
+            if (typeof p === 'function') p(mockClientBot);
+        };
+        mockClientBot.getEquipmentDestSlot = () => 0;
+        mockClientBot.setControlState = () => {};
+        mockClientBot.clearControlStates = () => {};
+
+        initBot(mockClientBot, { role: 'pvp' });
+        assert.strictEqual(typeof mockClientBot.swordpvp, 'object');
+        assert.strictEqual(typeof mockClientBot.bowpvp, 'object');
+        assert.strictEqual(mockClientBot.swordpvp.options.critConfig.mode, 'hop');
+        assert.strictEqual(mockClientBot.swordpvp.options.shieldConfig.mode, 'legit');
+        assert.strictEqual(mockClientBot.swordpvp.options.tapConfig.mode, 'wtap');
+        assert.strictEqual(mockClientBot.swordpvp.options.strafeConfig.mode.mode, 'intelligent');
+
+        console.log('  @nxg-org/mineflayer-custom-pvp Integration Passed.');
     }
 
     console.log('\n=== ALL TESTS PASSED SUCCESSFULLY! ===');

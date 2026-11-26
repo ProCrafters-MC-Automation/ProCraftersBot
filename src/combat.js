@@ -24,7 +24,10 @@ function load(bot) {
         targets: [],
         attackTick: 0,
         mvTick: 0,
-        isShieldActive: false
+        isShieldActive: false,
+        mode: 'idle', // 'idle' | 'sword' | 'bow' | 'auto'
+        target: null,
+        currentWeapon: 'none'
     };
 
     bot.huntTargetName = null;
@@ -37,15 +40,26 @@ function load(bot) {
 
     bot.clearTargets = function () {
         bot.combatState.targets = [];
+        bot.combatState.mode = 'idle';
+        bot.combatState.target = null;
+        bot.combatState.currentWeapon = 'none';
         bot.huntTargetName = null;
+
         bot.setControlState('forward', false);
         bot.setControlState('sprint', false);
         bot.setControlState('jump', false);
+
+        if (bot.swordpvp && typeof bot.swordpvp.stop === 'function') {
+            try { bot.swordpvp.stop(); } catch {}
+        }
+        if (bot.bowpvp && typeof bot.bowpvp.stop === 'function') {
+            try { bot.bowpvp.stop(); } catch {}
+        }
         if (bot.pvp && typeof bot.pvp.stop === 'function') {
-            bot.pvp.stop();
+            try { bot.pvp.stop(); } catch {}
         }
         if (bot.pathfinder) {
-            bot.pathfinder.setGoal(null);
+            try { bot.pathfinder.setGoal(null); } catch {}
         }
     };
 
@@ -56,6 +70,14 @@ function load(bot) {
         if (!bot.inventory || !bot.inventory.slots) return false;
         const offhand = bot.inventory.slots[45];
         return offhand && offhand.name && offhand.name.includes('shield');
+    };
+
+    bot.hasBowAndArrows = function () {
+        if (!bot.inventory) return false;
+        const items = typeof bot.inventory.items === 'function' ? bot.inventory.items() : [];
+        const hasBow = items.some(i => i.name && (i.name.includes('bow') || i.name.includes('crossbow')));
+        const hasArrows = items.some(i => i.name && i.name.includes('arrow'));
+        return hasBow && hasArrows;
     };
 
     bot.useShield = function (active = true) {
@@ -69,21 +91,35 @@ function load(bot) {
         }
     };
 
-    bot.equipForCombat = async function () {
-        if (!bot.inventory) return;
+    bot.equipSword = async function () {
+        if (!bot.inventory || typeof bot.inventory.items !== 'function') return;
         const items = bot.inventory.items();
         const weapon = items.find(i => i.name && (i.name.includes('sword') || i.name.includes('axe')));
-        if (weapon) {
+        if (weapon && typeof bot.equip === 'function') {
             try { await bot.equip(weapon, 'hand'); } catch {}
         }
         const shield = items.find(i => i.name && i.name.includes('shield'));
-        if (shield && bot.getEquipmentDestSlot) {
+        if (shield && bot.getEquipmentDestSlot && typeof bot.equip === 'function') {
             try { await bot.equip(shield, 'off-hand'); } catch {}
         }
         if (bot.armorManager && typeof bot.armorManager.equipAll === 'function') {
             try { bot.armorManager.equipAll(); } catch {}
         }
     };
+
+    bot.equipBow = async function () {
+        if (!bot.inventory || typeof bot.inventory.items !== 'function') return;
+        const items = bot.inventory.items();
+        const bow = items.find(i => i.name && (i.name === 'bow' || i.name === 'crossbow'));
+        if (bow && typeof bot.equip === 'function') {
+            try { await bot.equip(bow, 'hand'); } catch {}
+        }
+        if (bot.armorManager && typeof bot.armorManager.equipAll === 'function') {
+            try { bot.armorManager.equipAll(); } catch {}
+        }
+    };
+
+    bot.equipForCombat = bot.equipSword;
 
     bot.findEntityByName = function (name) {
         if (!name) return null;
@@ -109,21 +145,84 @@ function load(bot) {
         return null;
     };
 
-    bot.attackPlayer = function (targetName) {
+    bot.startSwordPvP = function (target) {
+        if (!target || !target.isValid) return false;
+        bot.combatState.target = target;
+        bot.combatState.currentWeapon = 'sword';
+        if (typeof bot.equipSword === 'function') {
+            bot.equipSword().catch(() => {});
+        }
+
+        if (bot.bowpvp && typeof bot.bowpvp.stop === 'function') {
+            try { bot.bowpvp.stop(); } catch {}
+        }
+
+        if (bot.swordpvp && typeof bot.swordpvp.attack === 'function') {
+            bot.swordpvp.attack(target);
+            return true;
+        } else if (bot.pvp && typeof bot.pvp.attack === 'function') {
+            bot.pvp.attack(target);
+            return true;
+        } else if (typeof bot.attackTarget === 'function') {
+            bot.attackTarget(target);
+            return true;
+        }
+        return false;
+    };
+
+    bot.startBowPvP = function (target) {
+        if (!target || !target.isValid) return false;
+        bot.combatState.target = target;
+        bot.combatState.currentWeapon = 'bow';
+        if (typeof bot.equipBow === 'function') {
+            bot.equipBow().catch(() => {});
+        }
+
+        if (bot.swordpvp && typeof bot.swordpvp.stop === 'function') {
+            try { bot.swordpvp.stop(); } catch {}
+        }
+
+        if (bot.bowpvp && typeof bot.bowpvp.attack === 'function') {
+            bot.bowpvp.attack(target, 'bow');
+            return true;
+        } else if (bot.pvp && typeof bot.pvp.attack === 'function') {
+            bot.pvp.attack(target);
+            return true;
+        } else if (typeof bot.attackTarget === 'function') {
+            bot.attackTarget(target);
+            return true;
+        }
+        return false;
+    };
+
+    bot.startAutoPvP = function (target) {
+        if (!target || !target.isValid) return false;
+        bot.combatState.target = target;
+        const dist = (bot.entity && bot.entity.position && target.position)
+            ? bot.entity.position.distanceTo(target.position)
+            : 0;
+
+        if (dist > 6.5 && bot.hasBowAndArrows()) {
+            return bot.startBowPvP(target);
+        } else {
+            return bot.startSwordPvP(target);
+        }
+    };
+
+    bot.attackPlayer = function (targetName, mode = 'auto') {
         if (!targetName) return false;
         bot.huntTargetName = targetName.toLowerCase().trim();
-        if (typeof bot.equipForCombat === 'function') {
-            bot.equipForCombat();
-        }
+        bot.combatState.mode = mode;
 
         const entity = bot.findEntityByName(bot.huntTargetName);
         if (entity && entity.isValid) {
-            if (bot.pvp && typeof bot.pvp.attack === 'function') {
-                bot.pvp.attack(entity);
-                return true;
-            } else if (typeof bot.attackTarget === 'function') {
-                bot.attackTarget(entity);
-                return true;
+            bot.combatState.target = entity;
+            if (mode === 'bow' && bot.hasBowAndArrows()) {
+                return bot.startBowPvP(entity);
+            } else if (mode === 'sword') {
+                return bot.startSwordPvP(entity);
+            } else {
+                return bot.startAutoPvP(entity);
             }
         }
         return false;
@@ -149,16 +248,33 @@ function load(bot) {
 
         // If continuous hunt mode is active, check and track target until killed
         if (bot.huntTargetName) {
-            const currentPvpTarget = bot.pvp ? bot.pvp.target : null;
-            if (!currentPvpTarget || !currentPvpTarget.isValid) {
-                const targetEntity = bot.findEntityByName(bot.huntTargetName);
-                if (targetEntity && targetEntity.isValid) {
-                    if (bot.pvp && typeof bot.pvp.attack === 'function') {
-                        if (bot.pvp.target !== targetEntity) {
-                            bot.pvp.attack(targetEntity);
-                        }
+            const targetEntity = (bot.combatState.target && bot.combatState.target.isValid)
+                ? bot.combatState.target
+                : bot.findEntityByName(bot.huntTargetName);
+
+            if (targetEntity && targetEntity.isValid) {
+                bot.combatState.target = targetEntity;
+
+                // Adaptive mode distance switching
+                if (bot.combatState.mode === 'auto' && bot.entity && bot.entity.position && targetEntity.position) {
+                    const dist = bot.entity.position.distanceTo(targetEntity.position);
+                    if (dist <= 6.5 && bot.combatState.currentWeapon !== 'sword') {
+                        bot.startSwordPvP(targetEntity);
+                    } else if (dist > 8.0 && bot.combatState.currentWeapon !== 'bow' && bot.hasBowAndArrows()) {
+                        bot.startBowPvP(targetEntity);
+                    }
+                }
+
+                // If not currently attacking, engage
+                const isCustomPvpAttacking = (bot.swordpvp && bot.swordpvp.target) || (bot.bowpvp && bot.bowpvp.target);
+                const isPvpAttacking = bot.pvp && bot.pvp.target;
+                if (!isCustomPvpAttacking && !isPvpAttacking) {
+                    if (bot.combatState.mode === 'bow' && bot.hasBowAndArrows()) {
+                        bot.startBowPvP(targetEntity);
+                    } else if (bot.combatState.mode === 'sword') {
+                        bot.startSwordPvP(targetEntity);
                     } else {
-                        bot.attackTarget(targetEntity);
+                        bot.startAutoPvP(targetEntity);
                     }
                 }
             }
@@ -194,7 +310,9 @@ function load(bot) {
         }
 
         if (bestTarget) {
-            if (bot.pvp && typeof bot.pvp.attack === 'function' && !bot.pvp.target) {
+            if (bot.swordpvp && typeof bot.swordpvp.attack === 'function' && !bot.swordpvp.target) {
+                bot.startSwordPvP(bestTarget);
+            } else if (bot.pvp && typeof bot.pvp.attack === 'function' && !bot.pvp.target) {
                 bot.pvp.attack(bestTarget);
             } else {
                 bot.attackTarget(bestTarget);
@@ -204,15 +322,16 @@ function load(bot) {
 
     // When target dies or is removed, handle elimination
     bot.on('entityDead', (entity) => {
-        if (!entity || !bot.huntTargetName) return;
-        const matches = (entity.username && entity.username.toLowerCase() === bot.huntTargetName) ||
-                        (entity.name && entity.name.toLowerCase() === bot.huntTargetName);
-        if (matches) {
-            if (bot.pvp && typeof bot.pvp.stop === 'function') {
-                bot.pvp.stop();
-            }
-            const killed = bot.huntTargetName;
-            bot.huntTargetName = null;
+        if (!entity) return;
+        const isHuntTarget = bot.huntTargetName && (
+            (entity.username && entity.username.toLowerCase() === bot.huntTargetName) ||
+            (entity.name && entity.name.toLowerCase() === bot.huntTargetName)
+        );
+        const isCurrentTarget = bot.combatState.target && entity.id === bot.combatState.target.id;
+
+        if (isHuntTarget || isCurrentTarget) {
+            const killed = bot.huntTargetName || (entity.username || entity.name);
+            bot.clearTargets();
             bot.emit('targetKilled', killed);
         }
     });
@@ -223,7 +342,7 @@ function load(bot) {
             const ent = bot.findEntityByName(bot.huntTargetName);
             if (!ent || !ent.isValid) {
                 const killed = bot.huntTargetName;
-                bot.huntTargetName = null;
+                bot.clearTargets();
                 bot.emit('targetKilled', killed);
             }
         }

@@ -3,6 +3,11 @@ const { pathfinder } = require('mineflayer-pathfinder');
 const armorManager = require('mineflayer-armor-manager');
 const toolPlugin = require('mineflayer-tool').plugin;
 const pvp = require('mineflayer-pvp').plugin;
+let customPVP;
+try {
+    customPVP = require('@nxg-org/mineflayer-custom-pvp').default || require('@nxg-org/mineflayer-custom-pvp');
+} catch (e) {}
+
 const blockfinderPlugin = require('mineflayer-blockfinder')(mineflayer);
 
 const movement = require('./movement');
@@ -57,6 +62,32 @@ function initBot(botOrOptions, optionsOrMaster, maybeCommandHandler) {
                 bot.loadPlugin(pathfinder);
             }
         } catch (e) {}
+
+        // Load @nxg-org/mineflayer-custom-pvp for advanced sword and bow PvP
+        if (customPVP && !bot.swordpvp) {
+            try {
+                bot.loadPlugin(customPVP);
+                if (bot.swordpvp && bot.swordpvp.options) {
+                    bot.swordpvp.options.critConfig.enabled = true;
+                    bot.swordpvp.options.critConfig.mode = 'hop';
+                    bot.swordpvp.options.shieldDisableConfig.enabled = true;
+                    bot.swordpvp.options.shieldDisableConfig.mode = 'single';
+                    bot.swordpvp.options.shieldConfig.enabled = true;
+                    bot.swordpvp.options.shieldConfig.mode = 'legit';
+                    bot.swordpvp.options.tapConfig.enabled = true;
+                    bot.swordpvp.options.tapConfig.mode = 'wtap';
+                    bot.swordpvp.options.strafeConfig.enabled = true;
+                    bot.swordpvp.options.strafeConfig.mode = { mode: 'intelligent', maxOffset: Math.PI / 2 };
+                    bot.swordpvp.options.rotateConfig.enabled = true;
+                    bot.swordpvp.options.rotateConfig.mode = 'constant';
+                }
+                if (bot.bowpvp) {
+                    bot.bowpvp.useOffhand = false;
+                }
+            } catch (e) {
+                console.error(`[CustomPVP] Error loading on ${bot.username}:`, e.message);
+            }
+        }
 
         try {
             if (!bot.pvp) {
